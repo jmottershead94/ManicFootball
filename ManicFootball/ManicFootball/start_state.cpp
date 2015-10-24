@@ -74,7 +74,7 @@ void StartState::OnEnter()
 	}
 
 	test_.Init(sf::Vector2f(0.0f, 600.0f), sf::Vector2f(1280.0f, 100.0f), world_, ObjectID::surface);
-	player_test_.Init(sf::Vector2f(500.0f, 200.0f), sf::Vector2f(50.0f, 100.0f), world_, ObjectID::player);
+	player_test_.Init(sf::Vector2f(500.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_, ObjectID::player);
 	ball_test_.Init(sf::Vector2f(800.0f, 100.0f), 25.0f, world_, ObjectID::ball);
 	// Setting a football up.
 	/*football_.setRadius(50);

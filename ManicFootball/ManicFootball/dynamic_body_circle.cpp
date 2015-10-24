@@ -47,11 +47,11 @@ void DynamicBodyCircle::Init(sf::Vector2f position, float radius, b2World* world
 
 	// Creates the bounding box for the body.
 	/*b2PolygonShape dynamic_box;
-	dynamic_box.SetAsBox(FRAMEWORK_BOX2D_SIZE(dimension_.x) * BOX2D_FRAMEWORK_SIZE_OFFSET, FRAMEWORK_BOX2D_SIZE(dimension_.y) * BOX2D_FRAMEWORK_SIZE_OFFSET);*/
+	dynamic_box.SetAsBox(FRAMEWORK_BOX2D_SIZE(dimension_.x) * BOX2D_FRAMEWORK_SIZE_OFFSET_X, FRAMEWORK_BOX2D_SIZE(dimension_.y) * BOX2D_FRAMEWORK_SIZE_OFFSET_Y);*/
 	
 	// Creates the bounding circle for the body.
 	b2CircleShape dynamic_circle;
-	dynamic_circle.m_radius = FRAMEWORK_BOX2D_SIZE(circle_.getRadius());
+	dynamic_circle.m_radius = (FRAMEWORK_BOX2D_SIZE(circle_.getRadius()) * BOX2D_FRAMEWORK_RADIUS_OFFSET);
 
 	// Adds a fixture definition.
 	b2FixtureDef fixture_def;
