@@ -2,8 +2,7 @@
 
 // Start class header file.
 // This class will contain all of the necessary information for handling this state.
-// In this case, it will display the main menu.
-// From here the player can access any of the other features in the game.
+// In this case, it will start the game and make the player wait for a server connection.
 
 // Header guard.
 #ifndef _START_STATE_H_
@@ -17,19 +16,19 @@
 class StartState : public State
 {
 
-public:
-	// Methods.
-	StartState(const State& current_state);
-	~StartState();
-	State* HandleInput();
-	void OnEnter();
-	void OnExit();
-	void Render();
-	void Update(float dt);
+	public:
+		// Methods.
+		StartState(const State& current_state);
+		~StartState();
+		State* HandleInput();
+		void OnEnter();
+		void OnExit();
+		void Render();
+		void Update(float dt);
 
-private:
-	// Attributes.
-
+	private:
+		// Attributes.
+		sf::CircleShape football_;
 
 };
 

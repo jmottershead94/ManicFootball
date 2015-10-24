@@ -12,7 +12,7 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 	screen_resolution_.y = game_screen_height;
 
 	// Setting up the game window with variable screen resolution.
-	window_ = new sf::RenderWindow(sf::VideoMode((unsigned int)screen_resolution_.x, (unsigned int)screen_resolution_.y), "It works!");
+	window_ = new sf::RenderWindow(sf::VideoMode((unsigned int)screen_resolution_.x, (unsigned int)screen_resolution_.y), "Manic Football");
 
 	// Handling the font loading.
 	if (!font_.loadFromFile("Resources/Fonts/heavy_data.ttf"))
@@ -106,5 +106,3 @@ void Game::Render()
 	window_->display();
 
 }
-
-

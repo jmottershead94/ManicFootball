@@ -73,6 +73,11 @@ void StartState::OnEnter()
 		text_->setStyle(sf::Text::Bold | sf::Text::Underlined);
 	}
 
+	// Setting a football up.
+	football_.setRadius(50);
+	football_.setPosition(400.0f, 400.0f);
+	football_.setFillColor(sf::Color::White);
+
 }
 
 //////////////////////////////////////////////////////////
@@ -106,6 +111,7 @@ void StartState::Render()
 	{
 		// Draws the text onto the screen.
 		window_->draw(*text_);
+		window_->draw(football_);
 	}
 
 }
