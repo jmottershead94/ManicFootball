@@ -49,7 +49,16 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="game_object.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="static_body.cpp">
+      <Filter>Framework\Bodies</Filter>
+    </ClCompile>
+    <ClCompile Include="dynamic_body_rectangle.cpp">
+      <Filter>Framework\Bodies</Filter>
+    </ClCompile>
+    <ClCompile Include="dynamic_body_circle.cpp">
+      <Filter>Framework\Bodies</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -75,7 +84,19 @@
       <Filter>Framework</Filter>
     </ClInclude>
     <ClInclude Include="game_object.h">
-      <Filter>Header Files</Filter>
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="object_id.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="static_body.h">
+      <Filter>Framework\Bodies</Filter>
+    </ClInclude>
+    <ClInclude Include="dynamic_body_rectangle.h">
+      <Filter>Framework\Bodies</Filter>
+    </ClInclude>
+    <ClInclude Include="dynamic_body_circle.h">
+      <Filter>Framework\Bodies</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

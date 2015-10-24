@@ -10,6 +10,7 @@
 
 // Include files here.
 #include <iostream>
+#include <Box2D\Box2D.h>
 #include <SFML/Graphics.hpp>
 #include "init_state.h"
 
@@ -29,6 +30,8 @@ class Game
 
 	private:
 		// Attributes.
+		const int frame_rate_= 60;
+		b2World* world_;
 		sf::Clock clock_;
 		sf::Event event_;
 		sf::Font font_;

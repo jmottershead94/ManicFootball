@@ -73,10 +73,12 @@ void StartState::OnEnter()
 		text_->setStyle(sf::Text::Bold | sf::Text::Underlined);
 	}
 
+	test_.Init(sf::Vector2f(0.0f, 600.0f), sf::Vector2f(1280.0f, 100.0f), world_, ObjectID::surface);
+	player_test_.Init(sf::Vector2f(500.0f, 200.0f), sf::Vector2f(100.0f, 200.0f), world_, ObjectID::player);
 	// Setting a football up.
-	football_.setRadius(50);
+	/*football_.setRadius(50);
 	football_.setPosition(400.0f, 400.0f);
-	football_.setFillColor(sf::Color::White);
+	football_.setFillColor(sf::Color::White);*/
 
 }
 
@@ -106,12 +108,18 @@ void StartState::OnExit()
 void StartState::Render()
 {
 
-	// If the text actually exists, meaning everything has loaded correctly.
-	if (text_)
+	// If the game window exists.
+	if (window_)
 	{
-		// Draws the text onto the screen.
-		window_->draw(*text_);
-		window_->draw(football_);
+		// If the text actually exists, meaning everything has loaded correctly.
+		if (text_)
+		{
+			// Draws the text onto the screen.
+			window_->draw(*text_);
+		}
+
+		window_->draw(test_.GetRectangleShape());
+		window_->draw(player_test_.GetRectangleShape());
 	}
 
 }
@@ -124,5 +132,9 @@ void StartState::Render()
 //////////////////////////////////////////////////////////
 void StartState::Update(float dt)
 {
+
+	player_test_.Update(dt);
+	std::cout << "Player Body Y = " << player_test_.GetBody()->GetPosition().y << std::endl;
+	std::cout << "Player Y = " << player_test_.GetPosition().y << std::endl;
 
 }

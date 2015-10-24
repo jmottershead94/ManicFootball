@@ -11,6 +11,8 @@
 // Include files here.
 // All of these includes are states that this state will communicate with.
 #include "state.h"
+#include "static_body.h"
+#include "dynamic_body_rectangle.h"
 
 // Menu state IS A state, therefore inherits from it.
 class StartState : public State
@@ -29,6 +31,8 @@ class StartState : public State
 	private:
 		// Attributes.
 		sf::CircleShape football_;
+		StaticBody test_;
+		DynamicBodyRectangle player_test_;
 
 };
 

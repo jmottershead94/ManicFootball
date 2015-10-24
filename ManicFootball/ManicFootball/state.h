@@ -9,6 +9,8 @@
 #define _STATE_H_
 
 // Include files here.
+#include <iostream>
+#include <Box2D\Box2D.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
 
@@ -42,6 +44,7 @@ class State
 
 	protected:
 		// Attributes.
+		b2World* world_;
 		sf::Font* font_;
 		sf::RenderWindow* window_;
 		sf::Text* text_;

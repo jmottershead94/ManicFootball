@@ -11,13 +11,14 @@
 // variables from game class.							//
 //////////////////////////////////////////////////////////
 // PASS IN CLASSES HERE TO INITIALISE POINTERS IN THE BASE STATE CLASS.
-InitState::InitState(sf::RenderWindow& window, sf::Font& game_font, sf::Vector2f& game_screen_resolution)
+InitState::InitState(sf::RenderWindow& window, sf::Font& game_font, sf::Vector2f& game_screen_resolution, b2World* world)
 {
 
 	// Setting up the state pointer variables.
 	font_ = &game_font;
 	window_ = &window;
 	screen_resolution_ = &game_screen_resolution;
+	world_ = world;
 
 }
 
