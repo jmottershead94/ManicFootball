@@ -1,5 +1,5 @@
 // Include header file here.
-#include "menu_state.h"
+#include "start_state.h"
 
 //////////////////////////////////////////////////////////
 //======================================================//
@@ -9,8 +9,7 @@
 // Passing in the current state allows for				//
 // communication between the states.					//
 //////////////////////////////////////////////////////////
-MenuState::MenuState(const State& current_state) : State(current_state),
-	menu_controls_(nullptr)
+StartState::StartState(const State& current_state) : State(current_state)
 {
 }
 
@@ -19,7 +18,7 @@ MenuState::MenuState(const State& current_state) : State(current_state),
 //					Destructor							//
 //======================================================//
 //////////////////////////////////////////////////////////
-MenuState::~MenuState()
+StartState::~StartState()
 {
 }
 
@@ -33,21 +32,15 @@ MenuState::~MenuState()
 // If there is a state transition, it will be placed	//
 // here.												//
 //////////////////////////////////////////////////////////
-State* MenuState::HandleInput()
+State* StartState::HandleInput()
 {
 
-	// If the player has pressed 1.
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
-	{
-		// Start the game.
-		return new StartState(*this);
-	}
-	// Otherwise, if the player has pressed 2.
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
-	{
-		// Exit the game.
-		window_->close();
-	}
+	//// If the player pressed the left mouse button.
+	//if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+	//{
+	//	// Return a new state.
+	//	//return new "StateClassNameHere"(*this);
+	//}
 
 	// Returns nothing because there has been no input from the player yet.
 	return nullptr;
@@ -62,7 +55,7 @@ State* MenuState::HandleInput()
 // is created.											//
 // This will contain some state specific functions.		//
 //////////////////////////////////////////////////////////
-void MenuState::OnEnter()
+void StartState::OnEnter()
 {
 
 	// Menu state specific stuff.
@@ -74,19 +67,10 @@ void MenuState::OnEnter()
 
 		// Set the font of the text that is going to be displayed and set what the text will display.
 		text_->setFont(*font_);
-		text_->setString("The Menu State");
+		text_->setString("The Start State");
 		text_->setCharacterSize(32);
 		text_->setColor(sf::Color::Red);
 		text_->setStyle(sf::Text::Bold | sf::Text::Underlined);
-
-		// Telling the player about the controls on the menu.
-		menu_controls_ = new sf::Text();
-		menu_controls_->setFont(*font_);
-		menu_controls_->setPosition(0.0f, 100.0f);
-		menu_controls_->setString("Press 1 - Start the game\nPress 2 - Exit");
-		menu_controls_->setCharacterSize(32);
-		menu_controls_->setColor(sf::Color::Green);
-		menu_controls_->setStyle(sf::Text::Bold);
 	}
 
 }
@@ -99,7 +83,7 @@ void MenuState::OnEnter()
 // is destroyed.										//
 // This will contain some state specific functions.		//
 //////////////////////////////////////////////////////////
-void MenuState::OnExit()
+void StartState::OnExit()
 {
 
 	// Stopping the menu state specific stuff.
@@ -114,7 +98,7 @@ void MenuState::OnExit()
 // Render will just draw everything that is in this 	//
 // state.												//
 //////////////////////////////////////////////////////////
-void MenuState::Render()
+void StartState::Render()
 {
 
 	// If the text actually exists, meaning everything has loaded correctly.
@@ -122,7 +106,6 @@ void MenuState::Render()
 	{
 		// Draws the text onto the screen.
 		window_->draw(*text_);
-		window_->draw(*menu_controls_);
 	}
 
 }
@@ -133,7 +116,7 @@ void MenuState::Render()
 //======================================================//
 // This will provide a timer for this class.			//
 //////////////////////////////////////////////////////////
-void MenuState::Update(float dt)
+void StartState::Update(float dt)
 {
 
 }
