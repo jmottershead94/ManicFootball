@@ -1,6 +1,6 @@
 // Jason Mottershead, 1300455.
 
-// Menu State class header file.
+// Credits class header file.
 // This class will contain all of the necessary information for handling this state.
 // In this case, it will display the main menu.
 // From here the player can access any of the other features in the game.
@@ -12,7 +12,10 @@
 // Include files here.
 // All of these includes are states that this state will communicate with.
 #include "state.h"
-#include "start_state.h"
+//#include "start_state.h"
+//#include "options_state.h"
+//#include "credits_state.h"
+//#include "exit_state.h"
 
 // Menu state IS A state, therefore inherits from it.
 class MenuState : public State
@@ -30,7 +33,7 @@ class MenuState : public State
 
 	private:
 		// Attributes.
-		sf::Text* menu_controls_;
+
 
 };
 

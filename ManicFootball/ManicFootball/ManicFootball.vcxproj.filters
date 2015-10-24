@@ -42,9 +42,6 @@
     <ClCompile Include="state.cpp">
       <Filter>Framework\States</Filter>
     </ClCompile>
-    <ClCompile Include="start_state.cpp">
-      <Filter>Framework\States</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h">
@@ -60,9 +57,6 @@
       <Filter>Framework\States</Filter>
     </ClInclude>
     <ClInclude Include="state.h">
-      <Filter>Framework\States</Filter>
-    </ClInclude>
-    <ClInclude Include="start_state.h">
       <Filter>Framework\States</Filter>
     </ClInclude>
   </ItemGroup>

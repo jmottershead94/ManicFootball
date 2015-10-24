@@ -9,8 +9,7 @@
 // Passing in the current state allows for				//
 // communication between the states.					//
 //////////////////////////////////////////////////////////
-MenuState::MenuState(const State& current_state) : State(current_state),
-	menu_controls_(nullptr)
+MenuState::MenuState(const State& current_state) : State(current_state)
 {
 }
 
@@ -36,18 +35,12 @@ MenuState::~MenuState()
 State* MenuState::HandleInput()
 {
 
-	// If the player has pressed 1.
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1))
-	{
-		// Start the game.
-		return new StartState(*this);
-	}
-	// Otherwise, if the player has pressed 2.
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2))
-	{
-		// Exit the game.
-		window_->close();
-	}
+	//// If the player pressed the left mouse button.
+	//if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+	//{
+	//	// Return a new state.
+	//	//return new "StateClassNameHere"(*this);
+	//}
 
 	// Returns nothing because there has been no input from the player yet.
 	return nullptr;
@@ -78,14 +71,6 @@ void MenuState::OnEnter()
 		text_->setCharacterSize(32);
 		text_->setColor(sf::Color::Red);
 		text_->setStyle(sf::Text::Bold | sf::Text::Underlined);
-
-		menu_controls_ = new sf::Text();
-		menu_controls_->setFont(*font_);
-		menu_controls_->setPosition(0.0f, 100.0f);
-		menu_controls_->setString("Press 1 - Start the game \nPress 2 - Exit");
-		menu_controls_->setCharacterSize(32);
-		menu_controls_->setColor(sf::Color::Green);
-		menu_controls_->setStyle(sf::Text::Bold);
 	}
 
 }
@@ -121,7 +106,6 @@ void MenuState::Render()
 	{
 		// Draws the text onto the screen.
 		window_->draw(*text_);
-		window_->draw(*menu_controls_);
 	}
 
 }

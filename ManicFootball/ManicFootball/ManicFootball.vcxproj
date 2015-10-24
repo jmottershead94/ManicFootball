@@ -85,7 +85,6 @@
     <ClCompile Include="init_state.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu_state.cpp" />
-    <ClCompile Include="start_state.cpp" />
     <ClCompile Include="state.cpp" />
     <ClCompile Include="vector2.cpp" />
   </ItemGroup>
@@ -93,7 +92,6 @@
     <ClInclude Include="game.h" />
     <ClInclude Include="init_state.h" />
     <ClInclude Include="menu_state.h" />
-    <ClInclude Include="start_state.h" />
     <ClInclude Include="state.h" />
     <ClInclude Include="vector2.h" />
   </ItemGroup>
