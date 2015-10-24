@@ -74,7 +74,8 @@ void StartState::OnEnter()
 	}
 
 	test_.Init(sf::Vector2f(0.0f, 600.0f), sf::Vector2f(1280.0f, 100.0f), world_, ObjectID::surface);
-	player_test_.Init(sf::Vector2f(500.0f, 200.0f), sf::Vector2f(100.0f, 200.0f), world_, ObjectID::player);
+	player_test_.Init(sf::Vector2f(500.0f, 200.0f), sf::Vector2f(50.0f, 100.0f), world_, ObjectID::player);
+	ball_test_.Init(sf::Vector2f(800.0f, 100.0f), 25.0f, world_, ObjectID::ball);
 	// Setting a football up.
 	/*football_.setRadius(50);
 	football_.setPosition(400.0f, 400.0f);
@@ -120,6 +121,7 @@ void StartState::Render()
 
 		window_->draw(test_.GetRectangleShape());
 		window_->draw(player_test_.GetRectangleShape());
+		window_->draw(ball_test_.GetCircleShape());
 	}
 
 }
@@ -133,8 +135,10 @@ void StartState::Render()
 void StartState::Update(float dt)
 {
 
+	// Updating the test player.
 	player_test_.Update(dt);
-	std::cout << "Player Body Y = " << player_test_.GetBody()->GetPosition().y << std::endl;
-	std::cout << "Player Y = " << player_test_.GetPosition().y << std::endl;
+
+	// Updating the test football.
+	ball_test_.Update(dt);
 
 }

@@ -34,18 +34,19 @@ void DynamicBodyRectangle::Init(sf::Vector2f position, sf::Vector2f dimensions, 
 
 	rectangle_.setPosition(GetPosition());
 	rectangle_.setSize(GetDimension());
-	rectangle_.setFillColor(sf::Color::White);
+	rectangle_.setFillColor(sf::Color::Blue);
 
 	// Setting up the body definition.
-	body_def_.type = b2_dynamicBody;
-	body_def_.position.Set(FRAMEWORK_BOX2D_POS_X(position_.x), FRAMEWORK_BOX2D_POS_Y(position_.y));
-	body_ = world->CreateBody(&body_def_);
+	b2BodyDef body_def;
+	body_def.type = b2_dynamicBody;
+	body_def.position.Set(FRAMEWORK_BOX2D_POS_X(position_.x), FRAMEWORK_BOX2D_POS_Y(position_.y));
+	body_ = world->CreateBody(&body_def);
 	body_->SetFixedRotation(true);
 	body_->SetTransform(b2Vec2(FRAMEWORK_BOX2D_POS_X(position_.x), FRAMEWORK_BOX2D_POS_Y(position_.y)), 0.0f);
 
 	// Creates the bounding box for the body.
 	b2PolygonShape dynamic_box;
-	dynamic_box.SetAsBox(FRAMEWORK_BOX2D_SIZE(dimension_.x) * 0.7f, FRAMEWORK_BOX2D_SIZE(dimension_.y) * 0.7f);
+	dynamic_box.SetAsBox(FRAMEWORK_BOX2D_SIZE(dimension_.x) * BOX2D_FRAMEWORK_SIZE_OFFSET, FRAMEWORK_BOX2D_SIZE(dimension_.y) * BOX2D_FRAMEWORK_SIZE_OFFSET);
 
 	// Adds a fixture definition.
 	b2FixtureDef fixture_def;

@@ -49,6 +49,12 @@ class GameObject
 		// This function will return the id number of the object.
 		int GetID()					{ return id_; }
 
+		// This function will convert any radian angles into degrees.
+		float RadiansToDegrees(float radians) { return (radians * (180.0f / b2_pi)); }
+
+		// This function will convert any degree angles into radians.
+		float DegreesToRadians(float degrees) { return (degrees * (b2_pi / 180.0f)); }
+
 	protected:
 		// Attributes.
 		b2Body* body_;

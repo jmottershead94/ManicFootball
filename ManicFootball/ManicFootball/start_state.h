@@ -13,6 +13,7 @@
 #include "state.h"
 #include "static_body.h"
 #include "dynamic_body_rectangle.h"
+#include "dynamic_body_circle.h"
 
 // Menu state IS A state, therefore inherits from it.
 class StartState : public State
@@ -30,9 +31,9 @@ class StartState : public State
 
 	private:
 		// Attributes.
-		sf::CircleShape football_;
 		StaticBody test_;
 		DynamicBodyRectangle player_test_;
+		DynamicBodyCircle ball_test_;
 
 };
 

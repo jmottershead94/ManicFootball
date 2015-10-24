@@ -1,5 +1,6 @@
 // This header file helps to convert box2d coordinates into local framework coordinates.
 
+// Header guard.
 #ifndef _BOX2D_CONVERSIONS_H
 #define _BOX2D_CONVERSIONS_H
 
@@ -10,7 +11,9 @@
 #define BOX2D_FRAMEWORK_SCALE 100.0f
 #define BOX2D_FRAMEWORK_OFFSET_X 0.0f
 #define BOX2D_FRAMEWORK_OFFSET_Y 0.0f
+#define BOX2D_FRAMEWORK_SIZE_OFFSET 0.675f
 
+// To convert the Box2D coordinates into framework coordinates.
 #define BOX2D_FRAMEWORK_POS_X(x) ((x)*BOX2D_FRAMEWORK_SCALE + BOX2D_FRAMEWORK_OFFSET_X)
 #define BOX2D_FRAMEWORK_POS_Y(y) (DISPLAY_HEIGHT - ((y)*BOX2D_FRAMEWORK_SCALE + BOX2D_FRAMEWORK_OFFSET_Y))
 #define BOX2D_FRAMEWORK_SIZE(s) ((s)*BOX2D_FRAMEWORK_SCALE)

@@ -44,7 +44,7 @@ void StaticBody::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* w
 
 	// Creates the bounding box for the body.
 	b2PolygonShape box_;
-	box_.SetAsBox(FRAMEWORK_BOX2D_SIZE(dimension_.x) * 0.75f, FRAMEWORK_BOX2D_SIZE(dimension_.y) * 0.75f);
+	box_.SetAsBox(FRAMEWORK_BOX2D_SIZE(dimension_.x) * BOX2D_FRAMEWORK_SIZE_OFFSET, FRAMEWORK_BOX2D_SIZE(dimension_.y) * BOX2D_FRAMEWORK_SIZE_OFFSET);
 	body_->CreateFixture(&box_, 0.0f);
 
 	// Setting the connection between game objects and the Box2D body.
