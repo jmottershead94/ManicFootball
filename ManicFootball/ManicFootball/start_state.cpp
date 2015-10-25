@@ -35,12 +35,12 @@ StartState::~StartState()
 State* StartState::HandleInput()
 {
 
-	//// If the player pressed the left mouse button.
-	//if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-	//{
-	//	// Return a new state.
-	//	//return new "StateClassNameHere"(*this);
-	//}
+	// If the player presses the escape button.
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+	{
+		// Close the window.
+		window_->close();
+	}
 
 	// Returns nothing because there has been no input from the player yet.
 	return nullptr;
@@ -73,13 +73,11 @@ void StartState::OnEnter()
 		text_->setStyle(sf::Text::Bold | sf::Text::Underlined);
 	}
 
-	test_.Init(sf::Vector2f(0.0f, 600.0f), sf::Vector2f(1280.0f, 100.0f), world_, ObjectID::surface);
-	player_test_.Init(sf::Vector2f(500.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_, ObjectID::player);
-	ball_test_.Init(sf::Vector2f(800.0f, 100.0f), 25.0f, world_, ObjectID::ball);
-	// Setting a football up.
-	/*football_.setRadius(50);
-	football_.setPosition(400.0f, 400.0f);
-	football_.setFillColor(sf::Color::White);*/
+	// Just used for testing purposes.
+	test_.Init(sf::Vector2f(0.0f, 600.0f), sf::Vector2f(1280.0f, 100.0f), world_, ObjectID::surface, sf::Color::Green);
+	player_test_.Init(sf::Vector2f(500.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_, ObjectID::player, sf::Color::Blue);
+	ball_test_.Init(sf::Vector2f(800.0f, 100.0f), 25.0f, world_, ObjectID::ball, sf::Color::White);
+	player_class_.Init(sf::Vector2f(100.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_);
 
 }
 
@@ -122,6 +120,7 @@ void StartState::Render()
 		window_->draw(test_.GetRectangleShape());
 		window_->draw(player_test_.GetRectangleShape());
 		window_->draw(ball_test_.GetCircleShape());
+		window_->draw(player_class_.GetRectangleShape());
 	}
 
 }
@@ -135,10 +134,13 @@ void StartState::Render()
 void StartState::Update(float dt)
 {
 
-	// Updating the test player.
+	// Updating the test rectangle.
 	player_test_.Update(dt);
 
 	// Updating the test football.
 	ball_test_.Update(dt);
+
+	// Updating the test player.
+	player_class_.Update(dt);
 
 }

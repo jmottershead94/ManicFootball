@@ -14,6 +14,7 @@
 #include "static_body.h"
 #include "dynamic_body_rectangle.h"
 #include "dynamic_body_circle.h"
+#include "player.h"
 
 // Menu state IS A state, therefore inherits from it.
 class StartState : public State
@@ -34,6 +35,7 @@ class StartState : public State
 		StaticBody test_;
 		DynamicBodyRectangle player_test_;
 		DynamicBodyCircle ball_test_;
+		Player player_class_;
 
 };
 

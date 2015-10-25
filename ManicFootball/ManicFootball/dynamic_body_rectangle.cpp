@@ -1,3 +1,4 @@
+// Include header file here.
 #include "dynamic_body_rectangle.h"
 
 //////////////////////////////////////////////////////////
@@ -26,22 +27,23 @@ DynamicBodyRectangle::~DynamicBodyRectangle()
 // definition for the dynamic body, as well as place	//
 // the sprite in the correct location.					//
 //////////////////////////////////////////////////////////
-void DynamicBodyRectangle::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world, ObjectID object_id)
+void DynamicBodyRectangle::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world, ObjectID object_id, const sf::Color colour)
 {
 
 	// Initialising the sprite for the body.
 	GameObject::Init(position, dimensions, object_id);
 
+	// Setting up the rectangle shape.
 	rectangle_.setPosition(GetPosition());
 	rectangle_.setSize(GetDimension());
-	rectangle_.setFillColor(sf::Color::Blue);
+	rectangle_.setFillColor(colour);
 
 	// Setting up the body definition.
 	b2BodyDef body_def;
 	body_def.type = b2_dynamicBody;
 	body_def.position.Set(FRAMEWORK_BOX2D_POS_X(position_.x), FRAMEWORK_BOX2D_POS_Y(position_.y));
 	body_ = world->CreateBody(&body_def);
-	body_->SetFixedRotation(false);
+	body_->SetFixedRotation(true);
 	body_->SetTransform(b2Vec2(FRAMEWORK_BOX2D_POS_X(position_.x), FRAMEWORK_BOX2D_POS_Y(position_.y)), 0.0f);
 
 	// Creates the bounding box for the body.
@@ -52,7 +54,7 @@ void DynamicBodyRectangle::Init(sf::Vector2f position, sf::Vector2f dimensions, 
 	b2FixtureDef fixture_def;
 	fixture_def.shape = &dynamic_box;
 	fixture_def.density = 1.0f;
-	fixture_def.friction = 0.1f;
+	fixture_def.friction = 0.2f;
 	fixture_def.restitution = 0.2f;
 	body_->CreateFixture(&fixture_def);
 

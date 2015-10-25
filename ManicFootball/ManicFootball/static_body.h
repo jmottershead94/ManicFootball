@@ -19,7 +19,7 @@ class StaticBody : public GameObject
 		// Methods.
 		StaticBody();
 		~StaticBody();
-		void Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world, ObjectID object_id);
+		void Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world, ObjectID object_id, const sf::Color colour);
 		void Update();
 		
 };

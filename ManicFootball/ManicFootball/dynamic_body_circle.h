@@ -19,7 +19,7 @@ class DynamicBodyCircle : public GameObject
 		// Methods.
 		DynamicBodyCircle();
 		~DynamicBodyCircle();
-		void Init(sf::Vector2f position, float radius, b2World* world, ObjectID object_id);
+		void Init(sf::Vector2f position, float radius, b2World* world, ObjectID object_id, const sf::Color colour);
 		void Update(float dt);
 
 };

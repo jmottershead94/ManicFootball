@@ -52,7 +52,6 @@ class GameObject
 	protected:
 		// Attributes.
 		b2Body* body_;
-		b2BodyDef body_def_;
 		sf::RectangleShape rectangle_;
 		sf::CircleShape circle_;
 		sf::Vector2f position_;

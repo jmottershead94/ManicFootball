@@ -1,3 +1,4 @@
+// Include header file here.
 #include "game_object.h"
 
 GameObject::GameObject()

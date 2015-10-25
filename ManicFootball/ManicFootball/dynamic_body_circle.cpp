@@ -1,3 +1,4 @@
+// Include header file here.
 #include "dynamic_body_circle.h"
 
 //////////////////////////////////////////////////////////
@@ -26,7 +27,7 @@ DynamicBodyCircle::~DynamicBodyCircle()
 // definition for the dynamic body, as well as place	//
 // the sprite in the correct location.					//
 //////////////////////////////////////////////////////////
-void DynamicBodyCircle::Init(sf::Vector2f position, float radius, b2World* world, ObjectID object_id)
+void DynamicBodyCircle::Init(sf::Vector2f position, float radius, b2World* world, ObjectID object_id, const sf::Color colour)
 {
 
 	// Initialising the sprite for the body.
@@ -35,7 +36,7 @@ void DynamicBodyCircle::Init(sf::Vector2f position, float radius, b2World* world
 	// Setting up the circle shape.
 	circle_.setRadius(radius);
 	circle_.setPosition(GetPosition());
-	circle_.setFillColor(sf::Color::Green);
+	circle_.setFillColor(colour);
 
 	// Setting up the body definition.
 	b2BodyDef body_def;
@@ -51,11 +52,11 @@ void DynamicBodyCircle::Init(sf::Vector2f position, float radius, b2World* world
 
 	// Adds a fixture definition.
 	b2FixtureDef fixture_def;
-	fixture_def.shape = &dynamic_circle;
-	fixture_def.density = 1.0f;
-	fixture_def.friction = 0.1f;
-	fixture_def.restitution = 0.2f;
-	body_->CreateFixture(&fixture_def);
+	fixture_def.shape = &dynamic_circle;	// Setting the shape of the fixture.
+	fixture_def.density = 1.0f;				// Setting the density of the object.
+	fixture_def.friction = 0.1f;			// How much friction the object has, how much drag it will have on a surface.
+	fixture_def.restitution = 0.9f;			// How bouncy the object will be.
+	body_->CreateFixture(&fixture_def);		// Applying the fixture to the body.
 
 	// Setting the connection between game objects and the Box2D body.
 	body_->SetUserData(this);

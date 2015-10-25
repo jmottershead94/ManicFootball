@@ -1,3 +1,4 @@
+// Include header file here.
 #include "static_body.h"
 
 //////////////////////////////////////////////////////////
@@ -26,20 +27,22 @@ StaticBody::~StaticBody()
 // definition for the static body, as well as place	the	//
 // sprite in the correct location.						//
 //////////////////////////////////////////////////////////
-void StaticBody::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world, ObjectID object_id)
+void StaticBody::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world, ObjectID object_id, const sf::Color colour)
 {
 
 	// Initialising the id and position for the game object.
 	GameObject::Init(position, dimensions, object_id);
 
+	// Setting up the rectangle shape.
 	rectangle_.setPosition(GetPosition());
 	rectangle_.setSize(GetDimension());
-	rectangle_.setFillColor(sf::Color::White);
+	rectangle_.setFillColor(colour);
 
 	// Setting up the body definition.
-	body_def_.type = b2_staticBody;
-	body_def_.position.Set(FRAMEWORK_BOX2D_POS_X(position_.x), FRAMEWORK_BOX2D_POS_Y(position_.y));
-	body_ = world->CreateBody(&body_def_);
+	b2BodyDef body_def;
+	body_def.type = b2_staticBody;
+	body_def.position.Set(FRAMEWORK_BOX2D_POS_X(position_.x), FRAMEWORK_BOX2D_POS_Y(position_.y));
+	body_ = world->CreateBody(&body_def);
 	body_->SetTransform(b2Vec2(FRAMEWORK_BOX2D_POS_X(position_.x), FRAMEWORK_BOX2D_POS_Y(position_.y)), 0.0f);
 
 	// Creates the bounding box for the body.

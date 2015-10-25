@@ -53,12 +53,12 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>SFML_STATIC;WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\University\CGAD\3rd_Year\Semester_1\Network_Programming\Coursework\ManicFootballRepository\ManicFootball\External;C:\University\CGAD\3rd_Year\Semester_1\Network_Programming\Coursework\SFML-2.3.2-windows-vc12-32-bit\SFML-2.3.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\University\CGAD\3rd_Year\Semester_1\Network_Programming\Coursework\ManicFootballRepository\ManicFootball\External;C:\University\CGAD\3rd_Year\Semester_1\Network_Programming\Coursework\ManicFootballRepository\ManicFootball\External\SFML-2.3.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\University\CGAD\3rd_Year\Semester_1\Network_Programming\Coursework\SFML-2.3.2-windows-vc12-32-bit\SFML-2.3.2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\University\CGAD\3rd_Year\Semester_1\Network_Programming\Coursework\ManicFootballRepository\ManicFootball\External\SFML-2.3.2\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sfml-graphics-s-d.lib;opengl32.lib;openal32.lib;freetype.lib;jpeg.lib;sfml-window-s-d.lib;winmm.lib;sfml-system-s-d.lib;sfml-audio-s-d.lib;flac.lib;vorbisenc.lib;vorbis.lib;vorbisfile.lib;ogg.lib;sfml-network-s-d.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -86,8 +86,9 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="game_object.cpp" />
     <ClCompile Include="init_state.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="client.cpp" />
     <ClCompile Include="menu_state.cpp" />
+    <ClCompile Include="player.cpp" />
     <ClCompile Include="start_state.cpp" />
     <ClCompile Include="state.cpp" />
     <ClCompile Include="static_body.cpp" />
@@ -102,6 +103,7 @@
     <ClInclude Include="object_id.h" />
     <ClInclude Include="init_state.h" />
     <ClInclude Include="menu_state.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="start_state.h" />
     <ClInclude Include="state.h" />
     <ClInclude Include="static_body.h" />
