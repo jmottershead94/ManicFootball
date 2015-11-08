@@ -9,6 +9,7 @@
 
 // Include files here.
 #include <array>
+#include <iostream>
 #include <sstream>
 #include <vector>
 #include "static_body.h"
@@ -35,8 +36,9 @@ class Level
 		void CreateOtherPlayers();
 		void CreateFootball(sf::Vector2f& position);
 		void Reset();
+		void UpdateScoreboard();
+		void RemoveObjects();
 		void CollisionTest();
-		void CollisionResponses();
 		void HandleLevelObjects(float dt);
 		void Clear();
 		void Update(float dt);

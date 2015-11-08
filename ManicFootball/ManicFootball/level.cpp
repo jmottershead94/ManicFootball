@@ -85,7 +85,7 @@ void Level::CreateNets(bool left_of_the_field)
 		crossbar->Init(sf::Vector2f((screen_resolution_->x * 0.0675f), (screen_resolution_->y * 0.5625f)), sf::Vector2f(screen_resolution_->x * 0.125f, screen_resolution_->y * 0.0625f), world_, ObjectID::surface, sf::Color::Red);
 
 		// Initialising the static body for the ground.
-		net->Init(sf::Vector2f(crossbar->GetPosition().x, (crossbar->GetPosition().y + crossbar->GetDimension().y)), sf::Vector2f(screen_resolution_->x * 0.03125f, screen_resolution_->y * 0.21f), world_, ObjectID::goal, sf::Color::Red);
+		net->Init(sf::Vector2f(crossbar->GetPosition().x, (crossbar->GetPosition().y + crossbar->GetDimension().y)), sf::Vector2f(screen_resolution_->x * 0.03125f, screen_resolution_->y * 0.21f), world_, ObjectID::redNet, sf::Color::Red);
 
 		// Adding the game object to the level objects vector.
 		level_objects_.push_back(crossbar);
@@ -100,7 +100,7 @@ void Level::CreateNets(bool left_of_the_field)
 		crossbar->Init(sf::Vector2f((screen_resolution_->x - (screen_resolution_->x * 0.0675f)), (screen_resolution_->y * 0.5625f)), sf::Vector2f(-1.0f * (screen_resolution_->x * 0.125f), (screen_resolution_->y * 0.0625f)), world_, ObjectID::surface, sf::Color::Blue);
 
 		// Initialising the static body for the ground.
-		net->Init(sf::Vector2f((screen_resolution_->x - (screen_resolution_->x * 0.0675f) - (screen_resolution_->x * 0.03125f)), (crossbar->GetPosition().y + crossbar->GetDimension().y)), sf::Vector2f((screen_resolution_->x * 0.03125f), screen_resolution_->y * 0.21f), world_, ObjectID::goal, sf::Color::Blue);
+		net->Init(sf::Vector2f((screen_resolution_->x - (screen_resolution_->x * 0.0675f) - (screen_resolution_->x * 0.03125f)), (crossbar->GetPosition().y + crossbar->GetDimension().y)), sf::Vector2f((screen_resolution_->x * 0.03125f), screen_resolution_->y * 0.21f), world_, ObjectID::blueNet, sf::Color::Blue);
 
 		// Adding the game object to the level objects vector.
 		level_objects_.push_back(crossbar);
@@ -192,13 +192,100 @@ void Level::Reset()
 
 }
 
-void Level::CollisionTest()
+void Level::UpdateScoreboard()
 {
+
+	red_convert_ << red_team_score_;				// Places the textual representation of the red team score integer into red_convert_.
+	blue_convert_ << blue_team_score_;				// Places the textual representation of the blue team score integer into blue_convert_.
+
+	// If there are elements in the scores vector.
+	if (!scores_.empty())
+	{
+		// Update the score strings with the new integers.
+		scores_[0]->setString(red_convert_.str());
+		scores_[1]->setString(blue_convert_.str());
+	}
 
 }
 
-void Level::CollisionResponses()
+void Level::RemoveObjects()
 {
+	// If there are objects in the level.
+	if (!level_objects_.empty())
+	{
+		// Iterating through all of the level objects.
+		for (auto level_object = level_objects_.begin(); level_object != level_objects_.end(); level_object++)
+		{
+			// If an object needs to be removed from the level.
+			if ((**level_object).NeedsRemoving())
+			{
+				// Remove the object from the vector.
+				level_objects_.erase(level_object);
+			}
+		}
+	}
+
+}
+
+void Level::CollisionTest()
+{
+
+	// Get the head of the contact list.
+	b2Contact* contact_ = world_->GetContactList();
+
+	// Get the contact count.
+	int contact_count = world_->GetContactCount();
+
+	
+	// Cycle through the contacts.
+	for (int contact_num = 0; contact_num < contact_count; contact_num++)
+	{
+		// Get the colliding bodies.
+		b2Body* body_a = contact_->GetFixtureA()->GetBody();
+		b2Body* body_b = contact_->GetFixtureB()->GetBody();
+
+		// Collision response here.
+		GameObject* game_object_ = static_cast<GameObject*>(body_a->GetUserData());
+		GameObject* game_object2_ = static_cast<GameObject*>(body_b->GetUserData());
+
+		// If a ball collides with the red team's net.
+		if (game_object_->GetID() == ObjectID::ball
+			&& game_object2_->GetID() == ObjectID::redNet)
+		{
+			// Remove the ball from the field.
+			game_object_->SetRemove(true);
+			game_object_->GetCircleShape().~CircleShape();
+			game_object_->GetBody()->DestroyFixture(game_object_->GetBody()->GetFixtureList());
+
+			// Increment the blue team's score.
+			IncrementBlueTeamScore();
+
+			std::cout << "Blue team have scored a goal! Blue: " << blue_team_score_ << std::endl;
+
+			// Update with the new scores.
+			UpdateScoreboard();
+		}
+		// Otherwise, if the ball has collided with the blue team's net.
+		else if (game_object_->GetID() == ObjectID::ball
+			&& game_object2_->GetID() == ObjectID::blueNet)
+		{
+			// Remove the ball from the field.
+			game_object_->SetRemove(true);
+			game_object_->GetCircleShape().~CircleShape();
+			game_object_->GetBody()->DestroyFixture(game_object_->GetBody()->GetFixtureList());
+
+			// Increment the red team's score.
+			IncrementRedTeamScore();
+
+			std::cout << "Red team have scored a goal! Red: " << red_team_score_ << std::endl;
+
+			// Update with the new scores.
+			UpdateScoreboard();
+		}
+
+		// Get the next contact point.
+		contact_ = contact_->GetNext();
+	}
 
 }
 
@@ -211,20 +298,13 @@ void Level::HandleLevelObjects(float dt)
 		// Iterating through all of the level objects.
 		for (auto level_object = level_objects_.begin(); level_object != level_objects_.end(); level_object++)
 		{
-			//// If the level object is a football.
+			// If the level object is a football.
 			if ((**level_object).GetID() == ObjectID::ball)
 			{
 				// Casting this to a dynamic body circle in order to update the sprites position for level object.
 				DynamicBodyCircle* temp = static_cast<DynamicBodyCircle*>(*level_object);
 				temp->Update(dt);
 			}
-			//// If the level object is a football.
-			//if ((**level_object).GetID() == ObjectID::ball)
-			//{
-			//	// Casting this to a dynamic body circle in order to update the sprites position for level object.
-			//	DynamicBodyRectangle* temp = static_cast<DynamicBodyRectangle*>(*level_object);
-			//	temp->Update(dt);
-			//}
 			// Otherwise, if the object is a player.
 			else if ((**level_object).GetID() == ObjectID::player)
 			{
@@ -253,5 +333,6 @@ void Level::Update(float dt)
 {
 
 	HandleLevelObjects(dt);
+	CollisionTest();
 
 }

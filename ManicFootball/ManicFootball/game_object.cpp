@@ -16,6 +16,7 @@ void GameObject::Init(sf::Vector2f position, sf::Vector2f dimensions, ObjectID o
 	position_ = position;			// Setting the position of the game object shape.
 	dimension_ = dimensions;		// Setting the width and height of the game object shape.
 	id_ = object_id;				// Setting the id number of the game object shape.
+	remove_ = false;				// Letting us know if the game object needs to be removed or not.
 	is_rectangle_ = is_rectangle;	// Letting us know what kind of shape we have.
 
 }

@@ -18,7 +18,8 @@ enum ObjectID
 	enemy,
 	ball,
 	surface,
-	goal
+	redNet,
+	blueNet
 	
 };
 

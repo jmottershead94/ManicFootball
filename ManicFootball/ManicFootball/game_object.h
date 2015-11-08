@@ -24,6 +24,9 @@ class GameObject
 		void Init(sf::Vector2f position, sf::Vector2f dimensions, ObjectID object_id, bool is_rectangle);
 
 		// Setters.
+		// This will set the remove flag.
+		inline void SetRemove(bool should_remove) { remove_ = should_remove; }
+
 		// This function will set the current body of the game object with the body passed in.
 		inline void SetBody(b2Body* body)	{ body_ = body; }
 
@@ -31,6 +34,9 @@ class GameObject
 		inline void SetPosition(sf::Vector2f new_position) { position_ = new_position; }
 
 		// Getters.
+		// This function will tell us if the game object needs removing from the level.
+		inline bool NeedsRemoving() { return remove_; }
+
 		// This function will return and let us know if the shape has a rectangle shape or not.
 		inline bool IsRectangle() { return is_rectangle_; }
 
@@ -54,6 +60,7 @@ class GameObject
 
 	protected:
 		// Attributes.
+		bool remove_;
 		bool is_rectangle_;
 		b2Body* body_;
 		sf::RectangleShape rectangle_;
