@@ -74,6 +74,9 @@ void DynamicBodyCircle::Init(sf::Vector2f position, float radius, b2World* world
 void DynamicBodyCircle::Update(float dt)
 {
 
+	// Wake up the body.
+	//body_->SetAwake(true);
+
 	// Resets the position of the shape.
 	SetPosition(sf::Vector2f(BOX2D_FRAMEWORK_POS_X(body_->GetPosition().x), BOX2D_FRAMEWORK_POS_Y(body_->GetPosition().y)));
 

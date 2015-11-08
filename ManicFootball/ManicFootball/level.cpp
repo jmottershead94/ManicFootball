@@ -30,7 +30,8 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 	CreateWall(sf::Vector2f(0.0f, (screen_resolution_->y - (screen_resolution_->y * 0.0675f))), sf::Vector2f(screen_resolution_->x, (screen_resolution_->y * 0.0675f)));
 	CreateWall(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(screen_resolution_->x, screen_resolution_->y * 0.0675f));
 	CreateWall(sf::Vector2f((screen_resolution_->x - (screen_resolution_->x * 0.0675f)), 0.0f), sf::Vector2f((screen_resolution_->x * 0.0675f), screen_resolution_->y));
-	CreateNets();
+	CreateNets(true);
+	CreateNets(false);
 	CreateScoreboard();
 	CreatePlayer();
 	CreateOtherPlayers();
@@ -68,9 +69,45 @@ void Level::CreateWall(sf::Vector2f& position, sf::Vector2f& dimension)
 
 }
 
-void Level::CreateNets()
+void Level::CreateNets(bool left_of_the_field)
 {
 
+	// Allocating memory for the crossbar when we need it.
+	StaticBody* crossbar = new StaticBody();
+
+	// Allocating memory for the net when we need it.
+	StaticBody* net = new StaticBody();
+
+	// If the nets should be to the left of the field.
+	if (left_of_the_field)
+	{
+		// Initialising the static body for the ground.
+		crossbar->Init(sf::Vector2f((screen_resolution_->x * 0.0675f), (screen_resolution_->y * 0.5625f)), sf::Vector2f(screen_resolution_->x * 0.125f, screen_resolution_->y * 0.0625f), world_, ObjectID::surface, sf::Color::Red);
+
+		// Initialising the static body for the ground.
+		net->Init(sf::Vector2f(crossbar->GetPosition().x, (crossbar->GetPosition().y + crossbar->GetDimension().y)), sf::Vector2f(screen_resolution_->x * 0.03125f, screen_resolution_->y * 0.21f), world_, ObjectID::goal, sf::Color::Red);
+
+		// Adding the game object to the level objects vector.
+		level_objects_.push_back(crossbar);
+		
+		// Adding the game object to the level objects vector.
+		level_objects_.push_back(net);
+	}
+	// Otherwise, the nets should be on the right side of the field.
+	else
+	{
+		// Initialising the static body for the ground.
+		crossbar->Init(sf::Vector2f((screen_resolution_->x - (screen_resolution_->x * 0.0675f)), (screen_resolution_->y * 0.5625f)), sf::Vector2f(-1.0f * (screen_resolution_->x * 0.125f), (screen_resolution_->y * 0.0625f)), world_, ObjectID::surface, sf::Color::Blue);
+
+		// Initialising the static body for the ground.
+		net->Init(sf::Vector2f((screen_resolution_->x - (screen_resolution_->x * 0.0675f) - (screen_resolution_->x * 0.03125f)), (crossbar->GetPosition().y + crossbar->GetDimension().y)), sf::Vector2f((screen_resolution_->x * 0.03125f), screen_resolution_->y * 0.21f), world_, ObjectID::goal, sf::Color::Blue);
+
+		// Adding the game object to the level objects vector.
+		level_objects_.push_back(crossbar);
+
+		// Adding the game object to the level objects vector.
+		level_objects_.push_back(net);
+	}
 
 
 }
@@ -115,7 +152,7 @@ void Level::CreatePlayer()
 	Player* player = new Player();
 
 	// Initialising the player on the red team.
-	player->Init(sf::Vector2f(200.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_, true);
+	player->Init(sf::Vector2f(300.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_, true);
 
 	// Adding the game object to the level objects vector.
 	level_objects_.push_back(player);
@@ -129,7 +166,7 @@ void Level::CreateOtherPlayers()
 	DynamicBodyRectangle* other_player = new DynamicBodyRectangle();
 
 	// Initialising the dynamic body for the other player on the red team.
-	other_player->Init(sf::Vector2f(400.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_, ObjectID::otherPlayer, sf::Color::Red, 0.2f);
+	other_player->Init(sf::Vector2f(800.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_, ObjectID::otherPlayer, sf::Color::Blue, 0.2f);
 
 	// Adding the game object to the level objects vector.
 	level_objects_.push_back(other_player);
@@ -144,19 +181,9 @@ void Level::CreateFootball(sf::Vector2f& position)
 
 	// Initialising the dynamic body for the football.
 	football->Init(position, 30.0f, world_, ObjectID::ball, sf::Color::White);
-	//football->Init(sf::Vector2f(screen_resolution_->x * 0.5f, screen_resolution_->y * 0.25f), 25.0f, world_, ObjectID::ball, sf::Color::White);
 
 	// Adding the game object to the level objects vector.
 	level_objects_.push_back(football);
-
-	//// Allocating memory for the football when we need it.
-	//DynamicBodyRectangle* football = new DynamicBodyRectangle();
-
-	//// Initialising the dynamic body for the football.
-	//football->Init(sf::Vector2f(screen_resolution_->x * 0.5f, screen_resolution_->y * 0.25f), sf::Vector2f(25.0f, 25.0f), world_, ObjectID::ball, sf::Color::White, 0.5f);
-
-	//// Adding the game object to the level objects vector.
-	//level_objects_.push_back(football);
 
 }
 

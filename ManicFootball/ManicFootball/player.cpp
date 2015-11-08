@@ -42,12 +42,18 @@ void Player::Input(float dt)
 	// If the player presses the right arrow key.
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
+		// Wake up the body.
+		body_->SetAwake(true);
+
 		// Move the body to the right.
 		body_->ApplyLinearImpulse(b2Vec2((movement_force_.x * dt), 0.0f), body_->GetWorldCenter(), body_->IsAwake());
 	}
 	// If the player has pressed the left arrow key.
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
+		// Wake up the body.
+		body_->SetAwake(true);
+
 		// Move the body to the left.
 		body_->ApplyLinearImpulse(b2Vec2(((movement_force_.x * -1.0f) * dt), 0.0f), body_->GetWorldCenter(), body_->IsAwake());
 	}
@@ -55,6 +61,9 @@ void Player::Input(float dt)
 	// If the player has pressed the up arrow key.
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
+		// Wake up the body.
+		body_->SetAwake(true);
+
 		// Make the player jump.
 		Jump(dt);
 	}

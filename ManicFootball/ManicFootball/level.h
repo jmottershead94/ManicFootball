@@ -29,7 +29,7 @@ class Level
 		void Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution);
 		void CreateGround();
 		void CreateWall(sf::Vector2f& position, sf::Vector2f& dimension);
-		void CreateNets();
+		void CreateNets(bool left_of_the_field);
 		void CreateScoreboard();
 		void CreatePlayer();
 		void CreateOtherPlayers();
