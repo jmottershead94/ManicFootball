@@ -26,10 +26,10 @@ class Player : public DynamicBodyRectangle
 
 	private:
 		// Attributes.
-		bool in_air_;
-		bool respawn_;
-		sf::Vector2f respawn_location_;
-		sf::Vector2f movement_force_;
+		bool in_air_;						// A flag to determine if the player is in the air or not.
+		bool respawn_;						// A flag to determine if the player should respawn or not.
+		sf::Vector2f movement_force_;		// A vector2 for the amount of force that should be applied to the player.
+		sf::Vector2f respawn_location_;		// A vector2 for the spawn location of the player.
 
 
 };

@@ -21,36 +21,40 @@ class GameObject
 		// Methods.
 		GameObject();
 		~GameObject();
-		void Init(sf::Vector2f position, sf::Vector2f dimensions, ObjectID object_id);
+		void Init(sf::Vector2f position, sf::Vector2f dimensions, ObjectID object_id, bool is_rectangle);
 
 		// Setters.
 		// This function will set the current body of the game object with the body passed in.
-		void SetBody(b2Body* body)	{ body_ = body; }
+		inline void SetBody(b2Body* body)	{ body_ = body; }
 
 		// This function will set the new position of the game object.
-		void SetPosition(sf::Vector2f new_position) { position_ = new_position; }
+		inline void SetPosition(sf::Vector2f new_position) { position_ = new_position; }
 
 		// Getters.
+		// This function will return and let us know if the shape has a rectangle shape or not.
+		inline bool IsRectangle() { return is_rectangle_; }
+
 		// This function will provide access to the body of the game object.
-		b2Body* GetBody()			{ return body_; }
+		inline b2Body* GetBody()			{ return body_; }
 
 		// This function will return the rectangle shape.
-		sf::RectangleShape GetRectangleShape()	{ return rectangle_; }
+		inline sf::RectangleShape GetRectangleShape()	{ return rectangle_; }
 
 		// This function will return the circle shape.
-		sf::CircleShape GetCircleShape() { return circle_; }
+		inline sf::CircleShape GetCircleShape() { return circle_; }
 
 		// This function will return the current position of the game object.
-		sf::Vector2f GetPosition() { return position_; }
+		inline sf::Vector2f GetPosition() { return position_; }
 
 		// This function will return the current dimension of the game object.
-		sf::Vector2f GetDimension() { return dimension_; }
+		inline sf::Vector2f GetDimension() { return dimension_; }
 
 		// This function will return the id number of the object.
-		int GetID()					{ return id_; }
+		inline int GetID()					{ return id_; }
 
 	protected:
 		// Attributes.
+		bool is_rectangle_;
 		b2Body* body_;
 		sf::RectangleShape rectangle_;
 		sf::CircleShape circle_;

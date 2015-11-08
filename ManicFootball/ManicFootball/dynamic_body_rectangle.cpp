@@ -31,7 +31,7 @@ void DynamicBodyRectangle::Init(sf::Vector2f position, sf::Vector2f dimensions, 
 {
 
 	// Initialising the sprite for the body.
-	GameObject::Init(position, dimensions, object_id);
+	GameObject::Init(position, dimensions, object_id, true);
 
 	// Setting up the rectangle shape.
 	rectangle_.setPosition(GetPosition());

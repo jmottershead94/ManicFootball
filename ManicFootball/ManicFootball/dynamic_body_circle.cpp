@@ -31,7 +31,7 @@ void DynamicBodyCircle::Init(sf::Vector2f position, float radius, b2World* world
 {
 
 	// Initialising the sprite for the body.
-	GameObject::Init(position, sf::Vector2f(0.0f, 0.0f), object_id);
+	GameObject::Init(position, sf::Vector2f(0.0f, 0.0f), object_id, false);
 
 	// Setting up the circle shape.
 	circle_.setRadius(radius);

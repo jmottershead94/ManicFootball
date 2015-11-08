@@ -41,6 +41,13 @@ State* StartState::HandleInput()
 		// Close the window.
 		window_->close();
 	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3))
+	{
+		return new LevelState(*this);
+	}
+
+	// Wait for all of the connections to be made here..
+	// All four players to connect here.
 
 	// Returns nothing because there has been no input from the player yet.
 	return nullptr;
@@ -58,7 +65,7 @@ State* StartState::HandleInput()
 void StartState::OnEnter()
 {
 
-	// Menu state specific stuff.
+	// Start state specific stuff.
 	// If the font file has loaded correctly.
 	if (font_)
 	{
@@ -67,15 +74,15 @@ void StartState::OnEnter()
 
 		// Set the font of the text that is going to be displayed and set what the text will display.
 		text_->setFont(*font_);
-		text_->setString("The Start State");
+		text_->setString("Waiting for connections...");
+		text_->setPosition(screen_resolution_->x * 0.55f, screen_resolution_->y * 0.25f);
 		text_->setCharacterSize(32);
 		text_->setColor(sf::Color::Red);
-		text_->setStyle(sf::Text::Bold | sf::Text::Underlined);
+		text_->setStyle(sf::Text::Bold);
 	}
 
 	// Just used for testing purposes.
 	test_.Init(sf::Vector2f(0.0f, 600.0f), sf::Vector2f(1280.0f, 100.0f), world_, ObjectID::surface, sf::Color::Green);
-	player_test_.Init(sf::Vector2f(500.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_, ObjectID::player, sf::Color::Blue);
 	ball_test_.Init(sf::Vector2f(800.0f, 100.0f), 25.0f, world_, ObjectID::ball, sf::Color::White);
 	player_class_.Init(sf::Vector2f(100.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_);
 
@@ -92,8 +99,12 @@ void StartState::OnEnter()
 void StartState::OnExit()
 {
 
-	// Stopping the menu state specific stuff.
-
+	// Stopping the start state specific stuff.
+	if (text_)
+	{
+		// Remove the "connection" text from the screen.
+		text_->~Text();
+	}
 
 }
 
@@ -118,7 +129,6 @@ void StartState::Render()
 		}
 
 		window_->draw(test_.GetRectangleShape());
-		window_->draw(player_test_.GetRectangleShape());
 		window_->draw(ball_test_.GetCircleShape());
 		window_->draw(player_class_.GetRectangleShape());
 	}
@@ -133,9 +143,6 @@ void StartState::Render()
 //////////////////////////////////////////////////////////
 void StartState::Update(float dt)
 {
-
-	// Updating the test rectangle.
-	player_test_.Update(dt);
 
 	// Updating the test football.
 	ball_test_.Update(dt);

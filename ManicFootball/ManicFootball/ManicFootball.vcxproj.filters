@@ -42,9 +42,6 @@
     <ClCompile Include="start_state.cpp">
       <Filter>Framework\States</Filter>
     </ClCompile>
-    <ClCompile Include="game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="game_object.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
@@ -63,6 +60,15 @@
     <ClCompile Include="client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="level.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="level_state.cpp">
+      <Filter>Framework\States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vector2.h">
@@ -79,9 +85,6 @@
     </ClInclude>
     <ClInclude Include="start_state.h">
       <Filter>Framework\States</Filter>
-    </ClInclude>
-    <ClInclude Include="game.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="box2d_conversions.h">
       <Filter>Framework</Filter>
@@ -103,6 +106,15 @@
     </ClInclude>
     <ClInclude Include="player.h">
       <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="level.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="game.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="level_state.h">
+      <Filter>Framework\States</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

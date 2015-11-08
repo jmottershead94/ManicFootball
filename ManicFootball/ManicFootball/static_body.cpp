@@ -31,7 +31,7 @@ void StaticBody::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* w
 {
 
 	// Initialising the id and position for the game object.
-	GameObject::Init(position, dimensions, object_id);
+	GameObject::Init(position, dimensions, object_id, true);
 
 	// Setting up the rectangle shape.
 	rectangle_.setPosition(GetPosition());
