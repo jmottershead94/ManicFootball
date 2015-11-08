@@ -22,22 +22,22 @@ class Level
 		// Attributes.
 		bool reset_;								// A flag to determine whether or not the level should be reset.
 		int red_team_score_, blue_team_score_;		// The score values of the two different teams.
-		//sf::Text* red_score_;						// Text to display the red team score.
-		//sf::Text* blue_score_;						// Text to display the blue team score.
-		//sf::Text* scores_[2];
-
+		
 		// Methods.
 		Level();
 		~Level();
 		void Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution);
 		void CreateGround();
-		void CreatePlayer();
 		void CreateWalls();
 		void CreateNets();
 		void CreateScoreboard();
+		void CreatePlayer();
+		void CreateOtherPlayers();
+		void CreateFootball();
 		void Reset();
 		void CollisionTest();
 		void CollisionResponses();
+		void HandleLevelObjects(float dt);
 		void Clear();
 		void Update(float dt);
 

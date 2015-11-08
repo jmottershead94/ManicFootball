@@ -14,6 +14,7 @@ enum ObjectID
 {
 
 	player = 0,
+	otherPlayer,
 	enemy,
 	ball,
 	surface,

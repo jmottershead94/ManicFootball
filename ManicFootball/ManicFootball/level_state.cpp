@@ -101,13 +101,6 @@ void LevelState::Render()
 	// If the game window exists.
 	if (window_)
 	{
-		//// If the text actually exists, meaning everything has loaded correctly.
-		//if (text_)
-		//{
-		//	// Removes any text from the screen.
-		//	text_->~Text();
-		//}
-
 		// If there are objects in the level.
 		if (!level_.GetObjects().empty())
 		{

@@ -9,19 +9,31 @@ Player::~Player()
 {
 }
 
-void Player::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world)
+void Player::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world, bool red_team)
 {
 
-	// Initialising the shape and body of the player.
-	DynamicBodyRectangle::Init(position, dimensions, world, ObjectID::player, sf::Color::Blue);
+	// If the player is on the red team.
+	if (red_team)
+	{
+		// Initialise the shape of the player to be red.
+		DynamicBodyRectangle::Init(position, dimensions, world, ObjectID::player, sf::Color::Red);
+	}
+	// Otherwise, the player is on the blue team.
+	else
+	{
+		// Make the player blue.
+		DynamicBodyRectangle::Init(position, dimensions, world, ObjectID::player, sf::Color::Blue);
+	}
 
 	// Initialising local attributes.
+	is_red_team_ = red_team;			// Setting if the player should be on the red team or not.
 	in_air_ = false;					// The player is currently not in the air.
 	respawn_ = false;					// The player does not need to respawn at this moment in time.
 	movement_force_.x = 2.0f;			// The movement force that will be applied in the x axis.
 	movement_force_.y = 10.0f;			// The movement force that will be applied in the y axis.
 	respawn_location_.x = position.x;	// The x position for respawn.
 	respawn_location_.y = position.y;	// The y position for respawn.
+
 }
 
 void Player::Input(float dt)
