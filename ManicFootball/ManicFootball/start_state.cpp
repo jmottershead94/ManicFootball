@@ -106,6 +106,15 @@ void StartState::OnExit()
 		text_->~Text();
 	}
 
+	test_.~StaticBody();
+	world_->DestroyBody(test_.GetBody());
+
+	player_class_.~Player();
+	world_->DestroyBody(player_class_.GetBody());
+
+	ball_test_.~DynamicBodyCircle();
+	world_->DestroyBody(ball_test_.GetBody());
+
 }
 
 //////////////////////////////////////////////////////////

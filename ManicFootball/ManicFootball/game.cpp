@@ -30,6 +30,7 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 
 	// Creating the Box2D physics world.
 	world_ = new b2World(gravity);
+	world_->SetContinuousPhysics(true);
 
 	// Setting up the state machine here.
 	current_state_ = new InitState(*window_, font_, screen_resolution_, world_);
@@ -89,7 +90,7 @@ void Game::Update()
 	// Set up Box2D variables.
 	float time_step = 1.0f / (float)frame_rate_;
 	int32 velocity_iterations = 8;
-	int32 position_iterations = 3;
+	int32 position_iterations = 6;
 
 	// Setting up delta time.
 	dt_ = clock_.restart();
@@ -103,7 +104,7 @@ void Game::Update()
 			window_->close();
 		}
 	}
-
+	
 	// Keep updating the physics world.
 	// Updates the physics simulation based on iterations.
 	world_->Step(time_step, velocity_iterations, position_iterations);

@@ -19,7 +19,7 @@ class DynamicBodyRectangle : public GameObject
 		// Methods.
 		DynamicBodyRectangle();
 		~DynamicBodyRectangle();
-		void Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world, ObjectID object_id, const sf::Color colour);
+		void Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world, ObjectID object_id, const sf::Color colour, float bounciness);
 		void Update(float dt);
 
 };

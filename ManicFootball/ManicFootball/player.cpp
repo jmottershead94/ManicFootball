@@ -16,13 +16,13 @@ void Player::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world
 	if (red_team)
 	{
 		// Initialise the shape of the player to be red.
-		DynamicBodyRectangle::Init(position, dimensions, world, ObjectID::player, sf::Color::Red);
+		DynamicBodyRectangle::Init(position, dimensions, world, ObjectID::player, sf::Color::Red, 0.2f);
 	}
 	// Otherwise, the player is on the blue team.
 	else
 	{
 		// Make the player blue.
-		DynamicBodyRectangle::Init(position, dimensions, world, ObjectID::player, sf::Color::Blue);
+		DynamicBodyRectangle::Init(position, dimensions, world, ObjectID::player, sf::Color::Blue, 0.2f);
 	}
 
 	// Initialising local attributes.

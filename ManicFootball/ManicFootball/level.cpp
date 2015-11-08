@@ -26,12 +26,17 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 
 	// Creating the level.
 	CreateGround();
-	CreateWalls();
+	CreateWall(sf::Vector2f(0.0f, 0.0f), sf::Vector2f((screen_resolution_->x * 0.0675f), screen_resolution_->y));
+	CreateWall(sf::Vector2f(0.0f, (screen_resolution_->y - (screen_resolution_->y * 0.0675f))), sf::Vector2f(screen_resolution_->x, (screen_resolution_->y * 0.0675f)));
+	CreateWall(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(screen_resolution_->x, screen_resolution_->y * 0.0675f));
+	CreateWall(sf::Vector2f((screen_resolution_->x - (screen_resolution_->x * 0.0675f)), 0.0f), sf::Vector2f((screen_resolution_->x * 0.0675f), screen_resolution_->y));
 	CreateNets();
 	CreateScoreboard();
 	CreatePlayer();
 	CreateOtherPlayers();
-	CreateFootball();
+	CreateFootball(sf::Vector2f(screen_resolution_->x * 0.25f, screen_resolution_->y * 0.25f));
+	CreateFootball(sf::Vector2f(screen_resolution_->x * 0.5f, screen_resolution_->y * 0.25f));
+	CreateFootball(sf::Vector2f(screen_resolution_->x * 0.75f, screen_resolution_->y * 0.25f));
 
 }
 
@@ -42,29 +47,31 @@ void Level::CreateGround()
 	StaticBody* ground = new StaticBody();
 
 	// Initialising the static body for the ground.
-	ground->Init(sf::Vector2f(0.0f, 600.0f), sf::Vector2f(1280.0f, 100.0f), world_, ObjectID::surface, sf::Color::Green);
+	ground->Init(sf::Vector2f(0.0f, 600.0f), sf::Vector2f(screen_resolution_->x, (screen_resolution_->y * 0.125f)), world_, ObjectID::surface, sf::Color::Green);
 	
 	// Adding the game object to the level objects vector.
 	level_objects_.push_back(ground);
 
 }
 
-void Level::CreateWalls()
+void Level::CreateWall(sf::Vector2f& position, sf::Vector2f& dimension)
 {
 
 	// Allocating memory for the ground when we need it.
-	StaticBody* ground = new StaticBody();
+	StaticBody* wall = new StaticBody();
 
 	// Initialising the static body for the ground.
-	ground->Init(sf::Vector2f(0.0f, 600.0f), sf::Vector2f(1280.0f, 100.0f), world_, ObjectID::surface, sf::Color::Green);
+	wall->Init(sf::Vector2f(position.x, position.y), sf::Vector2f(dimension.x, dimension.y), world_, ObjectID::surface, sf::Color::Cyan);
 	
 	// Adding the game object to the level objects vector.
-	level_objects_.push_back(ground);
+	level_objects_.push_back(wall);
 
 }
 
 void Level::CreateNets()
 {
+
+
 
 }
 
@@ -122,24 +129,34 @@ void Level::CreateOtherPlayers()
 	DynamicBodyRectangle* other_player = new DynamicBodyRectangle();
 
 	// Initialising the dynamic body for the other player on the red team.
-	other_player->Init(sf::Vector2f(400.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_, ObjectID::otherPlayer, sf::Color::Red);
+	other_player->Init(sf::Vector2f(400.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_, ObjectID::otherPlayer, sf::Color::Red, 0.2f);
 
 	// Adding the game object to the level objects vector.
 	level_objects_.push_back(other_player);
 
 }
 
-void Level::CreateFootball()
+void Level::CreateFootball(sf::Vector2f& position)
 {
 
 	// Allocating memory for the football when we need it.
 	DynamicBodyCircle* football = new DynamicBodyCircle();
 
 	// Initialising the dynamic body for the football.
-	football->Init(sf::Vector2f(screen_resolution_->x * 0.5f, screen_resolution_->y * 0.25f), 25.0f, world_, ObjectID::ball, sf::Color::White);
+	football->Init(position, 30.0f, world_, ObjectID::ball, sf::Color::White);
+	//football->Init(sf::Vector2f(screen_resolution_->x * 0.5f, screen_resolution_->y * 0.25f), 25.0f, world_, ObjectID::ball, sf::Color::White);
 
 	// Adding the game object to the level objects vector.
 	level_objects_.push_back(football);
+
+	//// Allocating memory for the football when we need it.
+	//DynamicBodyRectangle* football = new DynamicBodyRectangle();
+
+	//// Initialising the dynamic body for the football.
+	//football->Init(sf::Vector2f(screen_resolution_->x * 0.5f, screen_resolution_->y * 0.25f), sf::Vector2f(25.0f, 25.0f), world_, ObjectID::ball, sf::Color::White, 0.5f);
+
+	//// Adding the game object to the level objects vector.
+	//level_objects_.push_back(football);
 
 }
 
@@ -167,13 +184,20 @@ void Level::HandleLevelObjects(float dt)
 		// Iterating through all of the level objects.
 		for (auto level_object = level_objects_.begin(); level_object != level_objects_.end(); level_object++)
 		{
-			// If the level object is a football.
+			//// If the level object is a football.
 			if ((**level_object).GetID() == ObjectID::ball)
 			{
 				// Casting this to a dynamic body circle in order to update the sprites position for level object.
 				DynamicBodyCircle* temp = static_cast<DynamicBodyCircle*>(*level_object);
 				temp->Update(dt);
 			}
+			//// If the level object is a football.
+			//if ((**level_object).GetID() == ObjectID::ball)
+			//{
+			//	// Casting this to a dynamic body circle in order to update the sprites position for level object.
+			//	DynamicBodyRectangle* temp = static_cast<DynamicBodyRectangle*>(*level_object);
+			//	temp->Update(dt);
+			//}
 			// Otherwise, if the object is a player.
 			else if ((**level_object).GetID() == ObjectID::player)
 			{

@@ -28,12 +28,12 @@ class Level
 		~Level();
 		void Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution);
 		void CreateGround();
-		void CreateWalls();
+		void CreateWall(sf::Vector2f& position, sf::Vector2f& dimension);
 		void CreateNets();
 		void CreateScoreboard();
 		void CreatePlayer();
 		void CreateOtherPlayers();
-		void CreateFootball();
+		void CreateFootball(sf::Vector2f& position);
 		void Reset();
 		void CollisionTest();
 		void CollisionResponses();

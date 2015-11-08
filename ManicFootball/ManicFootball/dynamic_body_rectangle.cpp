@@ -27,7 +27,7 @@ DynamicBodyRectangle::~DynamicBodyRectangle()
 // definition for the dynamic body, as well as place	//
 // the sprite in the correct location.					//
 //////////////////////////////////////////////////////////
-void DynamicBodyRectangle::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world, ObjectID object_id, const sf::Color colour)
+void DynamicBodyRectangle::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world, ObjectID object_id, const sf::Color colour, float bounciness)
 {
 
 	// Initialising the sprite for the body.
@@ -48,14 +48,14 @@ void DynamicBodyRectangle::Init(sf::Vector2f position, sf::Vector2f dimensions, 
 
 	// Creates the bounding box for the body.
 	b2PolygonShape dynamic_box;
-	dynamic_box.SetAsBox(FRAMEWORK_BOX2D_SIZE(dimension_.x) * BOX2D_FRAMEWORK_SIZE_OFFSET_X, FRAMEWORK_BOX2D_SIZE(dimension_.y) * BOX2D_FRAMEWORK_SIZE_OFFSET_Y);
+	dynamic_box.SetAsBox(FRAMEWORK_BOX2D_SIZE(dimension_.x) * BOX2D_FRAMEWORK_DYNAMIC_RECTANGLE_SIZE_X, FRAMEWORK_BOX2D_SIZE(dimension_.y) * BOX2D_FRAMEWORK_DYNAMIC_RECTANGLE_SIZE_Y);
 
 	// Adds a fixture definition.
 	b2FixtureDef fixture_def;
 	fixture_def.shape = &dynamic_box;
 	fixture_def.density = 1.0f;
 	fixture_def.friction = 0.2f;
-	fixture_def.restitution = 0.2f;
+	fixture_def.restitution = bounciness;
 	body_->CreateFixture(&fixture_def);
 
 	// Setting the connection between game objects and the Box2D body.

@@ -48,14 +48,14 @@ void DynamicBodyCircle::Init(sf::Vector2f position, float radius, b2World* world
 	
 	// Creates the bounding circle for the body.
 	b2CircleShape dynamic_circle;
-	dynamic_circle.m_radius = (FRAMEWORK_BOX2D_SIZE(circle_.getRadius()) * BOX2D_FRAMEWORK_RADIUS_OFFSET);
+	dynamic_circle.m_radius = (FRAMEWORK_BOX2D_SIZE(circle_.getRadius()) * BOX2D_FRAMEWORK_DYNAMIC_CIRCLE_SIZE);
 
 	// Adds a fixture definition.
 	b2FixtureDef fixture_def;
 	fixture_def.shape = &dynamic_circle;	// Setting the shape of the fixture.
 	fixture_def.density = 1.0f;				// Setting the density of the object.
-	fixture_def.friction = 0.1f;			// How much friction the object has, how much drag it will have on a surface.
-	fixture_def.restitution = 0.9f;			// How bouncy the object will be.
+	fixture_def.friction = 0.25f;			// How much friction the object has, how much drag it will have on a surface.
+	fixture_def.restitution = 0.75f;		// How bouncy the object will be.
 	body_->CreateFixture(&fixture_def);		// Applying the fixture to the body.
 
 	// Setting the connection between game objects and the Box2D body.
