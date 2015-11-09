@@ -1,6 +1,5 @@
 #include "level.h"
 
-
 Level::Level() : level_objects_(NULL),
 	scores_(NULL)
 {

@@ -33,7 +33,13 @@ class GameObject
 		// This function will set the new position of the game object.
 		inline void SetPosition(sf::Vector2f new_position) { position_ = new_position; }
 
+		// This function will set the object's velocity.
+		void SetVelocity(float x, float y);
+
 		// Getters.
+		// This function will tell us if the object is on a surface or not.
+		inline bool IsOnSurface() { return on_surface_; }
+
 		// This function will tell us if the game object needs removing from the level.
 		inline bool NeedsRemoving() { return remove_; }
 
@@ -55,11 +61,15 @@ class GameObject
 		// This function will return the current dimension of the game object.
 		inline sf::Vector2f GetDimension() { return dimension_; }
 
+		// This will return the current velocity of the object.
+		inline sf::Vector2f GetVelocity() { return velocity_; }
+
 		// This function will return the id number of the object.
 		inline int GetID()					{ return id_; }
 
 	protected:
 		// Attributes.
+		bool on_surface_;
 		bool remove_;
 		bool is_rectangle_;
 		b2Body* body_;
@@ -67,6 +77,7 @@ class GameObject
 		sf::CircleShape circle_;
 		sf::Vector2f position_;
 		sf::Vector2f dimension_;
+		sf::Vector2f velocity_;
 		ObjectID id_;
 
 };

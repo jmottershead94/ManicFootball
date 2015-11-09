@@ -25,6 +25,9 @@
     <Filter Include="Framework\Bodies">
       <UniqueIdentifier>{6d3a8597-7b6b-41f7-b9bd-3d4fb275febe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Physics">
+      <UniqueIdentifier>{1b50bcf4-69d7-4c81-a467-c04b599ada73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="vector2.cpp">
@@ -68,6 +71,9 @@
     </ClCompile>
     <ClCompile Include="level_state.cpp">
       <Filter>Framework\States</Filter>
+    </ClCompile>
+    <ClCompile Include="physics_engine.cpp">
+      <Filter>Framework\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="level_state.h">
       <Filter>Framework\States</Filter>
+    </ClInclude>
+    <ClInclude Include="physics_engine.h">
+      <Filter>Framework\Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

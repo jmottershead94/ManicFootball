@@ -90,6 +90,7 @@
     <ClCompile Include="level.cpp" />
     <ClCompile Include="level_state.cpp" />
     <ClCompile Include="menu_state.cpp" />
+    <ClCompile Include="physics_engine.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="start_state.cpp" />
     <ClCompile Include="state.cpp" />
@@ -107,6 +108,7 @@
     <ClInclude Include="object_id.h" />
     <ClInclude Include="init_state.h" />
     <ClInclude Include="menu_state.h" />
+    <ClInclude Include="physics_engine.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="start_state.h" />
     <ClInclude Include="state.h" />
