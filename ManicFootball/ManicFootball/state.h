@@ -13,6 +13,7 @@
 #include <Box2D\Box2D.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
+#include "physics_engine.h"
 
 // The base state class, will be used by all other states.
 class State
@@ -50,6 +51,7 @@ class State
 		sf::Text* text_;
 		sf::Text* text_controls_;
 		sf::Vector2f* screen_resolution_;
+		PhysicsEngine* physics_;
 
 };
 

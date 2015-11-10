@@ -68,6 +68,7 @@ void LevelState::OnEnter()
 	// Starting the level state specific stuff.
 	// Load the level.
 	level_.Init(world_, *font_, *screen_resolution_);
+	//level_test_.Init(*font_, *screen_resolution_, *physics_);
 
 }
 
@@ -85,6 +86,7 @@ void LevelState::OnExit()
 	// Stopping the level state specific stuff.
 	// Clear the level.
 	level_.Clear();
+	//level_test_.Clear();
 
 }
 
@@ -132,6 +134,38 @@ void LevelState::Render()
 				window_->draw((**score));
 			}
 		}
+
+	//	// If there are objects in the level.
+	//	if (!level_test_.GetObjects().empty())
+	//	{
+	//		// Iterating through all of the level objects.
+	//		for (auto level_object = level_test_.GetObjects().begin(); level_object != level_test_.GetObjects().end(); level_object++)
+	//		{
+	//			// If the level object has a rectangle shape.
+	//			if ((**level_object).IsRectangle())
+	//			{
+	//				// Therefore, draw the rectangle shape.
+	//				window_->draw((**level_object).GetRectangleShape());
+	//			}
+	//			// Otherwise, the level object will have a circle shape.
+	//			else
+	//			{
+	//				// Draw the circle shape for the football.
+	//				window_->draw((**level_object).GetCircleShape());
+	//			}
+	//		}
+	//	}
+
+	//	// If there is a set of scores in the level.
+	//	if (!level_test_.GetScore().empty())
+	//	{
+	//		// Iterating through all of the level scores.
+	//		for (auto score = level_test_.GetScore().begin(); score != level_test_.GetScore().end(); score++)
+	//		{
+	//			// Draw the score on the screen.
+	//			window_->draw((**score));
+	//		}
+	//	}
 	}
 
 }
@@ -147,5 +181,6 @@ void LevelState::Update(float dt)
 
 	// Update the level.
 	level_.Update(dt);
+	//level_test_.Update(dt);
 
 }

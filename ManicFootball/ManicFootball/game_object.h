@@ -13,6 +13,7 @@
 #include <SFML/Graphics.hpp>
 #include "box2d_conversions.h"
 #include "object_id.h"
+#include "category.h"
 
 class GameObject
 {
@@ -22,8 +23,12 @@ class GameObject
 		GameObject();
 		~GameObject();
 		void Init(sf::Vector2f position, sf::Vector2f dimensions, ObjectID object_id, bool is_rectangle);
+		void InitPE(sf::Vector2f position, sf::Vector2f dimensions, ObjectID object_id, bool is_rectangle, sf::Color colour);
 
 		// Setters.
+		// This will allow us to set an object on a surface..
+		inline void OnSurface(bool on_surface) { on_surface_ = on_surface; }
+
 		// This will set the remove flag.
 		inline void SetRemove(bool should_remove) { remove_ = should_remove; }
 
@@ -32,6 +37,9 @@ class GameObject
 
 		// This function will set the new position of the game object.
 		inline void SetPosition(sf::Vector2f new_position) { position_ = new_position; }
+
+		// This will set the position of the game object.
+		void SetPositionPE(float x, float y);
 
 		// This function will set the object's velocity.
 		void SetVelocity(float x, float y);

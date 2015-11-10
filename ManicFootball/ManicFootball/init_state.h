@@ -22,7 +22,7 @@ class InitState : public State
 		// Methods.
 		// Pass in any important pointers here in the constructor.
 		//InitState(const abfw::Platform& platform, abfw::SpriteRenderer* sprite_rend, abfw::Font& font, b2World* world, Player& player, ControllerInput& input, Level& level);
-		InitState(sf::RenderWindow& window, sf::Font& game_font, sf::Vector2f& game_screen_resolution, b2World* world);
+		InitState(sf::RenderWindow& window, sf::Font& game_font, sf::Vector2f& game_screen_resolution, b2World* world, PhysicsEngine& physics);
 		~InitState();
 		State* HandleInput();
 		void OnEnter();
