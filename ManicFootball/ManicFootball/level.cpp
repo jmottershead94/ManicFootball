@@ -34,9 +34,9 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 	CreateScoreboard();
 	CreatePlayer();
 	CreateOtherPlayers();
-	CreateFootball(sf::Vector2f(screen_resolution_->x * 0.25f, screen_resolution_->y * 0.25f));
+	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.25f, screen_resolution_->y * 0.25f));
 	CreateFootball(sf::Vector2f(screen_resolution_->x * 0.5f, screen_resolution_->y * 0.25f));
-	CreateFootball(sf::Vector2f(screen_resolution_->x * 0.75f, screen_resolution_->y * 0.25f));
+	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.75f, screen_resolution_->y * 0.25f));
 
 }
 
@@ -175,11 +175,20 @@ void Level::CreateOtherPlayers()
 void Level::CreateFootball(sf::Vector2f& position)
 {
 
+	//// Allocating memory for the football when we need it.
+	//DynamicBodyCircle* football = new DynamicBodyCircle();
+
+	//// Initialising the dynamic body for the football.
+	//football->Init(position, 30.0f, world_, ObjectID::ball, sf::Color::White);
+
+	//// Adding the game object to the level objects vector.
+	//level_objects_.push_back(football);
+
 	// Allocating memory for the football when we need it.
-	DynamicBodyCircle* football = new DynamicBodyCircle();
+	DynamicBodyRectangle* football = new DynamicBodyRectangle();
 
 	// Initialising the dynamic body for the football.
-	football->Init(position, 30.0f, world_, ObjectID::ball, sf::Color::White);
+	football->Init(position, sf::Vector2f(50.0f, 50.0f), world_, ObjectID::ball, sf::Color::White, 0.9f);
 
 	// Adding the game object to the level objects vector.
 	level_objects_.push_back(football);
@@ -226,6 +235,24 @@ void Level::RemoveObjects()
 
 }
 
+void Level::CheckGoal()
+{
+	// If there are objects in the level.
+	if (!level_objects_.empty())
+	{
+		// Iterating through all of the level objects.
+		for (auto level_object = level_objects_.begin(); level_object != level_objects_.end(); level_object++)
+		{
+			if ((**level_object).GetID() == ObjectID::ball)
+			{
+
+				if ((**level_object).GetPosition().x < )
+			}
+		}
+	}
+
+}
+
 void Level::CollisionTest()
 {
 
@@ -234,7 +261,6 @@ void Level::CollisionTest()
 
 	// Get the contact count.
 	int contact_count = world_->GetContactCount();
-
 	
 	// Cycle through the contacts.
 	for (int contact_num = 0; contact_num < contact_count; contact_num++)
@@ -297,11 +323,18 @@ void Level::HandleLevelObjects(float dt)
 		// Iterating through all of the level objects.
 		for (auto level_object = level_objects_.begin(); level_object != level_objects_.end(); level_object++)
 		{
+			//// If the level object is a football.
+			//if ((**level_object).GetID() == ObjectID::ball)
+			//{
+			//	// Casting this to a dynamic body circle in order to update the sprites position for level object.
+			//	DynamicBodyCircle* temp = static_cast<DynamicBodyCircle*>(*level_object);
+			//	temp->Update(dt);
+			//}
 			// If the level object is a football.
 			if ((**level_object).GetID() == ObjectID::ball)
 			{
 				// Casting this to a dynamic body circle in order to update the sprites position for level object.
-				DynamicBodyCircle* temp = static_cast<DynamicBodyCircle*>(*level_object);
+				DynamicBodyRectangle* temp = static_cast<DynamicBodyRectangle*>(*level_object);
 				temp->Update(dt);
 			}
 			// Otherwise, if the object is a player.

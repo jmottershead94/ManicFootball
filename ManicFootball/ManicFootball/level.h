@@ -38,6 +38,7 @@ class Level
 		void Reset();
 		void UpdateScoreboard();
 		void RemoveObjects();
+		void CheckGoal();
 		void CollisionTest();
 		void HandleLevelObjects(float dt);
 		void Clear();
