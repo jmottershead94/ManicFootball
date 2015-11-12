@@ -11,12 +11,12 @@
 enum Category
 {
 
-	player =		0x0001,
-	otherPlayer =	0x0002,
-	enemy =			0x0003,
-	ball =			0x0004,
-	surface =		0x0005,
-	net =			0x0006,
+	playerCat =			0x0001,
+	otherPlayerCat =	0x0002,
+	enemyCat =			0x0003,
+	ballCat =			0x0004,
+	surfaceCat =		0x0005,
+	netCat =			0x0006,
 
 };
 

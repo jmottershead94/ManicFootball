@@ -101,9 +101,6 @@
     <ClInclude Include="start_state.h">
       <Filter>Framework\States</Filter>
     </ClInclude>
-    <ClInclude Include="box2d_conversions.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
     <ClInclude Include="game_object.h">
       <Filter>Framework</Filter>
     </ClInclude>
@@ -145,6 +142,9 @@
     </ClInclude>
     <ClInclude Include="category.h">
       <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="box2d_conversions.h">
+      <Filter>Framework\Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

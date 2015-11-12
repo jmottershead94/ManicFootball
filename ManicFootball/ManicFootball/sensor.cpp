@@ -51,11 +51,10 @@ void Sensor::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world
 	box_.SetAsBox(FRAMEWORK_BOX2D_SIZE(dimension_.x) * BOX2D_FRAMEWORK_STATIC_RECTANGLE_SIZE_X, FRAMEWORK_BOX2D_SIZE(dimension_.y) * BOX2D_FRAMEWORK_STATIC_RECTANGLE_SIZE_Y);
 	fixture_def.shape = &box_;
 	fixture_def.isSensor = true;
-	fixture_def.filter.categoryBits = Category::net;
-	fixture_def.filter.maskBits = Category::ball;		// The sensor should only collide with the ball.
+	fixture_def.filter.categoryBits = Category::netCat;
+	fixture_def.filter.maskBits = Category::ballCat;		// The sensor should only collide with the ball.
 	body_->CreateFixture(&fixture_def);
 	
-
 	// Setting the connection between game objects and the Box2D body.
 	body_->SetUserData(this);
 

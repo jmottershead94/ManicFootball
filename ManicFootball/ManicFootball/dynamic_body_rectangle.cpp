@@ -41,7 +41,7 @@ void DynamicBodyRectangle::Init(sf::Vector2f position, sf::Vector2f dimensions, 
 	// Setting up the body definition.
 	b2BodyDef body_def;
 	body_def.type = b2_dynamicBody;
-	body_def.position.Set(FRAMEWORK_BOX2D_POS_X(position_.x), FRAMEWORK_BOX2D_POS_Y(position_.y));
+	body_def.position.Set((position_.x), (position_.y));
 	body_ = world->CreateBody(&body_def);
 	body_->SetFixedRotation(true);
 	body_->SetTransform(b2Vec2(FRAMEWORK_BOX2D_POS_X(position_.x), FRAMEWORK_BOX2D_POS_Y(position_.y)), 0.0f);

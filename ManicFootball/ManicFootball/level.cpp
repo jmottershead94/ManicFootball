@@ -29,13 +29,13 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 	CreateWall(sf::Vector2f(0.0f, (screen_resolution_->y - (screen_resolution_->y * 0.0675f))), sf::Vector2f(screen_resolution_->x, (screen_resolution_->y * 0.0675f)));
 	CreateWall(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(screen_resolution_->x, screen_resolution_->y * 0.0675f));
 	CreateWall(sf::Vector2f((screen_resolution_->x - (screen_resolution_->x * 0.0675f)), 0.0f), sf::Vector2f((screen_resolution_->x * 0.0675f), screen_resolution_->y));
-	CreateNets(true);
-	CreateNets(false);
+	//CreateNets(true);
+	//CreateNets(false);
 	CreateScoreboard();
 	CreatePlayer();
-	CreateOtherPlayers();
+	//CreateOtherPlayers();
 	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.25f, screen_resolution_->y * 0.25f));
-	CreateFootball(sf::Vector2f(screen_resolution_->x * 0.5f, screen_resolution_->y * 0.25f));
+	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.5f, screen_resolution_->y * 0.25f));
 	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.75f, screen_resolution_->y * 0.25f));
 
 }
@@ -246,7 +246,7 @@ void Level::CheckGoal()
 			if ((**level_object).GetID() == ObjectID::ball)
 			{
 
-				if ((**level_object).GetPosition().x < )
+				//if ((**level_object).GetPosition().x < )
 			}
 		}
 	}
