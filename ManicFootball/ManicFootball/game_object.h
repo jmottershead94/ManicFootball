@@ -38,6 +38,9 @@ class GameObject
 		// This function will set the new position of the game object.
 		inline void SetPosition(sf::Vector2f new_position) { position_ = new_position; }
 
+		// This function will set the new dimension of the game object.
+		inline void SetDimension(sf::Vector2f new_dimension) { position_ = new_dimension; }
+
 		// This will set the position of the game object.
 		void SetPositionPE(float x, float y);
 

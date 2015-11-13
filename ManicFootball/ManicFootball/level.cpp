@@ -29,8 +29,8 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 	CreateWall(sf::Vector2f(0.0f, (screen_resolution_->y - (screen_resolution_->y * 0.0675f))), sf::Vector2f(screen_resolution_->x, (screen_resolution_->y * 0.0675f)));
 	CreateWall(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(screen_resolution_->x, screen_resolution_->y * 0.0675f));
 	CreateWall(sf::Vector2f((screen_resolution_->x - (screen_resolution_->x * 0.0675f)), 0.0f), sf::Vector2f((screen_resolution_->x * 0.0675f), screen_resolution_->y));
-	//CreateNets(true);
-	//CreateNets(false);
+	CreateNets(true);
+	CreateNets(false);
 	CreateScoreboard();
 	CreatePlayer();
 	//CreateOtherPlayers();
@@ -47,7 +47,7 @@ void Level::CreateGround()
 	StaticBody* ground = new StaticBody();
 
 	// Initialising the static body for the ground.
-	ground->Init(sf::Vector2f(0.0f, 600.0f), sf::Vector2f(screen_resolution_->x, (screen_resolution_->y * 0.125f)), world_, ObjectID::surface, sf::Color::Green);
+	ground->Init(sf::Vector2f(0.0f, (screen_resolution_->y - (screen_resolution_->y * 0.0675f)) - (screen_resolution_->y * 0.0625f)), sf::Vector2f(screen_resolution_->x, (screen_resolution_->y * 0.0625f)), world_, ObjectID::surface, sf::Color::Green);
 	
 	// Adding the game object to the level objects vector.
 	level_objects_.push_back(ground);
@@ -80,10 +80,12 @@ void Level::CreateNets(bool left_of_the_field)
 	// If the nets should be to the left of the field.
 	if (left_of_the_field)
 	{
-		// Initialising the static body for the ground.
-		crossbar->Init(sf::Vector2f((screen_resolution_->x * 0.0675f), (screen_resolution_->y * 0.5625f)), sf::Vector2f(screen_resolution_->x * 0.125f, screen_resolution_->y * 0.0625f), world_, ObjectID::surface, sf::Color::Red);
+		// Initialising the static body for the crossbar.
+		crossbar->Init(sf::Vector2f((screen_resolution_->x * 0.0675f), (screen_resolution_->y * 0.6f)), sf::Vector2f(screen_resolution_->x * 0.125f, screen_resolution_->y * 0.0625f), world_, ObjectID::surface, sf::Color::Red);
+		//crossbar->SetPosition(sf::Vector2f((screen_resolution_->x * 0.0675f), (screen_resolution_->y * 0.6f)));
+		//crossbar->SetDimension(sf::Vector2f(screen_resolution_->x * 0.125f, screen_resolution_->y * 0.0625f));
 
-		// Initialising the static body for the ground.
+		// Initialising the static body for the back of the net.
 		net->Init(sf::Vector2f(crossbar->GetPosition().x, (crossbar->GetPosition().y + crossbar->GetDimension().y)), sf::Vector2f(screen_resolution_->x * 0.03125f, screen_resolution_->y * 0.21f), world_, ObjectID::redNet, sf::Color::Red);
 
 		// Adding the game object to the level objects vector.
@@ -95,10 +97,10 @@ void Level::CreateNets(bool left_of_the_field)
 	// Otherwise, the nets should be on the right side of the field.
 	else
 	{
-		// Initialising the static body for the ground.
-		crossbar->Init(sf::Vector2f((screen_resolution_->x - (screen_resolution_->x * 0.0675f)), (screen_resolution_->y * 0.5625f)), sf::Vector2f(-1.0f * (screen_resolution_->x * 0.125f), (screen_resolution_->y * 0.0625f)), world_, ObjectID::surface, sf::Color::Blue);
+		// Initialising the static body for the crossbar.
+		crossbar->Init(sf::Vector2f((screen_resolution_->x - (screen_resolution_->x * 0.0675f) - (screen_resolution_->x * 0.125f)), (screen_resolution_->y * 0.6f)), sf::Vector2f((screen_resolution_->x * 0.125f), (screen_resolution_->y * 0.0625f)), world_, ObjectID::surface, sf::Color::Blue);
 
-		// Initialising the static body for the ground.
+		// Initialising the static body for the back of the net.
 		net->Init(sf::Vector2f((screen_resolution_->x - (screen_resolution_->x * 0.0675f) - (screen_resolution_->x * 0.03125f)), (crossbar->GetPosition().y + crossbar->GetDimension().y)), sf::Vector2f((screen_resolution_->x * 0.03125f), screen_resolution_->y * 0.21f), world_, ObjectID::blueNet, sf::Color::Blue);
 
 		// Adding the game object to the level objects vector.
