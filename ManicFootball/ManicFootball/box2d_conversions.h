@@ -12,7 +12,6 @@
 #define BOX2D_FRAMEWORK_OFFSET_X					0.0f
 #define BOX2D_FRAMEWORK_OFFSET_Y					0.0f
 #define BOX2D_FRAMEWORK_SIZE_OFFSET					0.5f
-#define BOX2D_FRAMEWORK_HALF_SIZE_OFFSET			0.25f
 #define BOX2D_FRAMEWORK_DYNAMIC_CIRCLE_SIZE			0.3f
 
 // To convert the Box2D coordinates into framework coordinates.

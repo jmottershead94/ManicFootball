@@ -33,7 +33,7 @@ class Level
 		void CreateNets(bool left_of_the_field);
 		void CreateScoreboard();
 		void CreatePlayer();
-		void CreateOtherPlayers();
+		void CreateOtherPlayer();
 		void CreateFootball(sf::Vector2f& position);
 		void Reset();
 		void UpdateScoreboard();
