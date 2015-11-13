@@ -41,7 +41,7 @@ void DynamicBodyCircle::Init(sf::Vector2f position, float radius, b2World* world
 	// Setting up the body definition.
 	b2BodyDef body_def;
 	body_def.type = b2_dynamicBody;
-	body_def.position.Set(FRAMEWORK_BOX2D_POS_X(position_.x), FRAMEWORK_BOX2D_POS_Y(position_.y));
+	//body_def.position.Set(FRAMEWORK_BOX2D_POS_X(position_.x, radius), FRAMEWORK_BOX2D_POS_Y(position_.y));
 	body_ = world->CreateBody(&body_def);
 	body_->SetFixedRotation(false);
 	body_->SetTransform(b2Vec2(FRAMEWORK_BOX2D_POS_X(position_.x), FRAMEWORK_BOX2D_POS_Y(position_.y)), 0.0f);

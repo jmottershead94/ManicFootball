@@ -47,7 +47,7 @@ void DynamicBodyRectangle::Init(sf::Vector2f position, sf::Vector2f dimensions, 
 
 	// Creates the bounding box for the body.
 	b2PolygonShape dynamic_box;
-	dynamic_box.SetAsBox(FRAMEWORK_BOX2D_SIZE(dimension_.x) * 0.7f, FRAMEWORK_BOX2D_SIZE(dimension_.y) * BOX2D_FRAMEWORK_SIZE_OFFSET);
+	dynamic_box.SetAsBox(FRAMEWORK_BOX2D_SIZE(dimension_.x) * 0.75f, FRAMEWORK_BOX2D_SIZE(dimension_.y) * BOX2D_FRAMEWORK_SIZE_OFFSET);
 
 	// Adds a fixture definition.
 	b2FixtureDef fixture_def;

@@ -82,7 +82,7 @@ void StartState::OnEnter()
 	}
 
 	// Just used for testing purposes.
-	test_.Init(sf::Vector2f(0.0f, 600.0f), sf::Vector2f(1280.0f, 100.0f), world_, ObjectID::surface, sf::Color::Green);
+	test_.Init(sf::Vector2f(0.0f, 600.0f), sf::Vector2f(1280.0f, 100.0f), world_, ObjectID::surface, sf::Color::Green, true);
 	ball_test_.Init(sf::Vector2f(800.0f, 100.0f), 25.0f, world_, ObjectID::ball, sf::Color::White);
 	player_class_.Init(sf::Vector2f(100.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_, true);
 

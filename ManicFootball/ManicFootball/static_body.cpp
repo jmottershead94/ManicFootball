@@ -27,7 +27,7 @@ StaticBody::~StaticBody()
 // definition for the static body, as well as place	the	//
 // sprite in the correct location.						//
 //////////////////////////////////////////////////////////
-void StaticBody::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world, ObjectID object_id, const sf::Color colour)
+void StaticBody::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world, ObjectID object_id, const sf::Color colour , bool big)
 {
 
 	// Initialising the id and position for the game object.
@@ -42,12 +42,30 @@ void StaticBody::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* w
 	b2BodyDef body_def;
 	body_def.type = b2_staticBody;
 	body_ = world->CreateBody(&body_def);
+
+	// Translate the body so that it is in the correct place for a bigger body with the correct offset.
 	body_->SetTransform(b2Vec2(FRAMEWORK_BOX2D_POS_X(position_.x) + (FRAMEWORK_BOX2D_SIZE(dimension_.x) * 0.4125f), FRAMEWORK_BOX2D_POS_Y(position_.y) + (FRAMEWORK_BOX2D_SIZE(dimension_.y) * 0.2f)), 0.0f);
+	
+	//// If the static body is big.
+	//if (big)
+	//{
+	//	// Translate the body so that it is in the correct place for a bigger body with the correct offset.
+	//	body_->SetTransform(b2Vec2(FRAMEWORK_BOX2D_POS_X(position_.x) + (FRAMEWORK_BOX2D_SIZE(dimension_.x) * BOX2D_FRAMEWORK_SIZE_OFFSET), FRAMEWORK_BOX2D_POS_Y(position_.y) + (FRAMEWORK_BOX2D_SIZE(dimension_.y) * 0.2f)), 0.0f);
+	//}
+	//// Otherwise, if the static body is small.
+	//else
+	//{
+	//	// Translate the body so that it is in the correct place for a smaller body with the correct offset.
+	//	body_->SetTransform(b2Vec2(FRAMEWORK_BOX2D_POS_X(position_.x) + (FRAMEWORK_BOX2D_SIZE(dimension_.x) * BOX2D_FRAMEWORK_HALF_SIZE_OFFSET), FRAMEWORK_BOX2D_POS_Y(position_.y) + (FRAMEWORK_BOX2D_SIZE(dimension_.y) * 0.2f)), 0.0f);
+	//}
 
 	// Creates the bounding box for the body.
 	b2PolygonShape box_;
 	box_.SetAsBox(FRAMEWORK_BOX2D_SIZE(dimension_.x) * BOX2D_FRAMEWORK_SIZE_OFFSET, FRAMEWORK_BOX2D_SIZE(dimension_.y) * BOX2D_FRAMEWORK_SIZE_OFFSET);
 	body_->CreateFixture(&box_, 0.0f);
+
+	// Resets the position of the shape.
+	//SetPosition(sf::Vector2f(BOX2D_FRAMEWORK_POS_X(body_->GetPosition().x), BOX2D_FRAMEWORK_POS_Y(body_->GetPosition().y)));
 
 	// Setting the connection between game objects and the Box2D body.
 	body_->SetUserData(this);
