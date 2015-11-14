@@ -21,7 +21,7 @@ class Level
 
 	public:
 		// Attributes.
-		bool reset_;												// A flag to determine whether or not the level should be reset.
+		bool finished_;												// Whether the match has finished or not.
 		int red_team_score_, blue_team_score_;						// The score values of the two different teams.
 		int previous_red_team_score_, previous_blue_team_score_;	// The previous score values used for comparisons.
 
@@ -37,9 +37,8 @@ class Level
 		void CreateOtherPlayer();
 		void CreateFootball(sf::Vector2f& position);
 		void Reset();
-		void UpdateScoreboard();
-		void RemoveObjects();
-		void CheckGoal();
+		void UpdateTheScoreboard();
+		void UpdateTheScore(int score, int previous_score, std::ostringstream& conversion, bool red_team);
 		void CollisionTest();
 		void HandleLevelObjects(float dt);
 		void Clear();
@@ -58,6 +57,15 @@ class Level
 
 		// This function will return the vector of scores.
 		inline std::vector<sf::Text*>& GetScore() { return scores_; }
+
+		// This function will return if the level has finished or not.
+		inline bool HasFinished() { return finished_; }
+
+		// This will return the current red team score.
+		inline int GetRedTeamScore() { return red_team_score_; }
+
+		// This will return the current blue team score.
+		inline int GetBlueTeamScore() { return blue_team_score_; }
 
 	private:
 		// Attributes.

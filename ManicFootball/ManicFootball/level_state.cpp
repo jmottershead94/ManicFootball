@@ -49,6 +49,29 @@ State* LevelState::HandleInput()
 		return new MenuState(*this);
 	}
 
+	// If the current match has finished.
+	if (level_.HasFinished())
+	{
+		// If the red team won.
+		if (level_.GetRedTeamScore() == 3)
+		{
+			// Go to the winning screen with red team as the winner.
+			return new EndMatchState(*this, true);
+		}
+		// Otherwise, blue team won.
+		else
+		{
+			// Go to the winning screen with blue team as the winner.
+			return new EndMatchState(*this, false);
+		}
+	}
+
+	// USED FOR DEBUGGING.
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+	{
+		level_.Reset();
+	}
+
 	// Returns nothing because there has been no input from the player yet.
 	return nullptr;
 

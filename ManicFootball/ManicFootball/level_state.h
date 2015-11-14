@@ -12,6 +12,7 @@
 // All of these includes are states that this state will communicate with.
 #include "state.h"
 #include "menu_state.h"
+#include "end_match_state.h"
 #include "level.h"
 #include "level_test.h"
 

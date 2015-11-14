@@ -33,10 +33,9 @@ class StartState : public State
 
 	private:
 		// Attributes.
-		StaticBody test_;
-		DynamicBodyRectangle player_test_;
-		DynamicBodyCircle ball_test_;
-		Player player_class_;
+		StaticBody ground_connection_screen_;
+		DynamicBodyRectangle ball_connection_screen_;
+		Player player_connection_screen_;
 
 };
 

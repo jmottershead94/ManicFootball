@@ -84,6 +84,9 @@
     <ClCompile Include="sensor.cpp">
       <Filter>Framework\Physics\Bodies</Filter>
     </ClCompile>
+    <ClCompile Include="end_match_state.cpp">
+      <Filter>Framework\States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vector2.h">
@@ -145,6 +148,9 @@
     </ClInclude>
     <ClInclude Include="box2d_conversions.h">
       <Filter>Framework\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="end_match_state.h">
+      <Filter>Framework\States</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -83,6 +83,7 @@
   <ItemGroup>
     <ClCompile Include="dynamic_body_circle.cpp" />
     <ClCompile Include="dynamic_body_rectangle.cpp" />
+    <ClCompile Include="end_match_state.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="game_object.cpp" />
     <ClCompile Include="init_state.cpp" />
@@ -103,6 +104,7 @@
   <ItemGroup>
     <ClInclude Include="dynamic_body_circle.h" />
     <ClInclude Include="dynamic_body_rectangle.h" />
+    <ClInclude Include="end_match_state.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="box2d_conversions.h" />
     <ClInclude Include="game_object.h" />

@@ -13,9 +13,9 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 {
 
 	// Initialising local attributes.
-	reset_ = false;									// The level does not need resetting right now.
-	red_team_score_ = 0;							// The current score of the red team.
-	blue_team_score_ = 0;							// The current score of the blue team.
+	finished_ = false;								// The match has not finished yet.
+	red_team_score_ = 2;							// The current score of the red team.
+	blue_team_score_ = 2;							// The current score of the blue team.
 	previous_red_team_score_ = red_team_score_;		// The current previous score of the red team.
 	previous_blue_team_score_ = blue_team_score_;	// The current previous score of the blue team.
 	world_ = world;									// Access to the box2D world.
@@ -34,7 +34,7 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 	CreateNets(false);
 	CreateScoreboard();
 	CreatePlayer();
-	//CreateOtherPlayer();
+	CreateOtherPlayer();
 	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.25f, screen_resolution_->y * 0.25f));
 	CreateFootball(sf::Vector2f(screen_resolution_->x * 0.5f, screen_resolution_->y * 0.25f));
 	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.75f, screen_resolution_->y * 0.25f));
@@ -62,7 +62,7 @@ void Level::CreateWall(sf::Vector2f& position, sf::Vector2f& dimension)
 	StaticBody* wall = new StaticBody();
 
 	// Initialising the static body for the ground.
-	wall->Init(sf::Vector2f(position.x, position.y), sf::Vector2f(dimension.x, dimension.y), world_, ObjectID::surface, sf::Color::Cyan, true);
+	wall->Init(sf::Vector2f(position.x, position.y), sf::Vector2f(dimension.x, dimension.y), world_, ObjectID::surface, sf::Color::Black, true);
 	
 	// Adding the game object to the level objects vector.
 	level_objects_.push_back(wall);
@@ -86,12 +86,6 @@ void Level::CreateNets(bool left_of_the_field)
 		
 		// Initialising the static body for the back of the net.
 		net->Init(sf::Vector2f(crossbar->GetPosition().x, (crossbar->GetPosition().y + crossbar->GetDimension().y)), sf::Vector2f(screen_resolution_->x * 0.03125f, screen_resolution_->y * 0.21f), world_, ObjectID::redNet, sf::Color::Red, false);
-
-		// Adding the game object to the level objects vector.
-		level_objects_.push_back(crossbar);
-		
-		// Adding the game object to the level objects vector.
-		level_objects_.push_back(net);
 	}
 	// Otherwise, the nets should be on the right side of the field.
 	else
@@ -101,15 +95,14 @@ void Level::CreateNets(bool left_of_the_field)
 
 		// Initialising the static body for the back of the net.
 		net->Init(sf::Vector2f((crossbar->GetPosition().x + crossbar->GetDimension().x - (screen_resolution_->x * 0.03125f)), (crossbar->GetPosition().y + crossbar->GetDimension().y)), sf::Vector2f((screen_resolution_->x * 0.03125f), screen_resolution_->y * 0.21f), world_, ObjectID::blueNet, sf::Color::Blue, false);
-
-		// Adding the game object to the level objects vector.
-		level_objects_.push_back(crossbar);
-
-		// Adding the game object to the level objects vector.
-		level_objects_.push_back(net);
 	}
 
+	// Adding the game object to the level objects vector.
+	level_objects_.push_back(crossbar);
 
+	// Adding the game object to the level objects vector.
+	level_objects_.push_back(net);
+	
 }
 
 void Level::CreateScoreboard()
@@ -199,94 +192,93 @@ void Level::CreateFootball(sf::Vector2f& position)
 void Level::Reset()
 {
 
+	// If there are objects in the level.
+	if (!level_objects_.empty())
+	{
+		// Iterating through all of the level objects.
+		for (auto level_object = level_objects_.begin(); level_object != level_objects_.end(); level_object++)
+		{
+			//// If the level object is a football.
+			//if ((**level_object).GetID() == ObjectID::ball)
+			//{
+			//	// Casting this to a dynamic body circle in order to update the sprites position for level object.
+			//	DynamicBodyCircle* temp = static_cast<DynamicBodyCircle*>(*level_object);
+			//	temp->Update(dt);
+			//}
+			// If the level object is a football.
+			if ((**level_object).GetID() == ObjectID::ball
+				|| ((**level_object).GetID() == ObjectID::otherPlayer))
+			{
+				// Casting this to a dynamic body rectangle in order to update the sprites position for level object.
+				DynamicBodyRectangle* dynamic_rectangle = static_cast<DynamicBodyRectangle*>(*level_object);
+				dynamic_rectangle->TranslateBody(dynamic_rectangle->GetRespawnPosition().x, dynamic_rectangle->GetRespawnPosition().y);
+			}
+			// Otherwise, if the object is a player.
+			else if ((**level_object).GetID() == ObjectID::player)
+			{
+				// Casting this to a player in order to update the sprites position for level object.
+				Player* player = static_cast<Player*>(*level_object);
+				player->TranslateBody(player->GetRespawnPosition().x, player->GetRespawnPosition().y);
+			}
+		}
+	}
+
 }
 
-void Level::UpdateScoreboard()
+void Level::UpdateTheScoreboard()
 {
 
 	// If the new red team score is greater than their previous score.
 	if (red_team_score_ > previous_red_team_score_)
 	{
-		// Set the new previous red team score.
-		previous_red_team_score_ = red_team_score_;
-
-		// Clear the ostringstream and "reset" it.
-		// So score numbers don't pile up.
-		// E.g. 0123...
-		red_convert_.clear();
-		red_convert_.str("");
-
-		// Insert the new score into the ostringstream for text conversion.
-		red_convert_ << red_team_score_;
-	
-		// Reset the string value for the red team score.
-		scores_[0]->setString(red_convert_.str());
+		// Update the score for the red team.
+		UpdateTheScore(red_team_score_, previous_red_team_score_, red_convert_, true);
 	}
 	
 	// If the blue team score is greater than their previous score.
 	if (blue_team_score_ > previous_blue_team_score_)
 	{
-		// Set the new previous blue team score.
-		previous_blue_team_score_ = blue_team_score_;
-
-		// Clear the ostringstream and "reset" it.
-		// So score numbers don't pile up.
-		// E.g. 0123...
-		blue_convert_.clear();
-		blue_convert_.str("");
-
-		// Insert the new score into the ostringstream.
-		blue_convert_ << blue_team_score_;
-	
-		// Reset the string value for the blue team score.
-		scores_[1]->setString(blue_convert_.str());
-	}
-	
-	//// If there are elements in the scores vector.
-	//if (!scores_.empty())
-	//{
-	//	// Update the score strings with the new integers.
-	//	
-	//	scores_[1]->setString(blue_convert_.str());
-	//}
-
-}
-
-void Level::RemoveObjects()
-{
-	// If there are objects in the level.
-	if (!level_objects_.empty())
-	{
-		// Iterating through all of the level objects.
-		for (auto level_object = level_objects_.begin(); level_object != level_objects_.end(); level_object++)
-		{
-			// If an object needs to be removed from the level.
-			if ((**level_object).NeedsRemoving())
-			{
-				// Remove the object from the vector.
-				level_objects_.erase(level_object);
-			}
-		}
+		// Update the score for the blue team.
+		UpdateTheScore(blue_team_score_, previous_blue_team_score_, blue_convert_, false);
 	}
 
 }
 
-void Level::CheckGoal()
+void Level::UpdateTheScore(int score, int previous_score, std::ostringstream& conversion, bool red_team)
 {
-	// If there are objects in the level.
-	if (!level_objects_.empty())
-	{
-		// Iterating through all of the level objects.
-		for (auto level_object = level_objects_.begin(); level_object != level_objects_.end(); level_object++)
-		{
-			if ((**level_object).GetID() == ObjectID::ball)
-			{
 
-				//if ((**level_object).GetPosition().x < )
-			}
-		}
+	int score_index = 0;	// Which score will be updated. 0 for red and 1 for blue.
+
+	// Set the previous team score.
+	previous_score = score;
+
+	// Clear the ostringstream and "reset" it.
+	// So score numbers don't pile up.
+	// E.g. 0123...
+	conversion.clear();
+	conversion.str("");
+
+	// Insert the new score into the ostringstream.
+	conversion << score;
+
+	// Quick error check.
+	// We don't want to try and access elements that aren't there.
+	// If the score is for the red team.
+	if (red_team)
+	{
+		// Make it the first value in the score data structure.
+		score_index = 0;
+	}
+	// Otherwise, if the score is for the blue team.
+	else
+	{
+		// Make if the second value in the score data structure.
+		score_index = 1;
 	}
 
+	// Reset the string value for the blue team score.
+	scores_[score_index]->setString(conversion.str());
+	
 }
 
 void Level::CollisionTest()
@@ -308,50 +300,50 @@ void Level::CollisionTest()
 		// Collision response here.
 		GameObject* game_object = static_cast<GameObject*>(body_a->GetUserData());
 		GameObject* game_object2 = static_cast<GameObject*>(body_b->GetUserData());
-
-		if (game_object->GetID() != ObjectID::surface
-			&& game_object2->GetID() != ObjectID::surface)
-		{
-			std::cout << "Contact: " << game_object->GetID() << " and " << game_object2->GetID() << std::endl;
-		}
-
+		
 		// If a ball collides with the red team's net.
 		if (game_object->GetID() == ObjectID::redNet
 			&& game_object2->GetID() == ObjectID::ball)
 		{
-			// Remove the ball from the field.
-			game_object2->TranslateBody(game_object2->GetRespawnPosition().x, game_object2->GetRespawnPosition().y);
+			std::cout << "The blue team have scored!" << std::endl;
 
-			//game_object2->SetRemove(true);
-			//game_object2->GetRectangleShape().~RectangleShape();
-			//game_object2->GetBody()->DestroyFixture(game_object->GetBody()->GetFixtureList());
+			// Reset the level for the next round.
+			Reset();
 
 			// Increment the blue team's score.
 			IncrementBlueTeamScore();
 
-			std::cout << "Blue team have scored a goal! Blue: " << blue_team_score_ << std::endl;
-
 			// Update with the new scores.
-			UpdateScoreboard();
+			UpdateTheScoreboard();
+
+			// If the blue team has reached three goals.
+			if (blue_team_score_ == 3)
+			{
+				// The match has now finished.
+				finished_ = true;
+			}
 		}
 		// Otherwise, if the ball has collided with the blue team's net.
 		else if (game_object->GetID() == ObjectID::blueNet
 			&& game_object2->GetID() == ObjectID::ball)
 		{
-			// Remove the ball from the field.
-			game_object2->TranslateBody(game_object2->GetRespawnPosition().x, game_object2->GetRespawnPosition().y);
+			std::cout << "The red team have scored!" << std::endl;
 
-			//game_object2->SetRemove(true);
-			//game_object2->GetRectangleShape().~RectangleShape();
-			//game_object2->GetBody()->DestroyFixture(game_object->GetBody()->GetFixtureList());
+			// Reset the level for the next round.
+			Reset();
 
 			// Increment the red team's score.
 			IncrementRedTeamScore();
-
-			std::cout << "Red team have scored a goal! Red: " << red_team_score_ << std::endl;
-
+	
 			// Update with the new scores.
-			UpdateScoreboard();
+			UpdateTheScoreboard();
+
+			// If the red team has reached three goals.
+			if (red_team_score_ == 3)
+			{
+				// The match has now finished.
+				finished_ = true;
+			}
 		}
 
 		// Get the next contact point.
@@ -377,24 +369,18 @@ void Level::HandleLevelObjects(float dt)
 			//	temp->Update(dt);
 			//}
 			// If the level object is a football.
-			if ((**level_object).GetID() == ObjectID::ball)
+			if ((**level_object).GetID() == ObjectID::ball
+				|| ((**level_object).GetID() == ObjectID::otherPlayer))
 			{
 				// Casting this to a dynamic body circle in order to update the sprites position for level object.
-				DynamicBodyRectangle* temp = static_cast<DynamicBodyRectangle*>(*level_object);
-				temp->Update(dt);
+				DynamicBodyRectangle* dynamic_rectangle = static_cast<DynamicBodyRectangle*>(*level_object);
+				dynamic_rectangle->Update(dt);
 			}
 			// Otherwise, if the object is a player.
 			else if ((**level_object).GetID() == ObjectID::player)
 			{
 				// Casting this to a player in order to update the sprites position for level object.
 				Player* temp = static_cast<Player*>(*level_object);
-				temp->Update(dt);
-			}
-			// Otherwise, the object is another player.
-			else if ((**level_object).GetID() == ObjectID::otherPlayer)
-			{
-				// Casting this to a dynamic body rectangle in order to update the sprites position for level object.
-				DynamicBodyRectangle* temp = static_cast<DynamicBodyRectangle*>(*level_object);
 				temp->Update(dt);
 			}
 		}
@@ -404,6 +390,32 @@ void Level::HandleLevelObjects(float dt)
 
 void Level::Clear()
 {
+
+	// Destroying the fixtures that were created during the set up of the text file levels.
+	// This means that there will be no random collisions in the level.
+	for (std::vector<GameObject*>::iterator level_object = level_objects_.begin(); level_object != level_objects_.end(); level_object++)
+	{
+		(**level_object).GetBody()->DestroyFixture((**level_object).GetBody()->GetFixtureList());
+		(**level_object).~GameObject();
+		world_->DestroyBody((**level_object).GetBody());
+	}
+
+	// If there are objects in the level.
+	if (!level_objects_.empty())
+	{
+		// Remove all of the objects from the level objects vector.
+		level_objects_.clear();
+	}
+
+	// If there is a set of scores stored in the level.
+	if (!scores_.empty())
+	{
+		// Clear the data for the scores.
+		scores_.clear();
+	}
+
+	// Resetting the finished flag.
+	finished_ = false;
 
 }
 
