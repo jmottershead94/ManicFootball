@@ -16,9 +16,6 @@
     <Filter Include="Framework">
       <UniqueIdentifier>{78bbf952-8c7a-4463-b685-edf65dcbff94}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\Maths">
-      <UniqueIdentifier>{50f2220c-4206-42b0-8b98-b9b216650877}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Framework\States">
       <UniqueIdentifier>{d775307f-3d13-420d-adf5-bbfe9471f344}</UniqueIdentifier>
     </Filter>
@@ -30,9 +27,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="vector2.cpp">
-      <Filter>Framework\Maths</Filter>
-    </ClCompile>
     <ClCompile Include="init_state.cpp">
       <Filter>Framework\States</Filter>
     </ClCompile>
@@ -80,9 +74,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="vector2.h">
-      <Filter>Framework\Maths</Filter>
-    </ClInclude>
     <ClInclude Include="init_state.h">
       <Filter>Framework\States</Filter>
     </ClInclude>

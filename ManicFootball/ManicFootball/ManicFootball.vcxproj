@@ -96,7 +96,6 @@
     <ClCompile Include="start_state.cpp" />
     <ClCompile Include="state.cpp" />
     <ClCompile Include="static_body.cpp" />
-    <ClCompile Include="vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dynamic_body_circle.h" />
@@ -116,7 +115,6 @@
     <ClInclude Include="start_state.h" />
     <ClInclude Include="state.h" />
     <ClInclude Include="static_body.h" />
-    <ClInclude Include="vector2.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\External\Build\vs2013\Box2D.vcxproj">
