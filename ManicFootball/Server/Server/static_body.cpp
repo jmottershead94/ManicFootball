@@ -42,8 +42,8 @@ void StaticBody::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* w
 	b2BodyDef body_def;
 	body_def.type = b2_staticBody;
 	body_ = world->CreateBody(&body_def);
-	body_->SetTransform(b2Vec2(FRAMEWORK_BOX2D_POS_X(position_.x) + (FRAMEWORK_BOX2D_SIZE(dimension_.x) * 0.4125f), FRAMEWORK_BOX2D_POS_Y(position_.y)), 0.0f);
-	
+	body_->SetTransform(b2Vec2(FRAMEWORK_BOX2D_POS_X(position_.x) + (FRAMEWORK_BOX2D_SIZE(dimension_.x) * 0.4125f), FRAMEWORK_BOX2D_POS_Y(position_.y) - (FRAMEWORK_BOX2D_SIZE(dimension_.y) * 0.25f)), 0.0f);
+
 	// Creates the bounding box for the body.
 	b2PolygonShape box_;
 	box_.SetAsBox(FRAMEWORK_BOX2D_SIZE(dimension_.x) * BOX2D_FRAMEWORK_SIZE_OFFSET, FRAMEWORK_BOX2D_SIZE(dimension_.y) * BOX2D_FRAMEWORK_SIZE_OFFSET);

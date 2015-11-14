@@ -31,7 +31,7 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 	CreateWall(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(screen_resolution_->x, screen_resolution_->y * 0.0675f));
 	CreateWall(sf::Vector2f((screen_resolution_->x - (screen_resolution_->x * 0.0675f)), 0.0f), sf::Vector2f((screen_resolution_->x * 0.0675f), screen_resolution_->y));
 	CreateNets(true);
-	//CreateNets(false);
+	CreateNets(false);
 	CreateScoreboard();
 	CreatePlayer();
 	//CreateOtherPlayer();
@@ -82,7 +82,7 @@ void Level::CreateNets(bool left_of_the_field)
 	if (left_of_the_field)
 	{
 		// Initialising the static body for the crossbar.
-		crossbar->Init(sf::Vector2f((screen_resolution_->x * 0.0675f), (screen_resolution_->y * 0.625f)), sf::Vector2f(screen_resolution_->x * 0.125f, screen_resolution_->y * 0.0625f), world_, ObjectID::surface, sf::Color::Red, false);
+		crossbar->Init(sf::Vector2f((screen_resolution_->x * 0.0675f), (screen_resolution_->y * 0.64f)), sf::Vector2f(screen_resolution_->x * 0.125f, screen_resolution_->y * 0.0625f), world_, ObjectID::surface, sf::Color::Red, false);
 		
 		// Initialising the static body for the back of the net.
 		net->Init(sf::Vector2f(crossbar->GetPosition().x, (crossbar->GetPosition().y + crossbar->GetDimension().y + (screen_resolution_->y * 0.000675f))), sf::Vector2f(screen_resolution_->x * 0.03125f, screen_resolution_->y * 0.17f), world_, ObjectID::redNet, sf::Color::Red, false);
@@ -91,7 +91,7 @@ void Level::CreateNets(bool left_of_the_field)
 	else
 	{
 		// Initialising the static body for the crossbar.
-		crossbar->Init(sf::Vector2f((screen_resolution_->x - (screen_resolution_->x * 0.0675f) - (screen_resolution_->x * 0.125f)), (screen_resolution_->y * 0.625f)), sf::Vector2f((screen_resolution_->x * 0.125f), (screen_resolution_->y * 0.0625f)), world_, ObjectID::surface, sf::Color::Blue, false);
+		crossbar->Init(sf::Vector2f((screen_resolution_->x - (screen_resolution_->x * 0.0675f) - (screen_resolution_->x * 0.125f)), (screen_resolution_->y * 0.64f)), sf::Vector2f((screen_resolution_->x * 0.125f), (screen_resolution_->y * 0.0625f)), world_, ObjectID::surface, sf::Color::Blue, false);
 
 		// Initialising the static body for the back of the net.
 		net->Init(sf::Vector2f((crossbar->GetPosition().x + crossbar->GetDimension().x - (screen_resolution_->x * 0.03125f)), (crossbar->GetPosition().y + crossbar->GetDimension().y + (screen_resolution_->y * 0.000675f))), sf::Vector2f((screen_resolution_->x * 0.03125f), screen_resolution_->y * 0.17f), world_, ObjectID::blueNet, sf::Color::Blue, false);
