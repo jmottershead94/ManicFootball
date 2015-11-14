@@ -58,25 +58,31 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 		// Send a starter message struct to player one.
 		// Telling them what team they are on. (bool red_team = true).
 		// Sending them the initial server timestamp for timing offsets on the client side.
-		std::cout << "Player one is going to the level." << std::endl;
+
+
+		// Initialise the server level.
+		//level_.Init(world_, font_, screen_resolution_);
+	}
+
+	// Checking to see if the second player has connected to the server.
+	if (connection_listener_.accept(player_two_socket_) != sf::Socket::Done)
+	{
+		// Error.
+		// The second player has not made a connection to the server.
+		std::cout << "Client could not connect..." << std::endl;
+	}
+	else
+	{
+		std::cout << "Client connected: " << player_one_socket_.getRemoteAddress() << std::endl;		
+
+		// Send a starter message struct to player one.
+		// Telling them what team they are on. (bool red_team = true).
+		// Sending them the initial server timestamp for timing offsets on the client side.
+		std::cout << "Players are now going to the level." << std::endl;
 
 		// Initialise the server level.
 		level_.Init(world_, font_, screen_resolution_);
 	}
-
-	//// Checking to see if the second player has connected to the server.
-	//if (connection_listener_.accept(player_two_socket_) != sf::Socket::Done)
-	//{
-	//	// Error.
-	//	// The second player has not made a connection to the server.
-	//	std::cout << "Player Two could not connect." << std::endl;
-	//}
-	//else
-	//{
-	//	// Send a starter message struct to player two.
-	//	// Telling them what team they are on. (bool red_team = false).
-	//	// Sending them the initial server timestamp for timing offsets on the client side.
-	//}
 
 	//// If both player one and two have connected to the server successfully.
 	//if ((connection_listener_.accept(player_one_socket_) == sf::Socket::Done))
