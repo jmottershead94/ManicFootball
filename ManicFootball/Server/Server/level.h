@@ -14,7 +14,7 @@
 #include <vector>
 #include "static_body.h"
 #include "dynamic_body_circle.h"
-#include "player.h"
+#include "dynamic_body_rectangle.h"
 
 class Level
 {
@@ -33,14 +33,14 @@ class Level
 		void CreateWall(sf::Vector2f& position, sf::Vector2f& dimension);
 		void CreateNets(bool left_of_the_field);
 		void CreateScoreboard();
-		void CreatePlayer();
-		void CreateOtherPlayer();
+		void CreatePlayer(bool red_team);
 		void CreateFootball(sf::Vector2f& position);
 		void Reset();
 		void UpdateTheScoreboard();
 		void UpdateTheScore(int score, int previous_score, std::ostringstream& conversion, bool red_team);
 		void CollisionTest();
 		void HandleLevelObjects(float dt);
+		void MovePlayers(float dt);
 		void Clear();
 		void Render(sf::RenderWindow& game_window);
 		void Update(float dt);
@@ -70,13 +70,14 @@ class Level
 
 	private:
 		// Attributes.
-		std::vector<GameObject*> level_objects_;	// The vector of level objects, stores all game objects in the world.
-		std::vector<sf::Text*> scores_;
-		b2World* world_;							// Points to the box2D world.
-		sf::Font* font_;							// Points to the game font.
-		sf::Vector2f* screen_resolution_;			// Points to the screen resolution.
-		std::ostringstream red_convert_;			// Convert the red score integer to a string.
-		std::ostringstream blue_convert_;			// Convert the blue score integer to a string.
+		const b2Vec2 player_movement_force_ = {2.0f, 10.0f};	// The force which the players will move at.
+		std::vector<GameObject*> level_objects_;				// The vector of level objects, stores all game objects in the world.
+		std::vector<sf::Text*> scores_;							// The vector for keeping track of scores.
+		b2World* world_;										// Points to the box2D world.
+		sf::Font* font_;										// Points to the game font.
+		sf::Vector2f* screen_resolution_;						// Points to the screen resolution.
+		std::ostringstream red_convert_;						// Convert the red score integer to a string.
+		std::ostringstream blue_convert_;						// Convert the blue score integer to a string.
 
 };
 

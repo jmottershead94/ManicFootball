@@ -46,14 +46,19 @@ State* StartState::HandleInput()
 		return new LevelState(*this);
 	}*/
 
+	// Creating a new socket.
+	socket_ = new sf::TcpSocket();
+
 	// Wait for all of the connections to be made here..
 	// Try and connect to the server.
-	// Use the created socket and connect to 127.0.0.1 (this machine) on port 53000, and use the default time out for this machine.
-	sf::Socket::Status status = socket_.connect("127.0.0.1", 53000);
+	// Use the created socket and connect to 127.0.0.1 (this machine) on port 5000, and use the default time out for this machine.
+	sf::Socket::Status status = socket_->connect(server_ip_address_, port_);
 
 	// If the socket has connected to the server.
 	if (status == sf::Socket::Done)
 	{
+		std::cout << "Connected to the server: " << server_ip_address_ << std::endl;
+
 		// Receive some data from the server for deciding what team the player is on.
 		// Pass the bool into the below function.
 		// And save the timestamp from the server.
@@ -65,6 +70,8 @@ State* StartState::HandleInput()
 	}
 	else
 	{
+		std::cout << "Connection error: Could not connect to the server. " << std::endl;
+
 		// Error, the socket did not connect to the requested server.
 		// Go back to the main menu.
 		return new MenuState(*this);
@@ -96,16 +103,11 @@ void StartState::OnEnter()
 		// Set the font of the text that is going to be displayed and set what the text will display.
 		text_->setFont(*font_);
 		text_->setString("Waiting for connections...");
-		text_->setPosition(screen_resolution_->x * 0.3f, screen_resolution_->y * 0.25f);
-		text_->setCharacterSize(32);
-		text_->setColor(sf::Color::Red);
+		text_->setPosition(screen_resolution_->x * 0.2f, screen_resolution_->y * 0.25f);
+		text_->setCharacterSize(64);
+		text_->setColor(sf::Color::White);
 		text_->setStyle(sf::Text::Bold);
 	}
-
-	// Just used for testing purposes.
-	ground_connection_screen_.Init(sf::Vector2f(0.0f, 600.0f), sf::Vector2f(1280.0f, 100.0f), world_, ObjectID::surface, sf::Color::Green, true);
-	ball_connection_screen_.Init(sf::Vector2f(800.0f, 100.0f), sf::Vector2f(50.0f, 50.0f), world_, ObjectID::ball, sf::Color::White, 0.9f);
-	player_connection_screen_.Init(sf::Vector2f(100.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_, true);
 
 }
 
@@ -126,18 +128,6 @@ void StartState::OnExit()
 		// Remove the "connection" text from the screen.
 		text_->~Text();
 	}
-
-	ground_connection_screen_.~StaticBody();
-	ground_connection_screen_.GetBody()->DestroyFixture(ground_connection_screen_.GetBody()->GetFixtureList());
-	world_->DestroyBody(ground_connection_screen_.GetBody());
-
-	ball_connection_screen_.~DynamicBodyRectangle();
-	ball_connection_screen_.GetBody()->DestroyFixture(ball_connection_screen_.GetBody()->GetFixtureList());
-	world_->DestroyBody(ball_connection_screen_.GetBody());
-
-	player_connection_screen_.~Player();
-	player_connection_screen_.GetBody()->DestroyFixture(player_connection_screen_.GetBody()->GetFixtureList());
-	world_->DestroyBody(player_connection_screen_.GetBody());
 
 }
 
@@ -160,10 +150,6 @@ void StartState::Render()
 			// Draws the text onto the screen.
 			window_->draw(*text_);
 		}
-
-		window_->draw(ground_connection_screen_.GetRectangleShape());
-		window_->draw(ball_connection_screen_.GetRectangleShape());
-		window_->draw(player_connection_screen_.GetRectangleShape());
 	}
 
 }
@@ -176,11 +162,4 @@ void StartState::Render()
 //////////////////////////////////////////////////////////
 void StartState::Update(float dt)
 {
-
-	// Updating the test football.
-	ball_connection_screen_.Update(dt);
-
-	// Updating the test player.
-	player_connection_screen_.Update(dt);
-
 }

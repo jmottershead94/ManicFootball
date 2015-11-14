@@ -33,6 +33,8 @@ class Game
 	private:
 		// Attributes.
 		const unsigned int frame_rate_= 60;
+		const unsigned short port_ = 5000;
+		const std::string ip_address_ = "127.0.0.1";
 		b2World* world_;
 		sf::Clock clock_;
 		sf::Event event_;

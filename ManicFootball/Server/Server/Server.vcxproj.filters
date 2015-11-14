@@ -33,9 +33,6 @@
     <ClCompile Include="level.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
-    <ClCompile Include="player.cpp">
-      <Filter>Framework</Filter>
-    </ClCompile>
     <ClCompile Include="game.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
@@ -63,9 +60,6 @@
       <Filter>Framework</Filter>
     </ClInclude>
     <ClInclude Include="object_id.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="player.h">
       <Filter>Framework</Filter>
     </ClInclude>
     <ClInclude Include="game.h">

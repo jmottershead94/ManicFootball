@@ -62,7 +62,7 @@ void Level::CreateWall(sf::Vector2f& position, sf::Vector2f& dimension)
 	StaticBody* wall = new StaticBody();
 
 	// Initialising the static body for the ground.
-	wall->Init(sf::Vector2f(position.x, position.y), sf::Vector2f(dimension.x, dimension.y), world_, ObjectID::surface, sf::Color::Cyan, true);
+	wall->Init(sf::Vector2f(position.x, position.y), sf::Vector2f(dimension.x, dimension.y), world_, ObjectID::surface, sf::Color::Black, true);
 	
 	// Adding the game object to the level objects vector.
 	level_objects_.push_back(wall);

@@ -10,6 +10,7 @@
 
 // Include files here.
 #include <iostream>
+#include <string>
 #include <Box2D\Box2D.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
@@ -45,13 +46,15 @@ class State
 
 	protected:
 		// Attributes.
+		const unsigned short port_ = 5000;
+		const std::string server_ip_address_ = "127.0.0.1";
 		b2World* world_;
 		sf::Font* font_;
 		sf::RenderWindow* window_;
 		sf::Text* text_;
 		sf::Text* text_controls_;
 		sf::Vector2f* screen_resolution_;
-		sf::TcpSocket socket_;
+		sf::TcpSocket* socket_;
 
 };
 

@@ -33,8 +33,8 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 	CreateNets(true);
 	CreateNets(false);
 	CreateScoreboard();
-	CreatePlayer();
-	CreateOtherPlayer();
+	CreatePlayer(true);
+	CreatePlayer(false);
 	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.25f, screen_resolution_->y * 0.25f));
 	CreateFootball(sf::Vector2f(screen_resolution_->x * 0.5f, screen_resolution_->y * 0.25f));
 	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.75f, screen_resolution_->y * 0.25f));
@@ -138,31 +138,27 @@ void Level::CreateScoreboard()
 
 }
 
-void Level::CreatePlayer()
+void Level::CreatePlayer(bool red_team)
 {
 
 	// Allocating memory for the player when we need it.
-	Player* player = new Player();
+	DynamicBodyRectangle* player = new DynamicBodyRectangle();
 
-	// Initialising the player on the red team.
-	player->Init(sf::Vector2f(300.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_, true);
+	// If the player is on the red team.
+	if (red_team)
+	{
+		// Initialising one of the players on the red team.
+		player->Init(sf::Vector2f(300.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_, ObjectID::playerOne, sf::Color::Red, 0.2f);
+	}
+	// Otherwise, the player is on the blue team.
+	else
+	{
+		// Initialising one of the players on the blue team.
+		player->Init(sf::Vector2f(800.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_, ObjectID::playerTwo, sf::Color::Blue, 0.2f);
+	}
 
 	// Adding the game object to the level objects vector.
 	level_objects_.push_back(player);
-
-}
-
-void Level::CreateOtherPlayer()
-{
-
-	// Allocating memory for the other player when we need it.
-	DynamicBodyRectangle* other_player = new DynamicBodyRectangle();
-
-	// Initialising the dynamic body for the other player on the red team.
-	other_player->Init(sf::Vector2f(800.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_, ObjectID::otherPlayer, sf::Color::Blue, 0.2f);
-
-	// Adding the game object to the level objects vector.
-	level_objects_.push_back(other_player);
 
 }
 
@@ -207,18 +203,12 @@ void Level::Reset()
 			//}
 			// If the level object is a football.
 			if ((**level_object).GetID() == ObjectID::ball
-				|| ((**level_object).GetID() == ObjectID::otherPlayer))
+				|| ((**level_object).GetID() == ObjectID::playerOne)
+				|| ((**level_object).GetID() == ObjectID::playerTwo))
 			{
 				// Casting this to a dynamic body rectangle in order to update the sprites position for level object.
 				DynamicBodyRectangle* dynamic_rectangle = static_cast<DynamicBodyRectangle*>(*level_object);
 				dynamic_rectangle->TranslateBody(dynamic_rectangle->GetRespawnPosition().x, dynamic_rectangle->GetRespawnPosition().y);
-			}
-			// Otherwise, if the object is a player.
-			else if ((**level_object).GetID() == ObjectID::player)
-			{
-				// Casting this to a player in order to update the sprites position for level object.
-				Player* player = static_cast<Player*>(*level_object);
-				player->TranslateBody(player->GetRespawnPosition().x, player->GetRespawnPosition().y);
 			}
 		}
 	}
@@ -374,18 +364,39 @@ void Level::HandleLevelObjects(float dt)
 			//}
 			// If the level object is a football.
 			if ((**level_object).GetID() == ObjectID::ball
-				|| ((**level_object).GetID() == ObjectID::otherPlayer))
+				|| ((**level_object).GetID() == ObjectID::playerOne)
+				|| ((**level_object).GetID() == ObjectID::playerTwo))
 			{
 				// Casting this to a dynamic body circle in order to update the sprites position for level object.
 				DynamicBodyRectangle* dynamic_rectangle = static_cast<DynamicBodyRectangle*>(*level_object);
 				dynamic_rectangle->Update(dt);
 			}
-			// Otherwise, if the object is a player.
-			else if ((**level_object).GetID() == ObjectID::player)
+		}
+	}
+
+}
+
+void Level::MovePlayers(float dt)
+{
+
+	// Use the structs brought in by both player one and two to move the rectangles accordingly.
+	// If there are objects in the level.
+	if (!level_objects_.empty())
+	{
+		// Iterating through all of the level objects.
+		for (auto level_object = level_objects_.begin(); level_object != level_objects_.end(); level_object++)
+		{
+			if ((**level_object).GetID() == ObjectID::playerOne)
 			{
-				// Casting this to a player in order to update the sprites position for level object.
-				Player* temp = static_cast<Player*>(*level_object);
-				temp->Update(dt);
+				DynamicBodyRectangle* dynamic_rectangle = static_cast<DynamicBodyRectangle*>(*level_object);
+				
+				// Use the player one struct information to move the body for player one around.
+				//if(up) 
+				//{ 
+				//	dynamic_rectangle->GetBody()->ApplyLinearImpulse(b2Vec2(0.0f, player_movement_force_.y * dt), dynamic_rectangle->GetBody()->GetWorldCenter(), dynamic_rectangle->GetBody()->IsAwake());
+				//}
+				//if(right)
+				//etc.
 			}
 		}
 	}
@@ -463,6 +474,7 @@ void Level::Render(sf::RenderWindow& game_window)
 void Level::Update(float dt)
 {
 
+	MovePlayers(dt);
 	HandleLevelObjects(dt);
 	CollisionTest();
 

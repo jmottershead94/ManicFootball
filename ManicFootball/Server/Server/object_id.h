@@ -13,8 +13,8 @@
 enum ObjectID
 {
 
-	player = 0,
-	otherPlayer,
+	playerOne = 0,
+	playerTwo,
 	enemy,
 	ball,
 	surface,
