@@ -23,7 +23,6 @@ class GameObject
 		GameObject();
 		~GameObject();
 		void Init(sf::Vector2f position, sf::Vector2f dimensions, ObjectID object_id, bool is_rectangle);
-		void InitPE(sf::Vector2f position, sf::Vector2f dimensions, ObjectID object_id, bool is_rectangle, sf::Color colour);
 		void TranslateBody(float x, float y);
 
 		// Setters.
@@ -38,13 +37,7 @@ class GameObject
 
 		// This function will set the new position of the game object.
 		inline void SetPosition(sf::Vector2f new_position) { position_ = new_position; }
-
-		// This will set the position of the game object.
-		void SetPositionPE(float x, float y);
-
-		// This function will set the object's velocity.
-		void SetVelocity(float x, float y);
-
+		
 		// Getters.
 		// This function will tell us if the object is on a surface or not.
 		inline bool IsOnSurface() { return on_surface_; }
@@ -73,9 +66,6 @@ class GameObject
 		// This function will return the current dimension of the game object.
 		inline sf::Vector2f GetDimension() { return dimension_; }
 
-		// This will return the current velocity of the object.
-		inline sf::Vector2f GetVelocity() { return velocity_; }
-
 		// This function will return the id number of the object.
 		inline int GetID()					{ return id_; }
 
@@ -90,7 +80,6 @@ class GameObject
 		sf::Vector2f position_;
 		sf::Vector2f respawn_position_;
 		sf::Vector2f dimension_;
-		sf::Vector2f velocity_;
 		ObjectID id_;
 
 };
