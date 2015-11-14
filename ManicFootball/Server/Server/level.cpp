@@ -419,6 +419,43 @@ void Level::Clear()
 
 }
 
+void Level::Render(sf::RenderWindow& game_window)
+{
+
+	// If there are objects in the level.
+	if (!level_objects_.empty())
+	{
+		// Iterating through all of the level objects.
+		for (auto level_object = level_objects_.begin(); level_object != level_objects_.end(); level_object++)
+		{
+			// If the level object has a rectangle shape.
+			if ((**level_object).IsRectangle())
+			{
+				// Therefore, draw the rectangle shape.
+				game_window.draw((**level_object).GetRectangleShape());
+			}
+			// Otherwise, the level object will have a circle shape.
+			else
+			{
+				// Draw the circle shape for the football.
+				game_window.draw((**level_object).GetCircleShape());
+			}
+		}
+	}
+
+	// If there is a set of scores in the level.
+	if (!scores_.empty())
+	{
+		// Iterating through all of the level scores.
+		for (auto score = scores_.begin(); score != scores_.end(); score++)
+		{
+			// Draw the score on the screen.
+			game_window.draw((**score));
+		}
+	}
+
+}
+
 void Level::Update(float dt)
 {
 

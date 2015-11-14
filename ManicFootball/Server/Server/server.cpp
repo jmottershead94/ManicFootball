@@ -9,6 +9,7 @@
 // The main function.
 void main()
 {
+
 	// Initialising a game window with a resolution of 1280 x 720.
 	Game game(1280.0f, 720.0f);
 
@@ -22,4 +23,5 @@ void main()
 		// Render the game.
 		game.Render();
 	}
+
 }

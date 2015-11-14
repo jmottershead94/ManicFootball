@@ -42,6 +42,7 @@ class Level
 		void CollisionTest();
 		void HandleLevelObjects(float dt);
 		void Clear();
+		void Render(sf::RenderWindow& game_window);
 		void Update(float dt);
 
 		// Setters.

@@ -12,6 +12,7 @@
 #include <iostream>
 #include <Box2D\Box2D.h>
 #include <SFML/Graphics.hpp>
+#include "level.h"
 
 // The main class that will render the window.
 class Game
@@ -21,6 +22,7 @@ class Game
 		// Methods.
 		Game(const float game_screen_width, const float game_screen_height);
 		~Game();
+		void CheckIfLevelHasFinished();
 		void Update();
 		void Render();
 
@@ -29,7 +31,7 @@ class Game
 
 	private:
 		// Attributes.
-		const int frame_rate_= 60;
+		const unsigned int frame_rate_= 60;
 		b2World* world_;
 		sf::Clock clock_;
 		sf::Event event_;
@@ -37,6 +39,7 @@ class Game
 		sf::RenderWindow* window_;
 		sf::Time dt_;
 		sf::Vector2f screen_resolution_;
+		Level level_;
 
 };
 

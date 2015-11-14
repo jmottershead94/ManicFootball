@@ -19,19 +19,13 @@
     <Filter Include="Framework\Physics">
       <UniqueIdentifier>{6c0b95de-bc58-48cb-bc13-3777398aa43b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Physics\Bodies">
+      <UniqueIdentifier>{931a4e29-fc27-4a4f-84df-826507f5b2cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="server.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="dynamic_body_circle.cpp">
-      <Filter>Framework\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="dynamic_body_rectangle.cpp">
-      <Filter>Framework\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="static_body.cpp">
-      <Filter>Framework\Physics</Filter>
     </ClCompile>
     <ClCompile Include="game_object.cpp">
       <Filter>Framework</Filter>
@@ -45,18 +39,18 @@
     <ClCompile Include="game.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
+    <ClCompile Include="dynamic_body_circle.cpp">
+      <Filter>Framework\Physics\Bodies</Filter>
+    </ClCompile>
+    <ClCompile Include="dynamic_body_rectangle.cpp">
+      <Filter>Framework\Physics\Bodies</Filter>
+    </ClCompile>
+    <ClCompile Include="static_body.cpp">
+      <Filter>Framework\Physics\Bodies</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="box2d_conversions.h">
-      <Filter>Framework\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="dynamic_body_circle.h">
-      <Filter>Framework\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="dynamic_body_rectangle.h">
-      <Filter>Framework\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="static_body.h">
       <Filter>Framework\Physics</Filter>
     </ClInclude>
     <ClInclude Include="category.h">
@@ -76,6 +70,15 @@
     </ClInclude>
     <ClInclude Include="game.h">
       <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="dynamic_body_circle.h">
+      <Filter>Framework\Physics\Bodies</Filter>
+    </ClInclude>
+    <ClInclude Include="dynamic_body_rectangle.h">
+      <Filter>Framework\Physics\Bodies</Filter>
+    </ClInclude>
+    <ClInclude Include="static_body.h">
+      <Filter>Framework\Physics\Bodies</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

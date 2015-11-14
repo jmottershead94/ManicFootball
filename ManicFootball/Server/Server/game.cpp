@@ -31,6 +31,10 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 	world_ = new b2World(gravity);
 	world_->SetContinuousPhysics(true);
 
+
+	// Initialising the server level.
+	level_.Init(world_, font_, screen_resolution_);
+
 }
 
 // This will clean up any pointers.
@@ -41,6 +45,26 @@ Game::~Game()
 	{
 		delete world_;
 		world_ = nullptr;
+	}
+
+}
+
+// This will check the current state of the match.
+// When someone has won the match.
+void Game::CheckIfLevelHasFinished()
+{
+
+	// If the current match has finished.
+	if (level_.HasFinished())
+	{
+		// Clear the level.
+		level_.Clear();
+
+		// Terminate all of the connections here...
+		
+
+		// Close the server connection.
+		//this->~Game();
 	}
 
 }
@@ -67,9 +91,15 @@ void Game::Update()
 		}
 	}
 	
+	// This will keep checking the current match state.
+	CheckIfLevelHasFinished();
+
 	// Keep updating the physics world.
 	// Updates the physics simulation based on iterations.
 	world_->Step(time_step, velocity_iterations, position_iterations);
+
+	// Update the level.
+	level_.Update(dt_.asSeconds());
 
 }
 
@@ -79,6 +109,9 @@ void Game::Render()
 
 	// Clear the current game window.
 	window_->clear();
+
+	// Render everything in the level.
+	level_.Render(*window_);
 
 	// Display the new layout of the window.
 	window_->display();

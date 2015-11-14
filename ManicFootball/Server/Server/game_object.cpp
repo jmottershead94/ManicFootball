@@ -20,7 +20,6 @@ void GameObject::Init(sf::Vector2f position, sf::Vector2f dimensions, ObjectID o
 	on_surface_ = false;			// Letting us know if the game object is on a surfact or not.
 	remove_ = false;				// Letting us know if the game object needs to be removed or not.
 	is_rectangle_ = is_rectangle;	// Letting us know what kind of shape we have.
-	velocity_ = { 0.0f, 0.0f };		// Setting the velocity to 0 to begin with.
 
 }
 
