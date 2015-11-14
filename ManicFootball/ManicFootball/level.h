@@ -21,9 +21,10 @@ class Level
 
 	public:
 		// Attributes.
-		bool reset_;								// A flag to determine whether or not the level should be reset.
-		int red_team_score_, blue_team_score_;		// The score values of the two different teams.
-		
+		bool reset_;												// A flag to determine whether or not the level should be reset.
+		int red_team_score_, blue_team_score_;						// The score values of the two different teams.
+		int previous_red_team_score_, previous_blue_team_score_;	// The previous score values used for comparisons.
+
 		// Methods.
 		Level();
 		~Level();

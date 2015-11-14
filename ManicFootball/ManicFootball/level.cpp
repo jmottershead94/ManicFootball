@@ -5,7 +5,6 @@ Level::Level() : level_objects_(NULL),
 {
 }
 
-
 Level::~Level()
 {
 }
@@ -17,6 +16,8 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 	reset_ = false;									// The level does not need resetting right now.
 	red_team_score_ = 0;							// The current score of the red team.
 	blue_team_score_ = 0;							// The current score of the blue team.
+	previous_red_team_score_ = red_team_score_;		// The current previous score of the red team.
+	previous_blue_team_score_ = blue_team_score_;	// The current previous score of the blue team.
 	world_ = world;									// Access to the box2D world.
 	font_ = &font;									// Access to the game font.
 	screen_resolution_ = &game_screen_resolution;	// Access to the game resolution.
@@ -33,7 +34,7 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 	CreateNets(false);
 	CreateScoreboard();
 	CreatePlayer();
-	CreateOtherPlayer();
+	//CreateOtherPlayer();
 	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.25f, screen_resolution_->y * 0.25f));
 	CreateFootball(sf::Vector2f(screen_resolution_->x * 0.5f, screen_resolution_->y * 0.25f));
 	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.75f, screen_resolution_->y * 0.25f));
@@ -203,16 +204,51 @@ void Level::Reset()
 void Level::UpdateScoreboard()
 {
 
-	red_convert_ << red_team_score_;				// Places the textual representation of the red team score integer into red_convert_.
-	blue_convert_ << blue_team_score_;				// Places the textual representation of the blue team score integer into blue_convert_.
-
-	// If there are elements in the scores vector.
-	if (!scores_.empty())
+	// If the new red team score is greater than their previous score.
+	if (red_team_score_ > previous_red_team_score_)
 	{
-		// Update the score strings with the new integers.
+		// Set the new previous red team score.
+		previous_red_team_score_ = red_team_score_;
+
+		// Clear the ostringstream and "reset" it.
+		// So score numbers don't pile up.
+		// E.g. 0123...
+		red_convert_.clear();
+		red_convert_.str("");
+
+		// Insert the new score into the ostringstream for text conversion.
+		red_convert_ << red_team_score_;
+	
+		// Reset the string value for the red team score.
 		scores_[0]->setString(red_convert_.str());
+	}
+	
+	// If the blue team score is greater than their previous score.
+	if (blue_team_score_ > previous_blue_team_score_)
+	{
+		// Set the new previous blue team score.
+		previous_blue_team_score_ = blue_team_score_;
+
+		// Clear the ostringstream and "reset" it.
+		// So score numbers don't pile up.
+		// E.g. 0123...
+		blue_convert_.clear();
+		blue_convert_.str("");
+
+		// Insert the new score into the ostringstream.
+		blue_convert_ << blue_team_score_;
+	
+		// Reset the string value for the blue team score.
 		scores_[1]->setString(blue_convert_.str());
 	}
+	
+	//// If there are elements in the scores vector.
+	//if (!scores_.empty())
+	//{
+	//	// Update the score strings with the new integers.
+	//	
+	//	scores_[1]->setString(blue_convert_.str());
+	//}
 
 }
 
@@ -270,17 +306,25 @@ void Level::CollisionTest()
 		b2Body* body_b = contact_->GetFixtureB()->GetBody();
 
 		// Collision response here.
-		GameObject* game_object_ = static_cast<GameObject*>(body_a->GetUserData());
-		GameObject* game_object2_ = static_cast<GameObject*>(body_b->GetUserData());
+		GameObject* game_object = static_cast<GameObject*>(body_a->GetUserData());
+		GameObject* game_object2 = static_cast<GameObject*>(body_b->GetUserData());
+
+		if (game_object->GetID() != ObjectID::surface
+			&& game_object2->GetID() != ObjectID::surface)
+		{
+			std::cout << "Contact: " << game_object->GetID() << " and " << game_object2->GetID() << std::endl;
+		}
 
 		// If a ball collides with the red team's net.
-		if (game_object_->GetID() == ObjectID::ball
-			&& game_object2_->GetID() == ObjectID::redNet)
+		if (game_object->GetID() == ObjectID::redNet
+			&& game_object2->GetID() == ObjectID::ball)
 		{
 			// Remove the ball from the field.
-			game_object_->SetRemove(true);
-			game_object_->GetCircleShape().~CircleShape();
-			game_object_->GetBody()->DestroyFixture(game_object_->GetBody()->GetFixtureList());
+			game_object2->TranslateBody(game_object2->GetRespawnPosition().x, game_object2->GetRespawnPosition().y);
+
+			//game_object2->SetRemove(true);
+			//game_object2->GetRectangleShape().~RectangleShape();
+			//game_object2->GetBody()->DestroyFixture(game_object->GetBody()->GetFixtureList());
 
 			// Increment the blue team's score.
 			IncrementBlueTeamScore();
@@ -291,13 +335,15 @@ void Level::CollisionTest()
 			UpdateScoreboard();
 		}
 		// Otherwise, if the ball has collided with the blue team's net.
-		else if (game_object_->GetID() == ObjectID::ball
-			&& game_object2_->GetID() == ObjectID::blueNet)
+		else if (game_object->GetID() == ObjectID::blueNet
+			&& game_object2->GetID() == ObjectID::ball)
 		{
 			// Remove the ball from the field.
-			game_object_->SetRemove(true);
-			game_object_->GetCircleShape().~CircleShape();
-			game_object_->GetBody()->DestroyFixture(game_object_->GetBody()->GetFixtureList());
+			game_object2->TranslateBody(game_object2->GetRespawnPosition().x, game_object2->GetRespawnPosition().y);
+
+			//game_object2->SetRemove(true);
+			//game_object2->GetRectangleShape().~RectangleShape();
+			//game_object2->GetBody()->DestroyFixture(game_object->GetBody()->GetFixtureList());
 
 			// Increment the red team's score.
 			IncrementRedTeamScore();

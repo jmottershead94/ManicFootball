@@ -49,9 +49,6 @@ void StaticBody::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* w
 	box_.SetAsBox(FRAMEWORK_BOX2D_SIZE(dimension_.x) * BOX2D_FRAMEWORK_SIZE_OFFSET, FRAMEWORK_BOX2D_SIZE(dimension_.y) * BOX2D_FRAMEWORK_SIZE_OFFSET);
 	body_->CreateFixture(&box_, 0.0f);
 
-	// Resets the position of the shape.
-	//SetPosition(sf::Vector2f(BOX2D_FRAMEWORK_POS_X(body_->GetPosition().x), BOX2D_FRAMEWORK_POS_Y(body_->GetPosition().y)));
-
 	// Setting the connection between game objects and the Box2D body.
 	body_->SetUserData(this);
 

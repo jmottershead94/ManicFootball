@@ -24,6 +24,7 @@ class GameObject
 		~GameObject();
 		void Init(sf::Vector2f position, sf::Vector2f dimensions, ObjectID object_id, bool is_rectangle);
 		void InitPE(sf::Vector2f position, sf::Vector2f dimensions, ObjectID object_id, bool is_rectangle, sf::Color colour);
+		void TranslateBody(float x, float y);
 
 		// Setters.
 		// This will allow us to set an object on a surface..
@@ -66,6 +67,9 @@ class GameObject
 		// This function will return the current position of the game object.
 		inline sf::Vector2f GetPosition() { return position_; }
 
+		// This function will return the current respawn position of the game object.
+		inline sf::Vector2f GetRespawnPosition() { return respawn_position_; }
+
 		// This function will return the current dimension of the game object.
 		inline sf::Vector2f GetDimension() { return dimension_; }
 
@@ -84,6 +88,7 @@ class GameObject
 		sf::RectangleShape rectangle_;
 		sf::CircleShape circle_;
 		sf::Vector2f position_;
+		sf::Vector2f respawn_position_;
 		sf::Vector2f dimension_;
 		sf::Vector2f velocity_;
 		ObjectID id_;
