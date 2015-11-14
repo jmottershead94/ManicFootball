@@ -48,6 +48,7 @@ State* StartState::HandleInput()
 
 	// Wait for all of the connections to be made here..
 	// Try and connect to the server.
+	
 
 	// Returns nothing because there has been no input from the player yet.
 	return nullptr;

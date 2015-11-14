@@ -31,10 +31,10 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 	CreateWall(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(screen_resolution_->x, screen_resolution_->y * 0.0675f));
 	CreateWall(sf::Vector2f((screen_resolution_->x - (screen_resolution_->x * 0.0675f)), 0.0f), sf::Vector2f((screen_resolution_->x * 0.0675f), screen_resolution_->y));
 	CreateNets(true);
-	CreateNets(false);
+	//CreateNets(false);
 	CreateScoreboard();
 	CreatePlayer();
-	CreateOtherPlayer();
+	//CreateOtherPlayer();
 	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.25f, screen_resolution_->y * 0.25f));
 	CreateFootball(sf::Vector2f(screen_resolution_->x * 0.5f, screen_resolution_->y * 0.25f));
 	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.75f, screen_resolution_->y * 0.25f));
@@ -62,7 +62,7 @@ void Level::CreateWall(sf::Vector2f& position, sf::Vector2f& dimension)
 	StaticBody* wall = new StaticBody();
 
 	// Initialising the static body for the ground.
-	wall->Init(sf::Vector2f(position.x, position.y), sf::Vector2f(dimension.x, dimension.y), world_, ObjectID::surface, sf::Color::Black, true);
+	wall->Init(sf::Vector2f(position.x, position.y), sf::Vector2f(dimension.x, dimension.y), world_, ObjectID::surface, sf::Color::Cyan, true);
 	
 	// Adding the game object to the level objects vector.
 	level_objects_.push_back(wall);
@@ -82,19 +82,19 @@ void Level::CreateNets(bool left_of_the_field)
 	if (left_of_the_field)
 	{
 		// Initialising the static body for the crossbar.
-		crossbar->Init(sf::Vector2f((screen_resolution_->x * 0.0675f), (screen_resolution_->y * 0.6f)), sf::Vector2f(screen_resolution_->x * 0.125f, screen_resolution_->y * 0.0625f), world_, ObjectID::surface, sf::Color::Red, false);
+		crossbar->Init(sf::Vector2f((screen_resolution_->x * 0.0675f), (screen_resolution_->y * 0.625f)), sf::Vector2f(screen_resolution_->x * 0.125f, screen_resolution_->y * 0.0625f), world_, ObjectID::surface, sf::Color::Red, false);
 		
 		// Initialising the static body for the back of the net.
-		net->Init(sf::Vector2f(crossbar->GetPosition().x, (crossbar->GetPosition().y + crossbar->GetDimension().y)), sf::Vector2f(screen_resolution_->x * 0.03125f, screen_resolution_->y * 0.21f), world_, ObjectID::redNet, sf::Color::Red, false);
+		net->Init(sf::Vector2f(crossbar->GetPosition().x, (crossbar->GetPosition().y + crossbar->GetDimension().y + (screen_resolution_->y * 0.000675f))), sf::Vector2f(screen_resolution_->x * 0.03125f, screen_resolution_->y * 0.17f), world_, ObjectID::redNet, sf::Color::Red, false);
 	}
 	// Otherwise, the nets should be on the right side of the field.
 	else
 	{
 		// Initialising the static body for the crossbar.
-		crossbar->Init(sf::Vector2f((screen_resolution_->x - (screen_resolution_->x * 0.0675f) - (screen_resolution_->x * 0.125f)), (screen_resolution_->y * 0.6f)), sf::Vector2f((screen_resolution_->x * 0.125f), (screen_resolution_->y * 0.0625f)), world_, ObjectID::surface, sf::Color::Blue, false);
+		crossbar->Init(sf::Vector2f((screen_resolution_->x - (screen_resolution_->x * 0.0675f) - (screen_resolution_->x * 0.125f)), (screen_resolution_->y * 0.625f)), sf::Vector2f((screen_resolution_->x * 0.125f), (screen_resolution_->y * 0.0625f)), world_, ObjectID::surface, sf::Color::Blue, false);
 
 		// Initialising the static body for the back of the net.
-		net->Init(sf::Vector2f((crossbar->GetPosition().x + crossbar->GetDimension().x - (screen_resolution_->x * 0.03125f)), (crossbar->GetPosition().y + crossbar->GetDimension().y)), sf::Vector2f((screen_resolution_->x * 0.03125f), screen_resolution_->y * 0.21f), world_, ObjectID::blueNet, sf::Color::Blue, false);
+		net->Init(sf::Vector2f((crossbar->GetPosition().x + crossbar->GetDimension().x - (screen_resolution_->x * 0.03125f)), (crossbar->GetPosition().y + crossbar->GetDimension().y + (screen_resolution_->y * 0.000675f))), sf::Vector2f((screen_resolution_->x * 0.03125f), screen_resolution_->y * 0.17f), world_, ObjectID::blueNet, sf::Color::Blue, false);
 	}
 
 	// Adding the game object to the level objects vector.
@@ -182,7 +182,7 @@ void Level::CreateFootball(sf::Vector2f& position)
 	DynamicBodyRectangle* football = new DynamicBodyRectangle();
 
 	// Initialising the dynamic body for the football.
-	football->Init(position, sf::Vector2f(50.0f, 50.0f), world_, ObjectID::ball, sf::Color::White, 0.9f);
+	football->Init(position, sf::Vector2f(40.0f, 40.0f), world_, ObjectID::ball, sf::Color::White, 0.9f);
 
 	// Adding the game object to the level objects vector.
 	level_objects_.push_back(football);
@@ -293,61 +293,65 @@ void Level::CollisionTest()
 	// Cycle through the contacts.
 	for (int contact_num = 0; contact_num < contact_count; contact_num++)
 	{
-		// Get the colliding bodies.
-		b2Body* body_a = contact_->GetFixtureA()->GetBody();
-		b2Body* body_b = contact_->GetFixtureB()->GetBody();
-
-		// Collision response here.
-		GameObject* game_object = static_cast<GameObject*>(body_a->GetUserData());
-		GameObject* game_object2 = static_cast<GameObject*>(body_b->GetUserData());
-		
-		// If a ball collides with the red team's net.
-		if (game_object->GetID() == ObjectID::redNet
-			&& game_object2->GetID() == ObjectID::ball)
+		// If the contact we are currently processing contains bodies actually touching/intersecting.
+		if (contact_->IsTouching())
 		{
-			std::cout << "The blue team have scored!" << std::endl;
+			// Get the colliding bodies.
+			b2Body* body_a = contact_->GetFixtureA()->GetBody();
+			b2Body* body_b = contact_->GetFixtureB()->GetBody();
 
-			// Reset the level for the next round.
-			Reset();
+			// Collision response here.
+			GameObject* game_object = static_cast<GameObject*>(body_a->GetUserData());
+			GameObject* game_object2 = static_cast<GameObject*>(body_b->GetUserData());
 
-			// Increment the blue team's score.
-			IncrementBlueTeamScore();
-
-			// Update with the new scores.
-			UpdateTheScoreboard();
-
-			// If the blue team has reached three goals.
-			if (blue_team_score_ == 3)
+			// If a ball collides with the red team's net.
+			if (game_object->GetID() == ObjectID::redNet
+				&& game_object2->GetID() == ObjectID::ball)
 			{
-				// The match has now finished.
-				finished_ = true;
+				std::cout << "The blue team have scored!" << std::endl;
+
+				// Reset the level for the next round.
+				Reset();
+
+				// Increment the blue team's score.
+				IncrementBlueTeamScore();
+
+				// Update with the new scores.
+				UpdateTheScoreboard();
+
+				// If the blue team has reached three goals.
+				if (blue_team_score_ == 3)
+				{
+					// The match has now finished.
+					finished_ = true;
+				}
 			}
-		}
-		// Otherwise, if the ball has collided with the blue team's net.
-		else if (game_object->GetID() == ObjectID::blueNet
-			&& game_object2->GetID() == ObjectID::ball)
-		{
-			std::cout << "The red team have scored!" << std::endl;
-
-			// Reset the level for the next round.
-			Reset();
-
-			// Increment the red team's score.
-			IncrementRedTeamScore();
-	
-			// Update with the new scores.
-			UpdateTheScoreboard();
-
-			// If the red team has reached three goals.
-			if (red_team_score_ == 3)
+			// Otherwise, if the ball has collided with the blue team's net.
+			else if (game_object->GetID() == ObjectID::blueNet
+				&& game_object2->GetID() == ObjectID::ball)
 			{
-				// The match has now finished.
-				finished_ = true;
-			}
-		}
+				std::cout << "The red team have scored!" << std::endl;
 
-		// Get the next contact point.
-		contact_ = contact_->GetNext();
+				// Reset the level for the next round.
+				Reset();
+
+				// Increment the red team's score.
+				IncrementRedTeamScore();
+
+				// Update with the new scores.
+				UpdateTheScoreboard();
+
+				// If the red team has reached three goals.
+				if (red_team_score_ == 3)
+				{
+					// The match has now finished.
+					finished_ = true;
+				}
+			}
+
+			// Get the next contact point.
+			contact_ = contact_->GetNext();
+		}
 	}
 
 }
