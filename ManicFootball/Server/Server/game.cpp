@@ -73,12 +73,12 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 	}
 	else
 	{
-		std::cout << "Client connected: " << player_one_socket_.getRemoteAddress() << std::endl;		
-
+		std::cout << "Client connected: " << player_two_socket_.getRemoteAddress() << std::endl;	
+		
 		// Send a starter message struct to player one.
 		// Telling them what team they are on. (bool red_team = true).
 		// Sending them the initial server timestamp for timing offsets on the client side.
-		std::cout << "Players are now going to the level." << std::endl;
+		
 
 		// Initialise the server level.
 		level_.Init(world_, font_, screen_resolution_);

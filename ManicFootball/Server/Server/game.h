@@ -10,10 +10,15 @@
 
 // Include files here.
 #include <iostream>
+#include <chrono>
+#include <ctime>
+#include <iomanip>
 #include <Box2D\Box2D.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
 #include "level.h"
+
+using std::chrono::duration_cast;
 
 // The main class that will render the window.
 class Game
@@ -46,6 +51,18 @@ class Game
 		sf::TcpSocket player_two_socket_;
 		sf::TcpListener connection_listener_;
 		Level level_;
+
+		struct StartMessage
+		{
+			bool player_team;			// What team the player will be on.
+			sf::Clock game_clock;		// The current 
+			sf::Time current_game_time;	// The current game time, used to work out latency time offset.
+
+			StartMessage()
+			{
+				current_game_time = game_clock.getElapsedTime();
+			};
+		};
 
 };
 

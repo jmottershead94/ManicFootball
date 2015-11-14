@@ -70,7 +70,7 @@ State* StartState::HandleInput()
 	}
 	else
 	{
-		std::cout << "Connection error: Could not connect to the server. " << std::endl;
+		std::cout << "Connection error: Could not connect to the server." << std::endl;
 
 		// Error, the socket did not connect to the requested server.
 		// Go back to the main menu.
