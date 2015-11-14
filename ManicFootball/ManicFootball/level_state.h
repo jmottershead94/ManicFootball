@@ -14,7 +14,6 @@
 #include "menu_state.h"
 #include "end_match_state.h"
 #include "level.h"
-#include "level_test.h"
 
 // Menu state IS A state, therefore inherits from it.
 class LevelState : public State
@@ -33,7 +32,6 @@ class LevelState : public State
 	private:
 		// Attributes.
 		Level level_;
-		LevelTest level_test_;
 
 };
 

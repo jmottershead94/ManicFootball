@@ -90,11 +90,8 @@
     <ClCompile Include="client.cpp" />
     <ClCompile Include="level.cpp" />
     <ClCompile Include="level_state.cpp" />
-    <ClCompile Include="level_test.cpp" />
     <ClCompile Include="menu_state.cpp" />
-    <ClCompile Include="physics_engine.cpp" />
     <ClCompile Include="player.cpp" />
-    <ClCompile Include="player_test.cpp" />
     <ClCompile Include="sensor.cpp" />
     <ClCompile Include="start_state.cpp" />
     <ClCompile Include="state.cpp" />
@@ -111,13 +108,10 @@
     <ClInclude Include="category.h" />
     <ClInclude Include="level.h" />
     <ClInclude Include="level_state.h" />
-    <ClInclude Include="level_test.h" />
     <ClInclude Include="object_id.h" />
     <ClInclude Include="init_state.h" />
     <ClInclude Include="menu_state.h" />
-    <ClInclude Include="physics_engine.h" />
     <ClInclude Include="player.h" />
-    <ClInclude Include="player_test.h" />
     <ClInclude Include="sensor.h" />
     <ClInclude Include="start_state.h" />
     <ClInclude Include="state.h" />

@@ -72,15 +72,6 @@
     <ClCompile Include="level_state.cpp">
       <Filter>Framework\States</Filter>
     </ClCompile>
-    <ClCompile Include="physics_engine.cpp">
-      <Filter>Framework\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="player_test.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="level_test.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sensor.cpp">
       <Filter>Framework\Physics\Bodies</Filter>
     </ClCompile>
@@ -130,15 +121,6 @@
     </ClInclude>
     <ClInclude Include="level_state.h">
       <Filter>Framework\States</Filter>
-    </ClInclude>
-    <ClInclude Include="physics_engine.h">
-      <Filter>Framework\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="player_test.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="level_test.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sensor.h">
       <Filter>Framework\Physics\Bodies</Filter>

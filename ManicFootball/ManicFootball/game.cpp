@@ -33,7 +33,7 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 	world_->SetContinuousPhysics(true);
 
 	// Setting up the state machine here.
-	current_state_ = new InitState(*window_, font_, screen_resolution_, world_, physics_);
+	current_state_ = new InitState(*window_, font_, screen_resolution_, world_);
 	current_state_->OnEnter();
 
 }

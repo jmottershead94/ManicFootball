@@ -39,7 +39,6 @@ class Game
 		sf::Time dt_;
 		sf::Vector2f screen_resolution_;
 		State* current_state_;
-		PhysicsEngine physics_;
 
 		void HandleStates();
 
