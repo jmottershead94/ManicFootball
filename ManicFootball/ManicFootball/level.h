@@ -28,13 +28,13 @@ class Level
 		// Methods.
 		Level();
 		~Level();
-		void Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution);
+		void Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution, bool player_team);
 		void CreateGround();
 		void CreateWall(sf::Vector2f& position, sf::Vector2f& dimension);
 		void CreateNets(bool left_of_the_field);
 		void CreateScoreboard();
-		void CreatePlayer();
-		void CreateOtherPlayer();
+		void CreatePlayer(bool red_team);
+		void CreateOtherPlayer(bool red_team);
 		void CreateFootball(sf::Vector2f& position);
 		void Reset();
 		void UpdateTheScoreboard();

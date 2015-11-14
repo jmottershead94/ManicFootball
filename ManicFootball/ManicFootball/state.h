@@ -12,6 +12,7 @@
 #include <iostream>
 #include <Box2D\Box2D.h>
 #include <SFML/Graphics.hpp>
+#include <SFML/Network.hpp>
 #include <SFML/System/Vector2.hpp>
 
 // The base state class, will be used by all other states.
@@ -50,6 +51,7 @@ class State
 		sf::Text* text_;
 		sf::Text* text_controls_;
 		sf::Vector2f* screen_resolution_;
+		sf::TcpSocket socket_;
 
 };
 

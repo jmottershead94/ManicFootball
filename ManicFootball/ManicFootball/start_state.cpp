@@ -41,14 +41,34 @@ State* StartState::HandleInput()
 		// Close the window.
 		window_->close();
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3))
+	/*else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3))
 	{
 		return new LevelState(*this);
-	}
+	}*/
 
 	// Wait for all of the connections to be made here..
 	// Try and connect to the server.
-	
+	// Use the created socket and connect to 127.0.0.1 (this machine) on port 53000, and use the default time out for this machine.
+	sf::Socket::Status status = socket_.connect("127.0.0.1", 53000);
+
+	// If the socket has connected to the server.
+	if (status == sf::Socket::Done)
+	{
+		// Receive some data from the server for deciding what team the player is on.
+		// Pass the bool into the below function.
+		// And save the timestamp from the server.
+		// Work out a latency time offset.
+
+
+		// Go to the level.
+		return new LevelState(*this, true);
+	}
+	else
+	{
+		// Error, the socket did not connect to the requested server.
+		// Go back to the main menu.
+		return new MenuState(*this);
+	}
 
 	// Returns nothing because there has been no input from the player yet.
 	return nullptr;

@@ -182,7 +182,7 @@ void Level::CreateFootball(sf::Vector2f& position)
 	DynamicBodyRectangle* football = new DynamicBodyRectangle();
 
 	// Initialising the dynamic body for the football.
-	football->Init(position, sf::Vector2f(50.0f, 50.0f), world_, ObjectID::ball, sf::Color::White, 0.9f);
+	football->Init(position, sf::Vector2f(40.0f, 40.0f), world_, ObjectID::ball, sf::Color::White, 0.9f);
 
 	// Adding the game object to the level objects vector.
 	level_objects_.push_back(football);

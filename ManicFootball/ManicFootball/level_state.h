@@ -21,7 +21,7 @@ class LevelState : public State
 
 	public:
 		// Methods.
-		LevelState(const State& current_state);
+		LevelState(const State& current_state, bool player_team);
 		~LevelState();
 		State* HandleInput();
 		void OnEnter();
@@ -31,6 +31,7 @@ class LevelState : public State
 
 	private:
 		// Attributes.
+		bool player_team_;
 		Level level_;
 
 };

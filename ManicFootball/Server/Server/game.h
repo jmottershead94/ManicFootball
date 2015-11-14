@@ -12,6 +12,7 @@
 #include <iostream>
 #include <Box2D\Box2D.h>
 #include <SFML/Graphics.hpp>
+#include <SFML/Network.hpp>
 #include "level.h"
 
 // The main class that will render the window.
@@ -39,6 +40,9 @@ class Game
 		sf::RenderWindow* window_;
 		sf::Time dt_;
 		sf::Vector2f screen_resolution_;
+		sf::TcpSocket player_one_socket_;
+		sf::TcpSocket player_two_socket_;
+		sf::TcpListener connection_listener_;
 		Level level_;
 
 };

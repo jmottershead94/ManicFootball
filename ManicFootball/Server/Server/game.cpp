@@ -31,9 +31,51 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 	world_ = new b2World(gravity);
 	world_->SetContinuousPhysics(true);
 
+	// Binding the listener to the port 53000.
+	// Listen out for any connections on port 53000.
+	if (connection_listener_.listen(53000) != sf::Socket::Done)
+	{
+		// Error for listening on the port number 53000.
+		std::cout << "Connection Listener Error" << std::endl;
+	}
 
-	// Initialising the server level.
-	level_.Init(world_, font_, screen_resolution_);
+	// Checking to see if the first player has connected to the server.
+	if (connection_listener_.accept(player_one_socket_) != sf::Socket::Done)
+	{
+		// Error.
+		// The first player has not made a connection to the server.
+		std::cout << "Player One could not connect." << std::endl;
+	}
+	else
+	{
+		// Send a starter message struct to player one.
+		// Telling them what team they are on. (bool red_team = true).
+		// Sending them the initial server timestamp for timing offsets on the client side.
+
+	}
+
+	// Checking to see if the second player has connected to the server.
+	if (connection_listener_.accept(player_two_socket_) != sf::Socket::Done)
+	{
+		// Error.
+		// The second player has not made a connection to the server.
+		std::cout << "Player Two could not connect." << std::endl;
+	}
+	else
+	{
+		// Send a starter message struct to player two.
+		// Telling them what team they are on. (bool red_team = false).
+		// Sending them the initial server timestamp for timing offsets on the client side.
+
+	}
+
+	// If both player one and two have connected to the server successfully.
+	if ((connection_listener_.accept(player_one_socket_) == sf::Socket::Done)
+		&& (connection_listener_.accept(player_two_socket_) == sf::Socket::Done))
+	{
+		// Initialise the server level.
+		level_.Init(world_, font_, screen_resolution_);
+	}
 
 }
 
