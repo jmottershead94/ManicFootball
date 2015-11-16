@@ -9,7 +9,7 @@ Level::~Level()
 {
 }
 
-void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution, bool player_team)
+void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution, bool player_team, sf::Time& lag_offset)
 {
 
 	// Initialising local attributes.
@@ -18,11 +18,12 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 	blue_team_score_ = 2;							// The current score of the blue team.
 	previous_red_team_score_ = red_team_score_;		// The current previous score of the red team.
 	previous_blue_team_score_ = blue_team_score_;	// The current previous score of the blue team.
+	red_convert_ << red_team_score_;				// Places the textual representation of the red team score integer into red_convert_.
+	blue_convert_ << blue_team_score_;				// Places the textual representation of the blue team score integer into blue_convert_.
 	world_ = world;									// Access to the box2D world.
 	font_ = &font;									// Access to the game font.
 	screen_resolution_ = &game_screen_resolution;	// Access to the game resolution.
-	red_convert_ << red_team_score_;				// Places the textual representation of the red team score integer into red_convert_.
-	blue_convert_ << blue_team_score_;				// Places the textual representation of the blue team score integer into blue_convert_.
+	lag_offset_ = lag_offset;						// What each networked message should take into consideration.
 
 	// Creating the level.
 	CreateGround();

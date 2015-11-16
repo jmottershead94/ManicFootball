@@ -4,7 +4,8 @@
 // This will initialise the game window.
 Game::Game(const float game_screen_width, const float game_screen_height) :
 	world_(nullptr),
-	window_(nullptr)
+	window_(nullptr),
+	ready_(false)
 {
 
 	// Setting the screen width and height.
@@ -31,6 +32,23 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 	world_ = new b2World(gravity);
 	world_->SetContinuousPhysics(true);
 
+	NetworkConnection();
+}
+
+// This will clean up any pointers.
+Game::~Game()
+{
+	
+	if (world_)
+	{
+		delete world_;
+		world_ = nullptr;
+	}
+
+}
+
+void Game::NetworkConnection()
+{
 	// Binding the listener to the port 5000.
 	// Listen out for any connections on port 5000.
 	if (connection_listener_.listen(port_) != sf::Socket::Done)
@@ -58,10 +76,19 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 		// Send a starter message struct to player one.
 		// Telling them what team they are on. (bool red_team = true).
 		// Sending them the initial server timestamp for timing offsets on the client side.
+		StartMessage starting_message;
+		starting_message.player_team = true;		// Setting player one to be on the red team.
+		starting_message.game_clock.restart();	// Restarting the game clock for player one to determine lag offset.
+					
+		// Placing the starting message into the data packet for sending.
+		data_ >> starting_message;
 
-
-		// Initialise the server level.
-		//level_.Init(world_, font_, screen_resolution_);
+		// Sending the data back to the player one socket.
+		if (player_one_socket_.send(data_) != sf::Socket::Done)
+		{
+			// ERROR: The data could not be sent!
+			std::cout << "ERROR: Data could not be sent to player one." << std::endl;
+		}
 	}
 
 	// Checking to see if the second player has connected to the server.
@@ -70,47 +97,52 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 		// Error.
 		// The second player has not made a connection to the server.
 		std::cout << "Client could not connect..." << std::endl;
+		return;
 	}
 	else
 	{
-		std::cout << "Client connected: " << player_two_socket_.getRemoteAddress() << std::endl;	
-		
-		// Send a starter message struct to player one.
+		std::cout << "Client connected: " << player_two_socket_.getRemoteAddress() << std::endl;
+
+		// Send a starter message struct to player two.
 		// Telling them what team they are on. (bool red_team = true).
 		// Sending them the initial server timestamp for timing offsets on the client side.
-		
+		StartMessage starting_message;
+		starting_message.player_team = false;		// Setting player two to be on the blue team.
+		starting_message.game_clock.restart();		// Restarting the game clock for player one to determine lag offset.
 
-		// Initialise the server level.
-		level_.Init(world_, font_, screen_resolution_);
+		// Placing the starting message into the data packet for sending.
+		data_ << starting_message;
+
+		// If the data could not be sent to player two.
+		if (player_two_socket_.send(data_) != sf::Socket::Done)
+		{
+			// ERROR: The data could not be sent!
+			std::cout << "ERROR: Data could not be sent to player two." << std::endl;
+			return;
+		}
+		// Otherwise, the data has been sent.
+		else
+		{
+			// Both players have connected and are ready to start the game.
+			ready_ = true;
+
+			// Place the ready flag into a packet of data.
+			data_ << ready_;
+
+			// Checking to see if both sockets have received the ready flag, continue with the game.
+			if ((player_one_socket_.send(data_) != sf::Socket::Done) || (player_two_socket_.send(data_) != sf::Socket::Done))
+			{
+				// ERROR: The data could not be sent!
+				std::cout << "ERROR: Data could not be sent to the players." << std::endl;
+				return;
+			}
+			else if ((player_one_socket_.send(data_) == sf::Socket::Done) || (player_two_socket_.send(data_) == sf::Socket::Done))
+			{
+				// Initialise the server level.
+				level_.Init(world_, font_, screen_resolution_);
+			}
+		}
 	}
-
-	//// If both player one and two have connected to the server successfully.
-	//if ((connection_listener_.accept(player_one_socket_) == sf::Socket::Done))
-	//{
-	//	std::cout << "Player one is going to the level." << std::endl;
-
-	//	// Initialise the server level.
-	//	level_.Init(world_, font_, screen_resolution_);
-	//}
-	//// Otherwise, one of the players did not connect to the server.
-	//else
-	//{
-	//	// Error message.
-	//	std::cout << "Client could not connect..." << std::endl;
-	//}
-
-}
-
-// This will clean up any pointers.
-Game::~Game()
-{
-	
-	if (world_)
-	{
-		delete world_;
-		world_ = nullptr;
-	}
-
 }
 
 // This will check the current state of the match.
@@ -180,4 +212,17 @@ void Game::Render()
 	// Display the new layout of the window.
 	window_->display();
 
+}
+
+// Overloading packet operator functions.
+// Used for sending packet data.
+sf::Packet& operator<<(sf::Packet& packet, const Game::StartMessage& message)
+{
+	return packet << message;
+}
+
+// Used for recieving packet data.
+sf::Packet& operator>>(sf::Packet& packet, const Game::StartMessage& message)
+{
+	return packet >> message;
 }

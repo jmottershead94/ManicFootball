@@ -91,7 +91,7 @@ void LevelState::OnEnter()
 	
 	// Starting the level state specific stuff.
 	// Load the level.
-	level_.Init(world_, *font_, *screen_resolution_, player_team_);
+	level_.Init(world_, *font_, *screen_resolution_, player_team_, lag_offset_);
 
 }
 

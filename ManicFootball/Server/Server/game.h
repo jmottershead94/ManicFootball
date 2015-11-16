@@ -18,8 +18,6 @@
 #include <SFML/Network.hpp>
 #include "level.h"
 
-using std::chrono::duration_cast;
-
 // The main class that will render the window.
 class Game
 {
@@ -35,11 +33,18 @@ class Game
 		// Getters.
 		inline sf::RenderWindow* getWindow()	{ return window_; }				// This will return the current game window.
 
+		struct StartMessage
+		{
+			bool player_team;			// What team the player will be on.
+			sf::Clock game_clock;		// The current game time clock that both clients will base their lag offset from.
+		};
+
 	private:
 		// Attributes.
 		const unsigned int frame_rate_= 60;
 		const unsigned short port_ = 5000;
 		const std::string ip_address_ = "127.0.0.1";
+		bool ready_;
 		b2World* world_;
 		sf::Clock clock_;
 		sf::Event event_;
@@ -47,23 +52,23 @@ class Game
 		sf::RenderWindow* window_;
 		sf::Time dt_;
 		sf::Vector2f screen_resolution_;
+		sf::Packet data_;
 		sf::TcpSocket player_one_socket_;
 		sf::TcpSocket player_two_socket_;
 		sf::TcpListener connection_listener_;
 		Level level_;
 
-		struct StartMessage
-		{
-			bool player_team;			// What team the player will be on.
-			sf::Clock game_clock;		// The current 
-			sf::Time current_game_time;	// The current game time, used to work out latency time offset.
+		// Methods.
+		void NetworkConnection();
 
-			StartMessage()
-			{
-				current_game_time = game_clock.getElapsedTime();
-			};
-		};
+		// Overloading.
+		// Used for sending packet data.
+		friend sf::Packet& operator<<(sf::Packet& packet, const StartMessage& message);
 
+		// Used for recieving packet data.
+		friend sf::Packet& operator>>(sf::Packet& packet, const StartMessage& message);
 };
+
+
 
 #endif

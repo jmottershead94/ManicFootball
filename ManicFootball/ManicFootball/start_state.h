@@ -33,6 +33,8 @@ class StartState : public State
 
 	private:
 		// Attributes.
+		bool ready_;					// If the level should start.
+		sf::Clock lag_offset_clock_;	// This will be used to work out the lag offset from the server.
 
 };
 

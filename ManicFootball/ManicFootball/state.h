@@ -54,7 +54,22 @@ class State
 		sf::Text* text_;
 		sf::Text* text_controls_;
 		sf::Vector2f* screen_resolution_;
+		sf::Time lag_offset_;
 		sf::TcpSocket* socket_;
+		sf::Packet data_;
+
+		struct StartMessage
+		{
+			bool player_team;			// What team the player will be on.
+			sf::Clock game_clock;		// The current game time clock that both clients will base their lag offset from.
+		};
+
+		// Overloading.
+		// Used for sending packet data.
+		friend sf::Packet& operator<<(sf::Packet& packet, const StartMessage& message);
+
+		// Used for recieving packet data.
+		friend sf::Packet& operator>>(sf::Packet& packet, const StartMessage& message);
 
 };
 

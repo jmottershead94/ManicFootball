@@ -28,7 +28,7 @@ class Level
 		// Methods.
 		Level();
 		~Level();
-		void Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution, bool player_team);
+		void Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution, bool player_team, sf::Time& lag_offset);
 		void CreateGround();
 		void CreateWall(sf::Vector2f& position, sf::Vector2f& dimension);
 		void CreateNets(bool left_of_the_field);
@@ -69,13 +69,14 @@ class Level
 
 	private:
 		// Attributes.
+		std::ostringstream red_convert_;			// Convert the red score integer to a string.
+		std::ostringstream blue_convert_;			// Convert the blue score integer to a string.
 		std::vector<GameObject*> level_objects_;	// The vector of level objects, stores all game objects in the world.
 		std::vector<sf::Text*> scores_;
 		b2World* world_;							// Points to the box2D world.
 		sf::Font* font_;							// Points to the game font.
 		sf::Vector2f* screen_resolution_;			// Points to the screen resolution.
-		std::ostringstream red_convert_;			// Convert the red score integer to a string.
-		std::ostringstream blue_convert_;			// Convert the blue score integer to a string.
+		sf::Time lag_offset_;						// The lag offset for each message from the server.
 
 };
 

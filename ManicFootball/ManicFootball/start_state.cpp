@@ -57,16 +57,67 @@ State* StartState::HandleInput()
 	// If the socket has connected to the server.
 	if (status == sf::Socket::Done)
 	{
+		// Start the lag timer.
+		lag_offset_clock_.restart();
+		
 		std::cout << "Connected to the server: " << server_ip_address_ << std::endl;
 
 		// Receive some data from the server for deciding what team the player is on.
 		// Pass the bool into the below function.
 		// And save the timestamp from the server.
 		// Work out a latency time offset.
+		StartMessage starting_message;
 
+		// If our socket has received some data.
+		if (socket_->receive(data_) != sf::Socket::Done)
+		{
+			// We were unable to read some data from the starting message.
+			std::cout << "ERROR: Could not read the message from the server." << std::endl;
+		}
+		else
+		{
+			// Check to see if it is okay to read the data.
+			if (data_ >> starting_message)
+			{
+				// We have read some data from the starting message!
+				sf::Time RRT;
+				sf::Time lag;
 
-		// Go to the level.
-		return new LevelState(*this, true);
+				// Get the current time, and the round trip time from the server message.
+				lag = lag_offset_clock_.getElapsedTime();
+				RRT = starting_message.game_clock.getElapsedTime();
+
+				// Calculate the lag offset.
+				lag_offset_ = lag - RRT;
+
+				// TESTING.
+				std::cout << "The lag offset is = " << lag_offset_.asMilliseconds() << std::endl;
+
+				// Store what team the player will be on.
+				bool team = starting_message.player_team;
+
+				// Wait for the second player to connect.
+				if (socket_->receive(data_) == sf::Socket::Done)
+				{
+					// Check to see if it is okay to read the data.
+					if (data_ >> ready_)
+					{
+						// Go to the level, with the team set from the server.
+						return new LevelState(*this, team);
+					}
+					else
+					{
+						// The packet is not okay to read.
+						std::cout << "ERROR: Unable to read the data." << std::endl;
+					}
+				}
+			}
+			else
+			{
+				// The packet is not okay to read.
+				std::cout << "ERROR: Unable to read the data." << std::endl;
+			}
+		}
 	}
 	else
 	{
