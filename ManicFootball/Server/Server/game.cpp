@@ -75,16 +75,16 @@ void Game::NetworkConnection()
 	{
 		std::cout << "Client connected: " << player_one_socket_.getRemoteAddress() << std::endl;
 
+		// Clear the packet.
+		data_.clear();
+
 		// Send a starter message struct to player one.
 		// Telling them what team they are on. (bool red_team = true).
 		// Sending them the initial server timestamp for timing offsets on the client side.
 		StartMessage starting_message;
 		starting_message.player_team = true;							// Setting player one to be on the red team.
-		starting_message.time = clock_.restart().asSeconds();		// Restarting the game clock for player one to determine lag offset.
+		starting_message.time = clock_.restart().asMilliseconds();		// Restarting the game clock for player one to determine lag offset.
 		
-		// Clear the packet.
-		data_.clear();
-
 		// Placing the starting message into the data packet for sending.
 		data_ << starting_message;
 
@@ -108,16 +108,16 @@ void Game::NetworkConnection()
 	{
 		std::cout << "Client connected: " << player_two_socket_.getRemoteAddress() << std::endl;
 
-		// Send a starter message struct to player two.
-		// Telling them what team they are on. (bool red_team = true).
-		// Sending them the initial server timestamp for timing offsets on the client side.
-		StartMessage starting_message;
-		starting_message.player_team = false;							// Setting player two to be on the blue team.
-		starting_message.time = clock_.restart().asSeconds();		// Restarting the game clock for player one to determine lag offset.
-
 		// Clear the packet.
 		data_.clear();
 
+		// Send a starter message struct to player one.
+		// Telling them what team they are on. (bool red_team = true).
+		// Sending them the initial server timestamp for timing offsets on the client side.
+		StartMessage starting_message;
+		starting_message.player_team = true;							// Setting player one to be on the red team.
+		starting_message.time = clock_.restart().asMilliseconds();		// Restarting the game clock for player one to determine lag offset.
+		
 		// Placing the starting message into the data packet for sending.
 		data_ << starting_message;
 	

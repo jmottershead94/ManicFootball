@@ -36,12 +36,11 @@ class Game
 		// Getters.
 		inline sf::RenderWindow* getWindow()	{ return window_; }				// This will return the current game window.
 
-		//// The structure for the game's starting message.
+		// The structure for the game's starting message.
 		struct StartMessage
 		{
 			bool player_team;			// What team the player will be on.
-			//sf::Clock game_clock;		// The current game time clock that both clients will base their lag offset from.
-			float time;
+			float time;					// The current game time.
 		};
 
 	private:

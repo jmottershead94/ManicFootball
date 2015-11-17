@@ -58,7 +58,7 @@ State* StartState::HandleInput()
 	if (status == sf::Socket::Done)
 	{
 		// Start the lag timer.
-		lag_offset_clock_.restart();
+		lag_offset_clock_.restart().asMilliseconds();
 		
 		std::cout << "Connected to the server: " << server_ip_address_ << std::endl;
 
@@ -78,19 +78,15 @@ State* StartState::HandleInput()
 			if (data_ >> starting_message)
 			{
 				// We have read some data from the starting message!
-				float RRT;
-				sf::Time lag;
-
-				// Get the current time, and the round trip time from the server message.
-				lag = lag_offset_clock_.getElapsedTime();
-				RRT = starting_message.time;
-
+				// Get the current time, and the half round trip time from the server message.
+				float RRT = (starting_message.time * 0.5f);
+				float lag = lag_offset_clock_.getElapsedTime().asMilliseconds();
 				
-				std::cout << "The lag client side is = " << lag.asSeconds() << std::endl;
+				std::cout << "The lag client side is = " << lag << std::endl;
 				std::cout << "The lag server side is = " << RRT << std::endl;
 
 				// Calculate the lag offset.
-				lag_offset_ = lag.asSeconds() - (RRT / 2.0f);
+				lag_offset_ = RRT - lag;
 
 				// TESTING.
 				std::cout << "The lag offset is = " << lag_offset_ << std::endl;
