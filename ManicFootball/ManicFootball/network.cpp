@@ -2,47 +2,10 @@
 
 Network::Network()
 {
-
-	// Initialising a new socket.
-	socket_ = new sf::TcpSocket();
-
 }
 
 Network::~Network()
 {
-}
-
-bool Network::ConnectedToServer()
-{
-
-	// Use the created socket and connect to 127.0.0.1 (this machine) on port 5000, and use the default time out for this machine.
-	sf::Socket::Status status = socket_->connect(kIPAddress, kPort);
-
-	// If the socket has not connected to the server.
-	if (status != sf::Socket::Done)
-	{
-		// ERROR: Could not connect to the server.
-		std::cout << kConnectionErrorMessage << std::endl;
-
-		// The client has not connected to the server.
-		return false;
-	}
-	// Otherwise, if the socket does connect to the server.
-	else
-	{
-		// Start the lag timer.
-		lag_offset_clock_.restart().asMilliseconds();
-
-		// Tell the user what IP address they have connected to.
-		std::cout << "Connected to the server: " << kIPAddress << std::endl;
-
-		// The client has connected to the server.
-		return true;
-	}
-
-	// The client has not connected to the server.
-	return false;
-
 }
 
 bool Network::ReceivedStartingMessage()
@@ -55,10 +18,10 @@ bool Network::ReceivedStartingMessage()
 	data_.clear();
 
 	// If the socket did not receive any data.
-	if (socket_->receive(data_) != sf::Socket::Done)
+	if (connection_.GetSocket()->receive(data_) != sf::Socket::Done)
 	{
-		// We were unable to read some data from the starting message.
-		std::cout << kDataReceivingErrorMessage << std::endl;
+		// ERROR: We were unable to read some data from the starting message.
+		DisplayErrorMessage(kDataReceivingErrorMessage);
 
 		// We have not received a starting message from the server.
 		return false;
@@ -94,7 +57,7 @@ bool Network::ReceivedStartingMessage()
 		else
 		{
 			// ERROR: The packet is not okay to read.
-			std::cout << kDataReadingErrorMessage << std::endl;
+			DisplayErrorMessage(kDataReadingErrorMessage);
 
 			// We have not received a starting message from the server.
 			return false;
@@ -113,10 +76,10 @@ bool Network::ReceivedReadyMessage()
 	data_.clear();
 
 	// Wait for the second player to connect.
-	if (socket_->receive(data_) != sf::Socket::Done)
+	if (connection_.GetSocket()->receive(data_) != sf::Socket::Done)
 	{
-		// We were unable to read some data from the starting message.
-		std::cout << kDataReceivingErrorMessage << std::endl;
+		// ERROR: We were unable to read some data from the starting message.
+		DisplayErrorMessage(kDataReceivingErrorMessage);
 
 		// We have not received a ready flag from the server yet.
 		return false;
@@ -135,7 +98,7 @@ bool Network::ReceivedReadyMessage()
 		else
 		{
 			// ERROR: The packet is not okay to read.
-			std::cout << kDataReadingErrorMessage << std::endl;
+			DisplayErrorMessage(kDataReadingErrorMessage);
 
 			// We have not been able to read the ready flag from the server.
 			return false;

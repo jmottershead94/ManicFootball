@@ -8,11 +8,10 @@
 #define _NETWORK_H_
 
 // Include files here.
-#include <iostream>
-#include <array>
-#include <SFML/Network.hpp>
+#include "utilities.h"
+#include "connection.h"
 
-class Network
+class Network : public Utilities
 {
 
 	public:
@@ -32,25 +31,20 @@ class Network
 
 		// Getters.
 		// This will return the team that the client is on.
-		inline bool GetAssignedTeam()	{ return team_; };
+		inline bool GetAssignedTeam()		{ return team_; };
 
 		// This will return the amount of lag that was calculate between the server and client.
-		inline float GetLagOffset()		{ return lag_offset_; }
+		inline float GetLagOffset()			{ return lag_offset_; }
+
+		// This will return the current connection that the network is using.
+		inline Connection& GetConnection()	{ return connection_; }
 
 	private:
 		// Attributes.
-		const unsigned short kPort = 5000;
-		const std::string kIPAddress = "127.0.0.1";
-		const std::string kTCPListenerErrorMessage = "ERROR: TCP connection listener failed.";	// The error message if tcp connection messes up.
-		const std::string kConnectionErrorMessage = "ERROR: Client could not connect.";			// The error message if the client cannot connect.
-		const std::string kDataSendingErrorMessage = "ERROR: Data could not be sent.";			// The error message if the SFML packets cannot send.
-		const std::string kDataReceivingErrorMessage = "ERROR: Data could not be received.";	// The error message if the SFML packets cannot be received.
-		const std::string kDataReadingErrorMessage = "ERROR: Data could not be read.";			// The error message if the SFML packets cannot be read.
 		bool team_;
 		float lag_offset_;
-		sf::TcpSocket* socket_;
 		sf::Packet data_;
-		sf::Clock lag_offset_clock_;	// This will be used to work out the lag offset from the server.
+		Connection connection_;
 
 		// Methods.
 		// Overloading packet operator functions.

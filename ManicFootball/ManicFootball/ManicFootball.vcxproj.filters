@@ -78,6 +78,12 @@
     <ClCompile Include="network.cpp">
       <Filter>Framework\Network</Filter>
     </ClCompile>
+    <ClCompile Include="utilities.cpp">
+      <Filter>Framework\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="connection.cpp">
+      <Filter>Framework\Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="init_state.h">
@@ -132,6 +138,12 @@
       <Filter>Framework\States</Filter>
     </ClInclude>
     <ClInclude Include="network.h">
+      <Filter>Framework\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities.h">
+      <Filter>Framework\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="connection.h">
       <Filter>Framework\Network</Filter>
     </ClInclude>
   </ItemGroup>

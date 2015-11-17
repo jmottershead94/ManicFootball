@@ -81,6 +81,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="connection.cpp" />
     <ClCompile Include="dynamic_body_circle.cpp" />
     <ClCompile Include="dynamic_body_rectangle.cpp" />
     <ClCompile Include="end_match_state.cpp" />
@@ -97,8 +98,10 @@
     <ClCompile Include="start_state.cpp" />
     <ClCompile Include="state.cpp" />
     <ClCompile Include="static_body.cpp" />
+    <ClCompile Include="utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="connection.h" />
     <ClInclude Include="dynamic_body_circle.h" />
     <ClInclude Include="dynamic_body_rectangle.h" />
     <ClInclude Include="end_match_state.h" />
@@ -117,6 +120,7 @@
     <ClInclude Include="start_state.h" />
     <ClInclude Include="state.h" />
     <ClInclude Include="static_body.h" />
+    <ClInclude Include="utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\External\Build\vs2013\Box2D.vcxproj">

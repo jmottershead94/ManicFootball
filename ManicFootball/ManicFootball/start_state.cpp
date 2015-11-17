@@ -47,7 +47,7 @@ State* StartState::HandleInput()
 	}
 
 	// Check to see if we have connected to the server.
-	if (network_->ConnectedToServer())
+	if (network_->GetConnection().ToServer())
 	{
 		// Check to see if we have received any starting messages.
 		if (network_->ReceivedStartingMessage())
