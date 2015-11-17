@@ -15,6 +15,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
 #include <SFML/System/Vector2.hpp>
+#include "network.h"
 
 // The base state class, will be used by all other states.
 class State
@@ -57,6 +58,7 @@ class State
 		float lag_offset_;
 		sf::TcpSocket* socket_;
 		sf::Packet data_;
+		Network* network_;
 
 		struct StartMessage
 		{
@@ -66,30 +68,11 @@ class State
 
 		// Overloading packet operator functions.
 		// Used for sending packet data.
-		// This will allow me to send clock data through packets.
-		/*friend sf::Packet& operator <<(sf::Packet& packet, const sf::Clock& clock)
-		{
-		return packet << clock;
-		}*/
-
 		// This will allow me to send struct data through packets.
 		friend sf::Packet& operator <<(sf::Packet& packet, const State::StartMessage& message)
 		{
 			return packet << message.player_team << message.time;
 		}
-
-		// Used for receiving packet data.
-		// This will allow me to receive clock data through packets.
-		/*friend sf::Packet& operator >>(sf::Packet& packet, sf::Clock& clock)
-		{
-		return packet >> clock;
-		}*/
-
-		// This will allow me to receive boolean data through packets.
-		/*friend sf::Packet& operator >>(sf::Packet& packet, const bool& player_team)
-		{
-		return packet >> player_team;
-		}*/
 
 		// This will allow me to receive struct data through packets.
 		friend sf::Packet& operator >>(sf::Packet& packet, State::StartMessage& message)

@@ -75,6 +75,9 @@
     <ClCompile Include="end_match_state.cpp">
       <Filter>Framework\States</Filter>
     </ClCompile>
+    <ClCompile Include="network.cpp">
+      <Filter>Framework\Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="init_state.h">
@@ -127,6 +130,9 @@
     </ClInclude>
     <ClInclude Include="end_match_state.h">
       <Filter>Framework\States</Filter>
+    </ClInclude>
+    <ClInclude Include="network.h">
+      <Filter>Framework\Network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

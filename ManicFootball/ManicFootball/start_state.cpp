@@ -11,6 +11,10 @@
 //////////////////////////////////////////////////////////
 StartState::StartState(const State& current_state) : State(current_state)
 {
+
+	// Creating a new network connection for the client.
+	network_ = new Network();
+
 }
 
 //////////////////////////////////////////////////////////
@@ -41,98 +45,31 @@ State* StartState::HandleInput()
 		// Close the window.
 		window_->close();
 	}
-	/*else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3))
+
+	// Check to see if we have connected to the server.
+	if (network_->ConnectedToServer())
 	{
-		return new LevelState(*this);
-	}*/
-
-	// Creating a new socket.
-	socket_ = new sf::TcpSocket();
-
-	// Wait for all of the connections to be made here..
-	// Try and connect to the server.
-	// Use the created socket and connect to 127.0.0.1 (this machine) on port 5000, and use the default time out for this machine.
-	sf::Socket::Status status = socket_->connect(server_ip_address_, port_);
-
-	// If the socket has connected to the server.
-	if (status == sf::Socket::Done)
-	{
-		// Start the lag timer.
-		lag_offset_clock_.restart().asMilliseconds();
-		
-		std::cout << "Connected to the server: " << server_ip_address_ << std::endl;
-
-		// Receive some data from the server for deciding what team the player is on.
-		// Pass the bool into the below function.
-		// And save the timestamp from the server.
-		// Work out a latency time offset.
-		StartMessage starting_message;
-
-		// Clear the packet.
-		data_.clear();
-
-		// If our socket has received some data.
-		if (socket_->receive(data_) == sf::Socket::Done)
+		// Check to see if we have received any starting messages.
+		if (network_->ReceivedStartingMessage())
 		{
-			// Check to see if it is okay to read the data.
-			if (data_ >> starting_message)
+			// Check to see if the client is now ready.
+			if (network_->ReceivedReadyMessage())
 			{
-				// We have read some data from the starting message!
-				// Get the current time, and the half round trip time from the server message.
-				float RRT = (starting_message.time * 0.5f);
-				float lag = lag_offset_clock_.getElapsedTime().asMilliseconds();
-				
-				std::cout << "The lag client side is = " << lag << std::endl;
-				std::cout << "The lag server side is = " << RRT << std::endl;
-
-				// Calculate the lag offset.
-				lag_offset_ = RRT - lag;
-
-				// TESTING.
-				std::cout << "The lag offset is = " << lag_offset_ << std::endl;
-
-				// Store what team the player will be on.
-				bool team = starting_message.player_team;
-
-				// Clear the packet.
-				data_.clear();
-
-				// Wait for the second player to connect.
-				if (socket_->receive(data_) == sf::Socket::Done)
-				{
-					// Check to see if it is okay to read the data.
-					if (data_ >> ready_)
-					{
-						// Go to the level, with the team set from the server.
-						return new LevelState(*this, team);
-					}
-					else
-					{
-						// The packet is not okay to read.
-						std::cout << "ERROR: Unable to read the data." << std::endl;
-					}
-				}
+				// Continue with the game.
+				return new LevelState(*this);
 			}
-			else
-			{
-				// The packet is not okay to read.
-				std::cout << "ERROR: Unable to read the data." << std::endl;
-			}
-			// We were unable to read some data from the starting message.
-			std::cout << "ERROR: Could not read the message from the server." << std::endl;
 		}
+		// Otherwise, we have not received a starting message.
 		else
 		{
-			// We were unable to read some data from the starting message.
-			std::cout << "ERROR: Could not read the message from the server." << std::endl;
+			// Return to the main menu.
+			return new MenuState(*this);
 		}
 	}
+	// Otherwise, we have not connected to the server.
 	else
 	{
-		std::cout << "ERROR: Could not connect to the server." << std::endl;
-
-		// Error, the socket did not connect to the requested server.
-		// Go back to the main menu.
+		// Return to the main menu.
 		return new MenuState(*this);
 	}
 

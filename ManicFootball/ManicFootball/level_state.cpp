@@ -9,8 +9,7 @@
 // Passing in the current state allows for				//
 // communication between the states.					//
 //////////////////////////////////////////////////////////
-LevelState::LevelState(const State& current_state, bool player_team) : State(current_state),
-	player_team_(player_team)
+LevelState::LevelState(const State& current_state) : State(current_state)
 {
 }
 
@@ -91,7 +90,7 @@ void LevelState::OnEnter()
 	
 	// Starting the level state specific stuff.
 	// Load the level.
-	level_.Init(world_, *font_, *screen_resolution_, player_team_, lag_offset_);
+	level_.Init(world_, *font_, *screen_resolution_, network_->GetAssignedTeam(), network_->GetLagOffset());
 
 }
 
