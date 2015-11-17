@@ -41,16 +41,3 @@ void State::Cleanup()
 void State::Update(float dt)
 {
 }
-
-// Overloading packet operator functions.
-// Used for sending packet data.
-sf::Packet& operator<<(sf::Packet& packet, const State::StartMessage& message)
-{
-	return packet << message;
-}
-
-// Used for recieving packet data.
-sf::Packet& operator>>(sf::Packet& packet, const State::StartMessage& message)
-{
-	return packet >> message;
-}

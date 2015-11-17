@@ -28,7 +28,7 @@ class Level
 		// Methods.
 		Level();
 		~Level();
-		void Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution, bool player_team, sf::Time& lag_offset);
+		void Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution, bool player_team, float& lag_offset);
 		void CreateGround();
 		void CreateWall(sf::Vector2f& position, sf::Vector2f& dimension);
 		void CreateNets(bool left_of_the_field);
@@ -76,7 +76,7 @@ class Level
 		b2World* world_;							// Points to the box2D world.
 		sf::Font* font_;							// Points to the game font.
 		sf::Vector2f* screen_resolution_;			// Points to the screen resolution.
-		sf::Time lag_offset_;						// The lag offset for each message from the server.
+		float lag_offset_;						// The lag offset for each message from the server.
 
 };
 

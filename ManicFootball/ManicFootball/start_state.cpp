@@ -68,33 +68,38 @@ State* StartState::HandleInput()
 		// Work out a latency time offset.
 		StartMessage starting_message;
 
+		// Clear the packet.
+		data_.clear();
+
 		// If our socket has received some data.
-		if (socket_->receive(data_) != sf::Socket::Done)
-		{
-			// We were unable to read some data from the starting message.
-			std::cout << "ERROR: Could not read the message from the server." << std::endl;
-		}
-		else
+		if (socket_->receive(data_) == sf::Socket::Done)
 		{
 			// Check to see if it is okay to read the data.
 			if (data_ >> starting_message)
 			{
 				// We have read some data from the starting message!
-				sf::Time RRT;
+				float RRT;
 				sf::Time lag;
 
 				// Get the current time, and the round trip time from the server message.
 				lag = lag_offset_clock_.getElapsedTime();
-				RRT = starting_message.game_clock.getElapsedTime();
+				RRT = starting_message.time;
+
+				
+				std::cout << "The lag client side is = " << lag.asSeconds() << std::endl;
+				std::cout << "The lag server side is = " << RRT << std::endl;
 
 				// Calculate the lag offset.
-				lag_offset_ = lag - RRT;
+				lag_offset_ = lag.asSeconds() - (RRT / 2.0f);
 
 				// TESTING.
-				std::cout << "The lag offset is = " << lag_offset_.asMilliseconds() << std::endl;
+				std::cout << "The lag offset is = " << lag_offset_ << std::endl;
 
 				// Store what team the player will be on.
 				bool team = starting_message.player_team;
+
+				// Clear the packet.
+				data_.clear();
 
 				// Wait for the second player to connect.
 				if (socket_->receive(data_) == sf::Socket::Done)
@@ -117,11 +122,18 @@ State* StartState::HandleInput()
 				// The packet is not okay to read.
 				std::cout << "ERROR: Unable to read the data." << std::endl;
 			}
+			// We were unable to read some data from the starting message.
+			std::cout << "ERROR: Could not read the message from the server." << std::endl;
+		}
+		else
+		{
+			// We were unable to read some data from the starting message.
+			std::cout << "ERROR: Could not read the message from the server." << std::endl;
 		}
 	}
 	else
 	{
-		std::cout << "Connection error: Could not connect to the server." << std::endl;
+		std::cout << "ERROR: Could not connect to the server." << std::endl;
 
 		// Error, the socket did not connect to the requested server.
 		// Go back to the main menu.
@@ -153,7 +165,7 @@ void StartState::OnEnter()
 
 		// Set the font of the text that is going to be displayed and set what the text will display.
 		text_->setFont(*font_);
-		text_->setString("Waiting for connections...");
+		text_->setString("Waiting for players...");
 		text_->setPosition(screen_resolution_->x * 0.2f, screen_resolution_->y * 0.25f);
 		text_->setCharacterSize(64);
 		text_->setColor(sf::Color::White);

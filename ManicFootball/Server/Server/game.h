@@ -23,6 +23,9 @@ class Game
 {
 
 	public:
+		// Attributes.
+		bool sent_, received_;
+
 		// Methods.
 		Game(const float game_screen_width, const float game_screen_height);
 		~Game();
@@ -33,10 +36,12 @@ class Game
 		// Getters.
 		inline sf::RenderWindow* getWindow()	{ return window_; }				// This will return the current game window.
 
+		//// The structure for the game's starting message.
 		struct StartMessage
 		{
 			bool player_team;			// What team the player will be on.
-			sf::Clock game_clock;		// The current game time clock that both clients will base their lag offset from.
+			//sf::Clock game_clock;		// The current game time clock that both clients will base their lag offset from.
+			float time;
 		};
 
 	private:
@@ -45,6 +50,7 @@ class Game
 		const unsigned short port_ = 5000;
 		const std::string ip_address_ = "127.0.0.1";
 		bool ready_;
+		
 		b2World* world_;
 		sf::Clock clock_;
 		sf::Event event_;
@@ -60,13 +66,39 @@ class Game
 
 		// Methods.
 		void NetworkConnection();
-
-		// Overloading.
+		
+		// Overloading packet operator functions.
 		// Used for sending packet data.
-		friend sf::Packet& operator<<(sf::Packet& packet, const StartMessage& message);
+		// This will allow me to send clock data through packets.
+		/*friend sf::Packet& operator <<(sf::Packet& packet, const sf::Clock& clock)
+		{
+			return packet << clock;
+		}*/
 
-		// Used for recieving packet data.
-		friend sf::Packet& operator>>(sf::Packet& packet, const StartMessage& message);
+		// This will allow me to send struct data through packets.
+		friend sf::Packet& operator <<(sf::Packet& packet, const Game::StartMessage& message)
+		{
+			return packet << message.player_team << message.time;
+		}
+
+		// Used for receiving packet data.
+		// This will allow me to receive clock data through packets.
+		/*friend sf::Packet& operator >>(sf::Packet& packet, sf::Clock clock)
+		{
+			return packet >> clock;
+		}*/
+
+		// This will allow me to receive boolean data through packets.
+		/*friend sf::Packet& operator >>(sf::Packet& packet, const bool& player_team)
+		{
+			return packet >> player_team;
+		}*/
+
+		// This will allow me to receive struct data through packets.
+		friend sf::Packet& operator >>(sf::Packet& packet, Game::StartMessage& message)
+		{
+			return packet >> message.player_team >> message.time;
+		}
 };
 
 

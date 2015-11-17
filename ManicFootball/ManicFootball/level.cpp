@@ -9,7 +9,7 @@ Level::~Level()
 {
 }
 
-void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution, bool player_team, sf::Time& lag_offset)
+void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution, bool player_team, float& lag_offset)
 {
 
 	// Initialising local attributes.

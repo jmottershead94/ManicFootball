@@ -22,6 +22,9 @@
     <Filter Include="Framework\Physics\Bodies">
       <UniqueIdentifier>{931a4e29-fc27-4a4f-84df-826507f5b2cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Network">
+      <UniqueIdentifier>{f6c1eac3-a0db-43ec-8411-8f07b43911cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="server.cpp">

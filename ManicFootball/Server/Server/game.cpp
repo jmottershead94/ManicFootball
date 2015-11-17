@@ -5,18 +5,20 @@
 Game::Game(const float game_screen_width, const float game_screen_height) :
 	world_(nullptr),
 	window_(nullptr),
-	ready_(false)
+	ready_(false),
+	sent_(false),
+	received_(false)
 {
 
 	// Setting the screen width and height.
 	screen_resolution_.x = game_screen_width;
 	screen_resolution_.y = game_screen_height;
 
-	// Setting up the game window with variable screen resolution.
-	window_ = new sf::RenderWindow(sf::VideoMode((unsigned int)screen_resolution_.x, (unsigned int)screen_resolution_.y), "Manic Football");
-	
-	// This will lock the frame rate of the game window to 60 fps.
-	window_->setFramerateLimit(frame_rate_);
+	//// Setting up the game window with variable screen resolution.
+	//window_ = new sf::RenderWindow(sf::VideoMode((unsigned int)screen_resolution_.x, (unsigned int)screen_resolution_.y), "Manic Football");
+	//
+	//// This will lock the frame rate of the game window to 60 fps.
+	//window_->setFramerateLimit(frame_rate_);
 
 	// Handling the font loading.
 	if (!font_.loadFromFile("Resources/Fonts/heavy_data.ttf"))
@@ -77,11 +79,14 @@ void Game::NetworkConnection()
 		// Telling them what team they are on. (bool red_team = true).
 		// Sending them the initial server timestamp for timing offsets on the client side.
 		StartMessage starting_message;
-		starting_message.player_team = true;		// Setting player one to be on the red team.
-		starting_message.game_clock.restart();	// Restarting the game clock for player one to determine lag offset.
-					
+		starting_message.player_team = true;							// Setting player one to be on the red team.
+		starting_message.time = clock_.restart().asSeconds();		// Restarting the game clock for player one to determine lag offset.
+		
+		// Clear the packet.
+		data_.clear();
+
 		// Placing the starting message into the data packet for sending.
-		data_ >> starting_message;
+		data_ << starting_message;
 
 		// Sending the data back to the player one socket.
 		if (player_one_socket_.send(data_) != sf::Socket::Done)
@@ -107,12 +112,15 @@ void Game::NetworkConnection()
 		// Telling them what team they are on. (bool red_team = true).
 		// Sending them the initial server timestamp for timing offsets on the client side.
 		StartMessage starting_message;
-		starting_message.player_team = false;		// Setting player two to be on the blue team.
-		starting_message.game_clock.restart();		// Restarting the game clock for player one to determine lag offset.
+		starting_message.player_team = false;							// Setting player two to be on the blue team.
+		starting_message.time = clock_.restart().asSeconds();		// Restarting the game clock for player one to determine lag offset.
+
+		// Clear the packet.
+		data_.clear();
 
 		// Placing the starting message into the data packet for sending.
 		data_ << starting_message;
-
+	
 		// If the data could not be sent to player two.
 		if (player_two_socket_.send(data_) != sf::Socket::Done)
 		{
@@ -126,6 +134,9 @@ void Game::NetworkConnection()
 			// Both players have connected and are ready to start the game.
 			ready_ = true;
 
+			// Clear the packet.
+			data_.clear();
+
 			// Place the ready flag into a packet of data.
 			data_ << ready_;
 
@@ -136,8 +147,14 @@ void Game::NetworkConnection()
 				std::cout << "ERROR: Data could not be sent to the players." << std::endl;
 				return;
 			}
-			else if ((player_one_socket_.send(data_) == sf::Socket::Done) || (player_two_socket_.send(data_) == sf::Socket::Done))
+			else if ((player_one_socket_.send(data_) == sf::Socket::Done) && (player_two_socket_.send(data_) == sf::Socket::Done))
 			{
+				// Setting up the game window with variable screen resolution.
+				window_ = new sf::RenderWindow(sf::VideoMode((unsigned int)screen_resolution_.x, (unsigned int)screen_resolution_.y), "Manic Football");
+
+				// This will lock the frame rate of the game window to 60 fps.
+				window_->setFramerateLimit(frame_rate_);
+
 				// Initialise the server level.
 				level_.Init(world_, font_, screen_resolution_);
 			}
@@ -213,16 +230,31 @@ void Game::Render()
 	window_->display();
 
 }
-
-// Overloading packet operator functions.
-// Used for sending packet data.
-sf::Packet& operator<<(sf::Packet& packet, const Game::StartMessage& message)
-{
-	return packet << message;
-}
-
-// Used for recieving packet data.
-sf::Packet& operator>>(sf::Packet& packet, const Game::StartMessage& message)
-{
-	return packet >> message;
-}
+//
+//// Overloading packet operator functions.
+//// Used for sending packet data.
+//sf::Packet& operator <<(sf::Packet& packet, const sf::Clock& clock)
+//{
+//	return packet << clock;
+//}
+//
+//sf::Packet& operator <<(sf::Packet& packet, const Game::StartMessage& message)
+//{
+//	return packet << message.player_team << message.game_clock;
+//}
+//
+//// Used for recieving packet data.
+//sf::Packet& operator >>(sf::Packet& packet, const sf::Clock& clock)
+//{
+//	return packet >> clock;
+//}
+//
+//sf::Packet& operator >>(sf::Packet& packet, const bool& player_team)
+//{
+//	return packet >> player_team;
+//}
+//
+//sf::Packet& operator >>(sf::Packet& packet, const Game::StartMessage& message)
+//{
+//	return packet >> message.player_team >> message.game_clock;
+//}

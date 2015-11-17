@@ -54,22 +54,48 @@ class State
 		sf::Text* text_;
 		sf::Text* text_controls_;
 		sf::Vector2f* screen_resolution_;
-		sf::Time lag_offset_;
+		float lag_offset_;
 		sf::TcpSocket* socket_;
 		sf::Packet data_;
 
 		struct StartMessage
 		{
 			bool player_team;			// What team the player will be on.
-			sf::Clock game_clock;		// The current game time clock that both clients will base their lag offset from.
+			float time;					// The current game time clock that both clients will base their lag offset from.
 		};
 
-		// Overloading.
+		// Overloading packet operator functions.
 		// Used for sending packet data.
-		friend sf::Packet& operator<<(sf::Packet& packet, const StartMessage& message);
+		// This will allow me to send clock data through packets.
+		/*friend sf::Packet& operator <<(sf::Packet& packet, const sf::Clock& clock)
+		{
+		return packet << clock;
+		}*/
 
-		// Used for recieving packet data.
-		friend sf::Packet& operator>>(sf::Packet& packet, const StartMessage& message);
+		// This will allow me to send struct data through packets.
+		friend sf::Packet& operator <<(sf::Packet& packet, const State::StartMessage& message)
+		{
+			return packet << message.player_team << message.time;
+		}
+
+		// Used for receiving packet data.
+		// This will allow me to receive clock data through packets.
+		/*friend sf::Packet& operator >>(sf::Packet& packet, sf::Clock& clock)
+		{
+		return packet >> clock;
+		}*/
+
+		// This will allow me to receive boolean data through packets.
+		/*friend sf::Packet& operator >>(sf::Packet& packet, const bool& player_team)
+		{
+		return packet >> player_team;
+		}*/
+
+		// This will allow me to receive struct data through packets.
+		friend sf::Packet& operator >>(sf::Packet& packet, State::StartMessage& message)
+		{
+			return packet >> message.player_team >> message.time;
+		}
 
 };
 
