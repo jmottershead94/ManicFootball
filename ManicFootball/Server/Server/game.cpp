@@ -25,8 +25,6 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 	world_ = new b2World(gravity);
 	world_->SetContinuousPhysics(true);
 
-	//NetworkConnection();
-
 	// Setting up a new network.
 	network_ = new Network();
 
@@ -34,10 +32,10 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 	network_->AcceptConnection(player_one_socket_, true, clock_);
 	network_->AcceptConnection(player_two_socket_, false, clock_);
 
-	// If the network is sending ready messages.
+	// If the network is sending ready messages (i.e. the clients have successfully connected).
 	if (network_->IsReady())
 	{
-		// Check to see if the clients are ready.
+		// Check to see if the clients are ready to play a match.
 		if (network_->ConnectionsAreReady())
 		{
 			// Setting up the game window with variable screen resolution.
