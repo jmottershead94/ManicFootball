@@ -48,6 +48,9 @@
     <ClCompile Include="static_body.cpp">
       <Filter>Framework\Physics\Bodies</Filter>
     </ClCompile>
+    <ClCompile Include="network.cpp">
+      <Filter>Framework\Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="box2d_conversions.h">
@@ -76,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="static_body.h">
       <Filter>Framework\Physics\Bodies</Filter>
+    </ClInclude>
+    <ClInclude Include="network.h">
+      <Filter>Framework\Network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
