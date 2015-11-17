@@ -1,3 +1,4 @@
+// Include header file here.
 #include "network.h"
 
 Network::Network() : connected_clients_(0),
@@ -20,6 +21,19 @@ Network::Network() : connected_clients_(0),
 
 Network::~Network()
 {
+
+	// If there are sockets connected to the server.
+	if (!sockets_.empty())
+	{
+		// Loop through all of the connections.
+		for (auto& socket : sockets_)
+		{
+			// Delete the current socket and set it to null.
+			delete socket;
+			socket = nullptr;
+		}
+	}
+
 }
 
 void Network::AcceptConnection(sf::TcpSocket& client_socket, bool team, sf::Clock& clock)
