@@ -84,6 +84,9 @@
     <ClCompile Include="connection.cpp">
       <Filter>Framework\Network</Filter>
     </ClCompile>
+    <ClCompile Include="network_handler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="init_state.h">
@@ -145,6 +148,9 @@
     </ClInclude>
     <ClInclude Include="connection.h">
       <Filter>Framework\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="network_handler.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

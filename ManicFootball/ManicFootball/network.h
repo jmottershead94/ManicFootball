@@ -8,17 +8,15 @@
 #define _NETWORK_H_
 
 // Include files here.
-#include "utilities.h"
-#include "connection.h"
+#include "network_handler.h"
 
-class Network : public Utilities
+class Network : public NetworkHandler
 {
 
 	public:
 		// Methods.
 		Network();
 		~Network();
-		bool ConnectedToServer();
 		bool ReceivedStartingMessage();
 		bool ReceivedReadyMessage();
 
