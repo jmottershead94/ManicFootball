@@ -77,7 +77,7 @@ void InitState::OnEnter()
 		// Set the font of the text that is going to be displayed.
 		text_->setFont(*font_);
 		text_->setPosition(screen_resolution_->x * 0.35f, 0.0f);
-		text_->setString("Hide 'N' Seek");
+		text_->setString("Manic Football");
 		text_->setCharacterSize(64);
 		text_->setColor(sf::Color::White);
 		text_->setStyle(sf::Text::Bold | sf::Text::Underlined);

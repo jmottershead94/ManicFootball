@@ -85,7 +85,7 @@
       <Filter>Framework\Network</Filter>
     </ClCompile>
     <ClCompile Include="network_handler.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Framework\Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -150,7 +150,7 @@
       <Filter>Framework\Network</Filter>
     </ClInclude>
     <ClInclude Include="network_handler.h">
-      <Filter>Header Files</Filter>
+      <Filter>Framework\Network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
