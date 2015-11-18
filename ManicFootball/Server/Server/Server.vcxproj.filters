@@ -51,6 +51,9 @@
     <ClCompile Include="network.cpp">
       <Filter>Framework\Network</Filter>
     </ClCompile>
+    <ClCompile Include="connection.cpp">
+      <Filter>Framework\Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="box2d_conversions.h">
@@ -81,6 +84,12 @@
       <Filter>Framework\Physics\Bodies</Filter>
     </ClInclude>
     <ClInclude Include="network.h">
+      <Filter>Framework\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="connection.h">
+      <Filter>Framework\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities.h">
       <Filter>Framework\Network</Filter>
     </ClInclude>
   </ItemGroup>
