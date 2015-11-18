@@ -17,17 +17,8 @@ bool Network::ReceivedStartingMessage()
 	// Clearing the packer of any data.
 	data_.clear();
 
-	// If the socket did not receive any data.
-	if (GetConnection().GetSocket()->receive(data_) != sf::Socket::Done)
-	{
-		// ERROR: We were unable to read some data from the starting message.
-		DisplayErrorMessage(kDataReceivingErrorMessage);
-
-		// We have not received a starting message from the server.
-		return false;
-	}
-	// Otherwise, we were able to receive the data.
-	else
+	// If we have received data from the server.
+	if (ReceivedData(data_))
 	{
 		// Check to see if it is okay to read the data.
 		if (data_ >> starting_message)
@@ -67,6 +58,9 @@ bool Network::ReceivedStartingMessage()
 		}
 	}
 
+	// ERROR: We were unable to read some data from the starting message.
+	DisplayErrorMessage(kDataReceivingErrorMessage);
+
 	// We have not received a starting message from the server.
 	return false;
 
@@ -78,24 +72,17 @@ bool Network::ReceivedReadyMessage()
 	// Clearing the packet of any data.
 	data_.clear();
 
-	// Wait for the second player to connect.
-	if (GetConnection().GetSocket()->receive(data_) != sf::Socket::Done)
+	// If we have received any more data.
+	if (ReceivedData(data_))
 	{
-		// ERROR: We were unable to read some data from the starting message.
-		DisplayErrorMessage(kDataReceivingErrorMessage);
-
-		// We have not received a ready flag from the server yet.
-		return false;
-	}
-	else
-	{
+		// Waiting for the second player to connect.
 		bool ready = false;
 
 		// Check to see if it is okay to read the data.
 		if (data_ >> ready)
 		{
 			// We have successfully read the ready message.
-			return true;
+			return ready;
 		}
 		// Otherwise, the data is not okay to read.
 		else
@@ -104,12 +91,12 @@ bool Network::ReceivedReadyMessage()
 			DisplayErrorMessage(kDataReadingErrorMessage);
 
 			// We have not been able to read the ready flag from the server.
-			return false;
+			return ready;
 		}
-
-		// We have not been able to read the ready flag from the server.
-		return false;
 	}
+
+	// ERROR: We were unable to receive some data from the starting message.
+	DisplayErrorMessage(kDataReceivingErrorMessage);
 
 	// We have not received a ready flag from the server yet.
 	return false;

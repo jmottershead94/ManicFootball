@@ -1,6 +1,14 @@
+// Jason Mottershead, 1300455.
+
+// Network Handler class header file.
+// This class will provide all of the basic functionality for the network.
+// As well as provide common network methods, structures and attributes.
+
+// Header guard.
 #ifndef _NETWORK_HANDLER_H_
 #define _NETWORK_HANDLER_H_
 
+// Include files here.
 #include "utilities.h"
 #include "connection.h"
 
@@ -10,6 +18,9 @@ class NetworkHandler : protected Utilities
 
 	public:
 		// Methods.
+		bool SendData(sf::Packet& data);
+		bool ReceivedData(sf::Packet& data);
+
 		// Pure virtual methods.
 		// Every network for a game using this "framework" must have these functions implemented.
 		virtual bool ReceivedStartingMessage() = 0;
