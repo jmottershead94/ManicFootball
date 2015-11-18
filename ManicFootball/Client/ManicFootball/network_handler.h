@@ -13,7 +13,7 @@ class NetworkHandler : protected Utilities
 		~NetworkHandler();
 
 		// Pure virtual functions.
-		// Every network for a game must have these functions implemented.
+		// Every network for a game using this "framework" must have these functions implemented.
 		virtual bool ReceivedStartingMessage() = 0;
 		virtual bool ReceivedReadyMessage() = 0;
 

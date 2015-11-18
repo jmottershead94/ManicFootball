@@ -10,7 +10,7 @@
 // Include files here.
 #include "network_handler.h"
 
-// Network IS A base network, therefore inherits from it.
+// Network IS A handled network, therefore inherits from it.
 class Network : public NetworkHandler
 {
 
