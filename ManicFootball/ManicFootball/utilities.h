@@ -26,35 +26,8 @@ class Utilities
 		sf::Clock lag_offset_clock_;															// This will be used to work out the lag offset from the server.
 
 		// Methods.
-		Utilities();
-		~Utilities();
-		void DisplayErrorMessage(const std::string& error_message);
-
-		// The structure for the game's starting message.
-		struct StartMessage
-		{
-			bool player_team;			// What team the player will be on.
-			float time;					// The current game time.
-		};
-
-		// The structure for the player's input.
-		// This will be the main message being sent across from the client to the server.
-		struct Input
-		{
-			bool up;					// If the player is pressing up.
-			bool right;					// If the player is pressing right.
-			bool left;					// If the player is pressing left.
-			float time;					// The current time that the input was given at.
-		};
-		
-		// The structure for correcting dynamic object's positions.
-		// This will be sent every so often to make sure that objects are in the correct place.
-		struct PositionCorrection
-		{
-			float x;					// The correct x position.
-			float y;					// The correct y position.
-			float time;					// The current time that the positions were given at.
-		};
+		// This function will be responsible for displaying any error messages when an error occurs.
+		inline void DisplayErrorMessage(const std::string& error_message) { std::cout << error_message << std::endl; }
 
 };
 
