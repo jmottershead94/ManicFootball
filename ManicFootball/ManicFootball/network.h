@@ -8,9 +8,10 @@
 #define _NETWORK_H_
 
 // Include files here.
-#include "network_handler.h"
+#include "utilities.h"
+#include "connection.h"
 
-class Network : public NetworkHandler
+class Network : public Utilities
 {
 
 	public:
