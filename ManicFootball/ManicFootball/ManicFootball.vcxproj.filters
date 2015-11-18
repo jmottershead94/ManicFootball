@@ -78,9 +78,6 @@
     <ClCompile Include="network.cpp">
       <Filter>Framework\Network</Filter>
     </ClCompile>
-    <ClCompile Include="utilities.cpp">
-      <Filter>Framework\Network</Filter>
-    </ClCompile>
     <ClCompile Include="connection.cpp">
       <Filter>Framework\Network</Filter>
     </ClCompile>

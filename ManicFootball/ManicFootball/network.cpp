@@ -18,7 +18,7 @@ bool Network::ReceivedStartingMessage()
 	data_.clear();
 
 	// If the socket did not receive any data.
-	if (connection_.GetSocket()->receive(data_) != sf::Socket::Done)
+	if (GetConnection().GetSocket()->receive(data_) != sf::Socket::Done)
 	{
 		// ERROR: We were unable to read some data from the starting message.
 		DisplayErrorMessage(kDataReceivingErrorMessage);
@@ -34,8 +34,11 @@ bool Network::ReceivedStartingMessage()
 		{
 			// We have read some data from the starting message!
 			// Get the current time, and the half round trip time from the server message.
-			float half_round_trip_time = (starting_message.time * 0.5f);
-			float lag = lag_offset_clock_.getElapsedTime().asMilliseconds();
+			//////////////////////////////////////////////////////////////////////////////////
+			// Conversion from float to sf::Int32 may be causing strange lag offset result...
+			sf::Int32 half_round_trip_time = (starting_message.time * 0.5f);
+			sf::Int32 lag = lag_offset_clock_.getElapsedTime().asMilliseconds();
+			//////////////////////////////////////////////////////////////////////////////////
 
 			// FOR TESTING.
 			std::cout << "The lag client side is = " << lag << std::endl;
@@ -76,7 +79,7 @@ bool Network::ReceivedReadyMessage()
 	data_.clear();
 
 	// Wait for the second player to connect.
-	if (connection_.GetSocket()->receive(data_) != sf::Socket::Done)
+	if (GetConnection().GetSocket()->receive(data_) != sf::Socket::Done)
 	{
 		// ERROR: We were unable to read some data from the starting message.
 		DisplayErrorMessage(kDataReceivingErrorMessage);
