@@ -83,7 +83,7 @@ void MenuState::OnEnter()
 		menu_controls_ = new sf::Text();
 		menu_controls_->setFont(*font_);
 		menu_controls_->setPosition(0.0f, 100.0f);
-		menu_controls_->setString("Press 1 - Start the game\nPress 2 - Exit");
+		menu_controls_->setString("Press 1 - Find a match\nPress 2 - Exit");
 		menu_controls_->setCharacterSize(32);
 		menu_controls_->setColor(sf::Color::Green);
 		menu_controls_->setStyle(sf::Text::Bold);
