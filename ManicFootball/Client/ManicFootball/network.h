@@ -20,6 +20,7 @@ class Network : public NetworkHandler
 		~Network();
 		bool ReceivedStartingMessage();
 		bool ReceivedReadyMessage();
+		void SendInputMessageToServer(Commands& commands, float time);
 
 		// Getters.
 		// This will return the team that the client is on.

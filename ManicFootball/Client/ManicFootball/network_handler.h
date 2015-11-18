@@ -21,11 +21,6 @@ class NetworkHandler : protected Utilities
 		bool SendData(sf::Packet& data);
 		bool ReceivedData(sf::Packet& data);
 
-		// Pure virtual methods.
-		// Every network for a game using this "framework" must have these functions implemented.
-		virtual bool ReceivedStartingMessage() = 0;
-		virtual bool ReceivedReadyMessage() = 0;
-
 		// Getters.
 		// This will return the current connection that the network is using.
 		inline Connection& GetConnection() { return connection_; }
@@ -48,6 +43,15 @@ class NetworkHandler : protected Utilities
 			float time = 0.0f;				// The current time that the input was given at.
 		};
 
+		// The structure for player's commands.
+		// This will be used to pass in the player class struct of commands.
+		struct Commands
+		{
+			bool up = false;
+			bool right = false;
+			bool left = false;
+		};
+
 		// The structure for correcting dynamic object's positions.
 		// This will be sent every so often to make sure that objects are in the correct place.
 		struct PositionCorrection
@@ -56,6 +60,12 @@ class NetworkHandler : protected Utilities
 			float y = 0.0f;					// The correct y position.
 			float time = 0.0f;				// The current time that the positions were given at.
 		};
+
+		// Pure virtual methods.
+		// Every network for a game using this "framework" must have these functions implemented.
+		virtual bool ReceivedStartingMessage() = 0;
+		virtual bool ReceivedReadyMessage() = 0;
+		virtual void SendInputMessageToServer(Commands& commands, float time) = 0;
 
 	private:
 		// Attributes.

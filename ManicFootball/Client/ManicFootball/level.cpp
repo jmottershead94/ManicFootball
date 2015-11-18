@@ -1,7 +1,11 @@
 #include "level.h"
 
 Level::Level() : level_objects_(NULL),
-	scores_(NULL)
+	scores_(NULL),
+	world_(nullptr),
+	font_(nullptr),
+	screen_resolution_(nullptr),
+	network_(nullptr)
 {
 }
 
@@ -9,7 +13,7 @@ Level::~Level()
 {
 }
 
-void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution, bool player_team, float lag_offset)
+void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution, Network& network)
 {
 
 	// Initialising local attributes.
@@ -23,7 +27,8 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 	world_ = world;									// Access to the box2D world.
 	font_ = &font;									// Access to the game font.
 	screen_resolution_ = &game_screen_resolution;	// Access to the game resolution.
-	lag_offset_ = lag_offset;						// What each networked message should take into consideration.
+	network_ = &network;							// Access to the game network.
+	lag_offset_ = network_->GetLagOffset();			// What each networked message should take into consideration.
 
 	// Creating the level.
 	CreateGround();
@@ -34,11 +39,14 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 	CreateNets(true);
 	CreateNets(false);
 	CreateScoreboard();
-	CreatePlayer(player_team);
-	CreateOtherPlayer(player_team);
+	CreatePlayer(network_->GetAssignedTeam());
+	CreateOtherPlayer(network_->GetAssignedTeam());
 	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.25f, screen_resolution_->y * 0.25f));
 	CreateFootball(sf::Vector2f(screen_resolution_->x * 0.5f, screen_resolution_->y * 0.25f));
 	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.75f, screen_resolution_->y * 0.25f));
+
+	// Starting the game clock for the player.
+	clock_.restart().asMilliseconds();
 
 }
 
@@ -406,6 +414,7 @@ void Level::HandleLevelObjects(float dt)
 			{
 				// Casting this to a player in order to update the sprites position for level object.
 				Player* temp = static_cast<Player*>(*level_object);
+				
 				temp->Update(dt);
 			}
 		}

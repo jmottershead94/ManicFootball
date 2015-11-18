@@ -33,7 +33,7 @@ void Player::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world
 	movement_force_.y = 10.0f;			// The movement force that will be applied in the y axis.
 	respawn_location_.x = position.x;	// The x position for respawn.
 	respawn_location_.y = position.y;	// The y position for respawn.
-
+	
 }
 
 void Player::Input(float dt)
@@ -42,6 +42,10 @@ void Player::Input(float dt)
 	// If the player presses the right arrow key.
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
+		// The player is moving right.
+		commands_.left = false;
+		commands_.right = true;
+
 		// Wake up the body.
 		body_->SetAwake(true);
 
@@ -51,21 +55,40 @@ void Player::Input(float dt)
 	// If the player has pressed the left arrow key.
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
+		// The player is moving left.
+		commands_.right = false;
+		commands_.left = true;
+
 		// Wake up the body.
 		body_->SetAwake(true);
 
 		// Move the body to the left.
 		body_->ApplyLinearImpulse(b2Vec2(((movement_force_.x * -1.0f) * dt), 0.0f), body_->GetWorldCenter(), body_->IsAwake());
 	}
+	// Otherwise, if the player is not pressing anything.
+	else
+	{
+		// The player is not moving.
+		commands_.right = false;
+		commands_.left = false;
+	}
 	
 	// If the player has pressed the up arrow key.
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
+		// The player is moving upwards.
+		commands_.up = true;
+
 		// Wake up the body.
 		body_->SetAwake(true);
 
 		// Make the player jump.
 		Jump(dt);
+	}
+	else
+	{
+		// The player is not moving upwards.
+		commands_.up = false;
 	}
 
 }

@@ -102,3 +102,30 @@ bool Network::ReceivedReadyMessage()
 	return false;
 
 }
+
+void Network::SendInputMessageToServer(Commands& commands, float time)
+{
+	
+	// Clearing the packet of any data.
+	data_.clear();
+
+	// Creating an instance on input.
+	// Placing all of the data from the level into the network struct for sending.
+	Input client_input;
+	client_input.up = commands.up;
+	client_input.right = commands.right;
+	client_input.left = commands.left;
+	client_input.time = time;
+
+	// Placing client input into some data for transferring.
+	data_ << client_input;
+
+	// If we can successfully send the data.
+	if (SendData(data_))
+	{
+		// We have successfully sent the input message to the server.
+		// TESTING.
+		std::cout << "Up Command = " + client_input.up << std::endl;
+	}
+
+}

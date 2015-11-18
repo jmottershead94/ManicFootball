@@ -55,9 +55,8 @@ class State
 		sf::Text* text_;
 		sf::Text* text_controls_;
 		sf::Vector2f* screen_resolution_;
+		sf::Clock game_clock_;
 		float lag_offset_;
-		sf::TcpSocket* socket_;
-		sf::Packet data_;
 		Network* network_;
 
 		struct StartMessage

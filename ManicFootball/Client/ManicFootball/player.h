@@ -24,6 +24,17 @@ class Player : public DynamicBodyRectangle
 		void Respawn();
 		void Update(float dt);
 
+		struct Commands
+		{
+			bool up = false;
+			bool right = false;
+			bool left = false;
+		}commands_;
+
+		// Getters.
+		// This function will return all of the current player commands.
+		inline Commands& GetCommands() { return commands_; }
+
 	private:
 		// Attributes.
 		bool is_red_team_;					// If the player is on the red team or not.
