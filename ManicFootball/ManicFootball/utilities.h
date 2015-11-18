@@ -14,7 +14,7 @@
 class Utilities
 {
 
-	public:
+	protected:
 		// Attributes.
 		const unsigned short kPort = 5000;
 		const std::string kIPAddress = "127.0.0.1";
