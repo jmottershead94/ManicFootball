@@ -9,7 +9,7 @@
 
 #include "utilities.h"
 
-class Connection : public Utilities
+class Connection : protected Utilities
 {
 
 	public:
