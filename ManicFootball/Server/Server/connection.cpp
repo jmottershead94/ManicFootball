@@ -16,7 +16,7 @@ void Connection::Listen()
 	if (connection_listener_.listen(kPort) != sf::Socket::Done)
 	{
 		// ERROR: for listening on the port number 5000; display error message.
-		std::cout << kTCPListenerErrorMessage << std::endl;
+		DisplayErrorMessage(kTCPListenerErrorMessage);
 		return;
 	}
 
@@ -28,20 +28,22 @@ void Connection::Listen()
 bool Connection::Accept(sf::TcpSocket& client_socket)
 {
 
-	// Checking to see if the client is able to connect to the server.
-	if (connection_listener_.accept(client_socket) != sf::Socket::Done)
+	// If we have successfully accepted a connection from the client.
+	if (connection_listener_.accept(client_socket) == sf::Socket::Done)
 	{
-		// ERROR: Could not accept a connection on the server.
-		std::cout << kConnectionErrorMessage << std::endl;
-		
-		// We have not accepted the connection from this client.
-		return false;
-	}
-	// Otherwise, the client has connected to the server.
-	else
-	{
-		// We have accepted a connection from this client.
+		// Print out the IP address of the connecting client.
+		std::cout << "Client connected from: " << client_socket.getRemoteAddress() << std::endl;
+
+		// We have accepted a connection from this client, notify the server.
 		return true;
 	}
+
+	// We can modify what the standard response for not connecting with a client is here.
+	// Without having to go through network connecting code and modifying each if statement to provide a standard response.
+	// ERROR: Could not accept a connection on the server.
+	DisplayErrorMessage(kConnectionErrorMessage);
+
+	// We have not accepted the connection from this client.
+	return false;
 
 }

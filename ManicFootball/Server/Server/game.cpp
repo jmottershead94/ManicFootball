@@ -24,19 +24,16 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 	// Creating the Box2D physics world.
 	world_ = new b2World(gravity);
 	world_->SetContinuousPhysics(true);
-
-	// Setting up a new network.
-	network_ = new Network();
-
+	
 	// Accept connections from two clients.
-	network_->AcceptConnection(player_one_socket_, true, clock_);
-	network_->AcceptConnection(player_two_socket_, false, clock_);
+	network_.AcceptConnection(player_one_socket_, true, clock_);
+	network_.AcceptConnection(player_two_socket_, false, clock_);
 
 	// If the network is sending ready messages (i.e. the clients have successfully connected).
-	if (network_->IsReady())
+	if (network_.IsReady())
 	{
 		// Check to see if the clients are ready to play a match.
-		if (network_->ConnectionsAreReady())
+		if (network_.ConnectionsAreReady())
 		{
 			// Setting up the game window with variable screen resolution.
 			window_ = new sf::RenderWindow(sf::VideoMode((unsigned int)screen_resolution_.x, (unsigned int)screen_resolution_.y), "Manic Football");
@@ -131,31 +128,3 @@ void Game::Render()
 	window_->display();
 
 }
-//
-//// Overloading packet operator functions.
-//// Used for sending packet data.
-//sf::Packet& operator <<(sf::Packet& packet, const sf::Clock& clock)
-//{
-//	return packet << clock;
-//}
-//
-//sf::Packet& operator <<(sf::Packet& packet, const Game::StartMessage& message)
-//{
-//	return packet << message.player_team << message.game_clock;
-//}
-//
-//// Used for recieving packet data.
-//sf::Packet& operator >>(sf::Packet& packet, const sf::Clock& clock)
-//{
-//	return packet >> clock;
-//}
-//
-//sf::Packet& operator >>(sf::Packet& packet, const bool& player_team)
-//{
-//	return packet >> player_team;
-//}
-//
-//sf::Packet& operator >>(sf::Packet& packet, const Game::StartMessage& message)
-//{
-//	return packet >> message.player_team >> message.game_clock;
-//}

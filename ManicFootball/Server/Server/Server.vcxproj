@@ -88,6 +88,7 @@
     <ClCompile Include="game_object.cpp" />
     <ClCompile Include="level.cpp" />
     <ClCompile Include="network.cpp" />
+    <ClCompile Include="network_handler.cpp" />
     <ClCompile Include="server.cpp" />
     <ClCompile Include="static_body.cpp" />
   </ItemGroup>
@@ -101,6 +102,7 @@
     <ClInclude Include="game_object.h" />
     <ClInclude Include="level.h" />
     <ClInclude Include="network.h" />
+    <ClInclude Include="network_handler.h" />
     <ClInclude Include="object_id.h" />
     <ClInclude Include="static_body.h" />
     <ClInclude Include="utilities.h" />

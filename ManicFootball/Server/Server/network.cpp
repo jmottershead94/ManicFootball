@@ -5,17 +5,8 @@ Network::Network() : connected_clients_(0),
 	ready_(false)
 {
 
-	// Binding the listener to the port 5000.
-	// Listen out for any connections on port 5000.
-	if (connection_listener_.listen(kPort) != sf::Socket::Done)
-	{
-		// ERROR: for listening on the port number 5000; display error message.
-		std::cout << kTCPListenerErrorMessage << std::endl;
-		return;
-	}
-
-	// Telling the user what port the server is listening on.
-	std::cout << "Server is listening to port " << kPort << ", waiting for connections..." << std::endl;
+	// Make the connection listener listen out for connections on a specified port number.
+	GetConnection().Listen();
 
 }
 
@@ -50,19 +41,8 @@ void Network::AcceptConnection(sf::TcpSocket& client_socket, bool team, sf::Cloc
 		connected_clients_++;
 	}
 
-	// Checking to see if the client is able to connect to the server.
-	if (connection_listener_.accept(client_socket) != sf::Socket::Done)
+	if (GetConnection().Accept(client_socket))
 	{
-		// ERROR: Could not accept a connection on the server.
-		std::cout << kConnectionErrorMessage << std::endl;
-		return;
-	}
-	// Otherwise, the client has connected to the server.
-	else
-	{
-		// Print out the IP address of the connecting client.
-		std::cout << "Client connected: " << client_socket.getRemoteAddress() << std::endl;
-		
 		// Clearing the packet of any data.
 		data_.clear();
 
@@ -76,15 +56,8 @@ void Network::AcceptConnection(sf::TcpSocket& client_socket, bool team, sf::Cloc
 		// Placing the starting message into the data packet for sending.
 		data_ << starting_message;
 
-		// If the data could not be sent back to the client.
-		if (client_socket.send(data_) != sf::Socket::Done)
-		{
-			// ERROR: The data could not be sent.
-			std::cout << kDataSendingErrorMessage << std::endl;
-			return;
-		}
-		// Otherwise, the data was sent successfully.
-		else
+		// If we can send the data over to the client.
+		if (SendData(client_socket, data_))
 		{
 			// Check the current number of connections we have.
 			// If we have 2 elements in our sockets array.
@@ -108,19 +81,14 @@ bool Network::ConnectionsAreReady()
 	data_ << ready_;
 	
 	// Checking to see if both sockets have received the ready flag.
-	// If they have not received the ready flag.
-	if ((sockets_[0]->send(data_) != sf::Socket::Done) || (sockets_[1]->send(data_) != sf::Socket::Done))
-	{
-		// ERROR: The data could not be sent!
-		std::cout << kDataSendingErrorMessage << std::endl;
-		return false;
-	}
-	// Otherwise, both clients have received the ready flag.
-	else if ((sockets_[0]->send(data_) == sf::Socket::Done) && (sockets_[1]->send(data_) == sf::Socket::Done))
+	if (SendData(*sockets_[0], data_) && SendData(*sockets_[1], data_))
 	{
 		// Let the game continue.
 		return true;
 	}
+
+	// ERROR: The data could not be sent!
+	DisplayErrorMessage(kDataSendingErrorMessage);
 
 	// Don't let the game continue.
 	return false;

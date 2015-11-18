@@ -47,7 +47,7 @@ class Game
 		sf::TcpSocket player_one_socket_;
 		sf::TcpSocket player_two_socket_;
 		Level level_;
-		Network* network_;
+		Network network_;
 
 		// Methods.
 		void SetUpNetwork();

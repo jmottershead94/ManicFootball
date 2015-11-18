@@ -14,7 +14,7 @@ class Connection : protected Utilities
 		bool Accept(sf::TcpSocket& client_socket);
 
 	private:
-		sf::TcpListener connection_listener_;													// The TCP listener for listening out for TCP connections.
+		sf::TcpListener connection_listener_;	// The TCP listener for listening out for TCP connections.
 
 };
 
