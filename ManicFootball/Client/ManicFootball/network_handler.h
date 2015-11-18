@@ -4,15 +4,13 @@
 #include "utilities.h"
 #include "connection.h"
 
+// Network handler IS A network utility, therefore inherits from it.
 class NetworkHandler : protected Utilities
 {
 
 	public:
 		// Methods.
-		NetworkHandler();
-		~NetworkHandler();
-
-		// Pure virtual functions.
+		// Pure virtual methods.
 		// Every network for a game using this "framework" must have these functions implemented.
 		virtual bool ReceivedStartingMessage() = 0;
 		virtual bool ReceivedReadyMessage() = 0;
