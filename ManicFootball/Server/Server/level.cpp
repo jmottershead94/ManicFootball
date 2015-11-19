@@ -381,7 +381,7 @@ void Level::HandleLevelObjects(float dt)
 						if (network_->GetData() >> dynamic_rectangle->GetInput())
 						{
 							ApplyPlayerInput(*dynamic_rectangle, dt);
-							//network_->SendInputToClients(*network_->GetClientSockets()[1], dynamic_rectangle->GetInput());
+							network_->SendInputToClients(*network_->GetClientSockets()[1], dynamic_rectangle->GetInput());
 						}
 					}
 				}
@@ -394,7 +394,7 @@ void Level::HandleLevelObjects(float dt)
 						if (network_->GetData() >> dynamic_rectangle->GetInput())
 						{
 							ApplyPlayerInput(*dynamic_rectangle, dt);
-							//network_->SendInputToClients(*network_->GetClientSockets()[0], dynamic_rectangle->GetInput());
+							network_->SendInputToClients(*network_->GetClientSockets()[0], dynamic_rectangle->GetInput());
 						}
 					}
 				}
@@ -412,20 +412,23 @@ void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
 	// If player one pressed up.
 	if (player.GetInput().up)
 	{
+		player.GetBody()->SetAwake(true);
 		player.GetBody()->ApplyLinearImpulse(b2Vec2(0.0f, player_movement_force_.y * dt), player.GetBody()->GetWorldCenter(), player.GetBody()->IsAwake());
 		std::cout << "Player " + player.GetID() << " has pressed up!" << std::endl;
 	}
 
+	// Move the body to the right.
 	if (player.GetInput().right)
 	{
-		// Move the body to the right.
+		player.GetBody()->SetAwake(true);
 		player.GetBody()->ApplyLinearImpulse(b2Vec2((player_movement_force_.x * dt), 0.0f), player.GetBody()->GetWorldCenter(), player.GetBody()->IsAwake());
 		std::cout << "Player " + player.GetID() << " has pressed right!" << std::endl;
 	}
 
+	// Move the body to the left.
 	if (player.GetInput().left)
 	{
-		// Move the body to the left.
+		player.GetBody()->SetAwake(true);
 		player.GetBody()->ApplyLinearImpulse(b2Vec2(((player_movement_force_.x * -1.0f) * dt), 0.0f), player.GetBody()->GetWorldCenter(), player.GetBody()->IsAwake());
 		std::cout << "Player " + player.GetID() << " has pressed left!" << std::endl;
 	}
