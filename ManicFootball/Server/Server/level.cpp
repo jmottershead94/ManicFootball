@@ -414,7 +414,6 @@ void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
 	{
 		player.GetBody()->SetAwake(true);
 		player.GetBody()->ApplyLinearImpulse(b2Vec2(0.0f, player_movement_force_.y * dt), player.GetBody()->GetWorldCenter(), player.GetBody()->IsAwake());
-		std::cout << "Player " + player.GetID() << " has pressed up!" << std::endl;
 	}
 
 	// Move the body to the right.
@@ -422,7 +421,6 @@ void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
 	{
 		player.GetBody()->SetAwake(true);
 		player.GetBody()->ApplyLinearImpulse(b2Vec2((player_movement_force_.x * dt), 0.0f), player.GetBody()->GetWorldCenter(), player.GetBody()->IsAwake());
-		std::cout << "Player " + player.GetID() << " has pressed right!" << std::endl;
 	}
 
 	// Move the body to the left.
@@ -430,10 +428,7 @@ void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
 	{
 		player.GetBody()->SetAwake(true);
 		player.GetBody()->ApplyLinearImpulse(b2Vec2(((player_movement_force_.x * -1.0f) * dt), 0.0f), player.GetBody()->GetWorldCenter(), player.GetBody()->IsAwake());
-		std::cout << "Player " + player.GetID() << " has pressed left!" << std::endl;
 	}
-
-	player.Update(dt);
 
 }
 
