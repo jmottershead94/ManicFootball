@@ -109,7 +109,7 @@ void Network::SendInputMessageToServer(Input& client_input)
 	// If we can successfully send the data.
 	if (SendData(data_))
 	{
-		std::cout << "Data has been sent to the server." << std::endl;
+		//std::cout << "Data has been sent to the server." << std::endl;
 	}
 
 }
@@ -129,6 +129,9 @@ bool Network::ReceivedInputMessagesFromServer()
 		// Check to see if it is okay to read the data.
 		if (data_ >> input)
 		{
+			// Place the input data back into the packet data to be used by the client.
+			data_ << input;
+
 			// We have received some input data.
 			return true;
 		}

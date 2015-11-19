@@ -28,7 +28,7 @@ class DynamicBodyRectangle : public GameObject
 		inline Input& GetInput() { return input_; }
 
 		// This function will return the current movement force for players.
-		inline sf::Vector2f GetMovementForce()	{ return movement_force_; }
+		inline sf::Vector2f& GetMovementForce()	{ return movement_force_; }
 
 	private:
 		// Attributes.
