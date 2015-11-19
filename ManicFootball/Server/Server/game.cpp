@@ -42,7 +42,7 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 			window_->setFramerateLimit(frame_rate_);
 
 			// Initialise the server level.
-			level_.Init(world_, font_, screen_resolution_);
+			level_.Init(world_, font_, screen_resolution_, network_);
 		}
 	}
 

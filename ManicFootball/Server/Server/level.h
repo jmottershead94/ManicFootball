@@ -15,6 +15,7 @@
 #include "static_body.h"
 #include "dynamic_body_circle.h"
 #include "dynamic_body_rectangle.h"
+#include "network.h"
 
 class Level
 {
@@ -28,7 +29,7 @@ class Level
 		// Methods.
 		Level();
 		~Level();
-		void Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution);
+		void Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution, Network& network);
 		void CreateGround();
 		void CreateWall(sf::Vector2f& position, sf::Vector2f& dimension);
 		void CreateNets(bool left_of_the_field);
@@ -40,7 +41,9 @@ class Level
 		void UpdateTheScore(int score, int previous_score, std::ostringstream& conversion, bool red_team);
 		void CollisionTest();
 		void HandleLevelObjects(float dt);
+		void CheckPlayerInput(DynamicBodyRectangle& player, float dt);
 		void MovePlayers(float dt);
+		void ApplyPlayerInput(DynamicBodyRectangle& player, float dt);
 		void Clear();
 		void Render(sf::RenderWindow& game_window);
 		void Update(float dt);
@@ -78,6 +81,7 @@ class Level
 		sf::Vector2f* screen_resolution_;						// Points to the screen resolution.
 		std::ostringstream red_convert_;						// Convert the red score integer to a string.
 		std::ostringstream blue_convert_;						// Convert the blue score integer to a string.
+		Network* network_;										// Points to the game network.
 
 };
 

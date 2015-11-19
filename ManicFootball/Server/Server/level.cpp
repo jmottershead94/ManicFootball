@@ -9,7 +9,7 @@ Level::~Level()
 {
 }
 
-void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution)
+void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution, Network& network)
 {
 
 	// Initialising local attributes.
@@ -23,6 +23,7 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 	screen_resolution_ = &game_screen_resolution;	// Access to the game resolution.
 	red_convert_ << red_team_score_;				// Places the textual representation of the red team score integer into red_convert_.
 	blue_convert_ << blue_team_score_;				// Places the textual representation of the blue team score integer into blue_convert_.
+	network_ = &network;							// Access to the game network.
 
 	// Creating the level.
 	CreateGround();
@@ -369,6 +370,35 @@ void Level::HandleLevelObjects(float dt)
 			{
 				// Casting this to a dynamic body circle in order to update the sprites position for level object.
 				DynamicBodyRectangle* dynamic_rectangle = static_cast<DynamicBodyRectangle*>(*level_object);
+
+				// If the dynamic object is player one.
+				if (dynamic_rectangle->GetID() == ObjectID::playerOne)
+				{
+					// Check to see if we have received any input data for player one.
+					if (network_->ReceivedData(*network_->GetClientSockets()[0], network_->GetData()))
+					{
+						// Check to see if we can read the input data for player one.
+						if (network_->GetData() >> dynamic_rectangle->GetInput())
+						{
+							ApplyPlayerInput(*dynamic_rectangle, dt);
+							//network_->SendInputToClients(*network_->GetClientSockets()[1], dynamic_rectangle->GetInput());
+						}
+					}
+				}
+				else if (dynamic_rectangle->GetID() == ObjectID::playerTwo)
+				{
+					// Check to see if we have received any input data for player one.
+					if (network_->ReceivedData(*network_->GetClientSockets()[1], network_->GetData()))
+					{
+						// Check to see if we can read the input data for player one.
+						if (network_->GetData() >> dynamic_rectangle->GetInput())
+						{
+							ApplyPlayerInput(*dynamic_rectangle, dt);
+							//network_->SendInputToClients(*network_->GetClientSockets()[0], dynamic_rectangle->GetInput());
+						}
+					}
+				}
+
 				dynamic_rectangle->Update(dt);
 			}
 		}
@@ -376,30 +406,31 @@ void Level::HandleLevelObjects(float dt)
 
 }
 
-void Level::MovePlayers(float dt)
+void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
 {
 
-	// Use the structs brought in by both player one and two to move the rectangles accordingly.
-	// If there are objects in the level.
-	if (!level_objects_.empty())
+	// If player one pressed up.
+	if (player.GetInput().up)
 	{
-		// Iterating through all of the level objects.
-		for (auto level_object = level_objects_.begin(); level_object != level_objects_.end(); level_object++)
-		{
-			if ((**level_object).GetID() == ObjectID::playerOne)
-			{
-				DynamicBodyRectangle* dynamic_rectangle = static_cast<DynamicBodyRectangle*>(*level_object);
-				
-				// Use the player one struct information to move the body for player one around.
-				//if(up) 
-				//{ 
-				//	dynamic_rectangle->GetBody()->ApplyLinearImpulse(b2Vec2(0.0f, player_movement_force_.y * dt), dynamic_rectangle->GetBody()->GetWorldCenter(), dynamic_rectangle->GetBody()->IsAwake());
-				//}
-				//if(right)
-				//etc.
-			}
-		}
+		player.GetBody()->ApplyLinearImpulse(b2Vec2(0.0f, player_movement_force_.y * dt), player.GetBody()->GetWorldCenter(), player.GetBody()->IsAwake());
+		std::cout << "Player " + player.GetID() << " has pressed up!" << std::endl;
 	}
+
+	if (player.GetInput().right)
+	{
+		// Move the body to the right.
+		player.GetBody()->ApplyLinearImpulse(b2Vec2((player_movement_force_.x * dt), 0.0f), player.GetBody()->GetWorldCenter(), player.GetBody()->IsAwake());
+		std::cout << "Player " + player.GetID() << " has pressed right!" << std::endl;
+	}
+
+	if (player.GetInput().left)
+	{
+		// Move the body to the left.
+		player.GetBody()->ApplyLinearImpulse(b2Vec2(((player_movement_force_.x * -1.0f) * dt), 0.0f), player.GetBody()->GetWorldCenter(), player.GetBody()->IsAwake());
+		std::cout << "Player " + player.GetID() << " has pressed left!" << std::endl;
+	}
+
+	player.Update(dt);
 
 }
 
@@ -474,7 +505,6 @@ void Level::Render(sf::RenderWindow& game_window)
 void Level::Update(float dt)
 {
 
-	MovePlayers(dt);
 	HandleLevelObjects(dt);
 	CollisionTest();
 

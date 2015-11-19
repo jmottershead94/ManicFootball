@@ -100,6 +100,7 @@
     <ClInclude Include="dynamic_body_rectangle.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="game_object.h" />
+    <ClInclude Include="messages.h" />
     <ClInclude Include="level.h" />
     <ClInclude Include="network.h" />
     <ClInclude Include="network_handler.h" />
