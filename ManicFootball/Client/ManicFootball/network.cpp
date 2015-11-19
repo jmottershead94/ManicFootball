@@ -136,11 +136,13 @@ bool Network::ReceivedInputMessagesFromServer()
 		else
 		{
 			// ERROR: The packet is not okay to read.
-			//DisplayErrorMessage(kDataReadingErrorMessage);
+			DisplayErrorMessage(kDataReadingErrorMessage);
 
 			// We could not read the input message.
 			return false;
 		}
+
+		return false;
 	}
 	
 	// We have not received any input yet.

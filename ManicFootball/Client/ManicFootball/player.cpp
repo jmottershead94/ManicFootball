@@ -41,8 +41,6 @@ void Player::Controls(float dt)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
 		// The player is moving right.
-		//commands_.left = false;
-		//commands_.right = true;
 		input_.right = true;
 		input_.left = false;
 
@@ -56,8 +54,6 @@ void Player::Controls(float dt)
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
 		// The player is moving left.
-		//commands_.right = false;
-		//commands_.left = true;
 		input_.right = false;
 		input_.left = true;
 
@@ -71,8 +67,6 @@ void Player::Controls(float dt)
 	else
 	{
 		// The player is not moving.
-		//commands_.right = false;
-		//commands_.left = false;
 		input_.right = false;
 		input_.left = false;
 	}
@@ -81,7 +75,6 @@ void Player::Controls(float dt)
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
 		// The player is moving upwards.
-		//commands_.up = true;
 		input_.up = true;
 
 		// Wake up the body.
@@ -93,7 +86,6 @@ void Player::Controls(float dt)
 	else
 	{
 		// The player is not moving upwards.
-		//commands_.up = false;
 		input_.up = false;
 	}
 

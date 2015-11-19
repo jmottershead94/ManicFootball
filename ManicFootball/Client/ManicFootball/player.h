@@ -25,9 +25,6 @@ class Player : public DynamicBodyRectangle
 		void Update(float dt);
 
 		// Getters.
-		// This function will return all of the current player commands.
-		//inline Commands& GetCommands()			{ return commands_; }
-
 		// This will return the current input state of the player.
 		inline Input& GetInput()				{ return input_; }
 
@@ -38,7 +35,6 @@ class Player : public DynamicBodyRectangle
 		bool respawn_;						// A flag to determine if the player should respawn or not.
 		
 		sf::Vector2f respawn_location_;		// A vector2 for the spawn location of the player.
-		//Commands commands_;
 		Input input_;
 
 };
