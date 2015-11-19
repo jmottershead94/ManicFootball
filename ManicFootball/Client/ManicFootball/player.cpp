@@ -29,55 +29,60 @@ void Player::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world
 	is_red_team_ = red_team;			// Setting if the player should be on the red team or not.
 	in_air_ = false;					// The player is currently not in the air.
 	respawn_ = false;					// The player does not need to respawn at this moment in time.
-	movement_force_.x = 2.0f;			// The movement force that will be applied in the x axis.
-	movement_force_.y = 10.0f;			// The movement force that will be applied in the y axis.
 	respawn_location_.x = position.x;	// The x position for respawn.
 	respawn_location_.y = position.y;	// The y position for respawn.
 	
 }
 
-void Player::Input(float dt)
+void Player::Controls(float dt)
 {
 
 	// If the player presses the right arrow key.
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
 		// The player is moving right.
-		commands_.left = false;
-		commands_.right = true;
+		//commands_.left = false;
+		//commands_.right = true;
+		input_.right = true;
+		input_.left = false;
 
 		// Wake up the body.
 		body_->SetAwake(true);
 
 		// Move the body to the right.
-		body_->ApplyLinearImpulse(b2Vec2((movement_force_.x * dt), 0.0f), body_->GetWorldCenter(), body_->IsAwake());
+		body_->ApplyLinearImpulse(b2Vec2((GetMovementForce().x * dt), 0.0f), body_->GetWorldCenter(), body_->IsAwake());
 	}
 	// If the player has pressed the left arrow key.
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
 		// The player is moving left.
-		commands_.right = false;
-		commands_.left = true;
+		//commands_.right = false;
+		//commands_.left = true;
+		input_.right = false;
+		input_.left = true;
 
 		// Wake up the body.
 		body_->SetAwake(true);
 
 		// Move the body to the left.
-		body_->ApplyLinearImpulse(b2Vec2(((movement_force_.x * -1.0f) * dt), 0.0f), body_->GetWorldCenter(), body_->IsAwake());
+		body_->ApplyLinearImpulse(b2Vec2(((GetMovementForce().x * -1.0f) * dt), 0.0f), body_->GetWorldCenter(), body_->IsAwake());
 	}
 	// Otherwise, if the player is not pressing anything.
 	else
 	{
 		// The player is not moving.
-		commands_.right = false;
-		commands_.left = false;
+		//commands_.right = false;
+		//commands_.left = false;
+		input_.right = false;
+		input_.left = false;
 	}
 	
 	// If the player has pressed the up arrow key.
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
 		// The player is moving upwards.
-		commands_.up = true;
+		//commands_.up = true;
+		input_.up = true;
 
 		// Wake up the body.
 		body_->SetAwake(true);
@@ -88,7 +93,8 @@ void Player::Input(float dt)
 	else
 	{
 		// The player is not moving upwards.
-		commands_.up = false;
+		//commands_.up = false;
+		input_.up = false;
 	}
 
 }
@@ -101,7 +107,7 @@ void Player::Jump(float dt)
 	if (!in_air_)
 	{
 		// Make the player jump upwards.
-		body_->ApplyLinearImpulse(b2Vec2(0.0f, (movement_force_.y * dt)), body_->GetWorldCenter(), body_->IsAwake());
+		body_->ApplyLinearImpulse(b2Vec2(0.0f, (GetMovementForce().y * dt)), body_->GetWorldCenter(), body_->IsAwake());
 
 		// Set the air flag to true.
 		in_air_ = true;
@@ -136,7 +142,7 @@ void Player::Respawn()
 void Player::Update(float dt)
 {
 
-	Input(dt);
+	Controls(dt);
 	DynamicBodyRectangle::Update(dt);
 
 }

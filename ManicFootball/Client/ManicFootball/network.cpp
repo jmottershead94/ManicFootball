@@ -14,7 +14,7 @@ bool Network::ReceivedStartingMessage()
 	// This is the struct that we will be passing the data into from the server.
 	StartMessage starting_message;
 
-	// Clearing the packer of any data.
+	// Clearing the packet of any data.
 	data_.clear();
 
 	// If we have received data from the server.
@@ -30,7 +30,7 @@ bool Network::ReceivedStartingMessage()
 			sf::Int32 half_round_trip_time = (starting_message.time * 0.5f);
 			sf::Int32 lag = lag_offset_clock_.getElapsedTime().asMilliseconds();
 			//////////////////////////////////////////////////////////////////////////////////
-
+			
 			// FOR TESTING.
 			std::cout << "The lag client side is = " << lag << std::endl;
 			std::cout << "The lag server side is = " << half_round_trip_time << std::endl;
@@ -53,13 +53,10 @@ bool Network::ReceivedStartingMessage()
 			// ERROR: The packet is not okay to read.
 			DisplayErrorMessage(kDataReadingErrorMessage);
 
-			// We have not received a starting message from the server.
+			// We could not read the starting message from the server.
 			return false;
 		}
 	}
-
-	// ERROR: We were unable to read some data from the starting message.
-	DisplayErrorMessage(kDataReceivingErrorMessage);
 
 	// We have not received a starting message from the server.
 	return false;
@@ -95,27 +92,16 @@ bool Network::ReceivedReadyMessage()
 		}
 	}
 
-	// ERROR: We were unable to receive some data from the starting message.
-	DisplayErrorMessage(kDataReceivingErrorMessage);
-
 	// We have not received a ready flag from the server yet.
 	return false;
 
 }
 
-void Network::SendInputMessageToServer(Commands& commands, float time)
+void Network::SendInputMessageToServer(Input& client_input)
 {
 	
 	// Clearing the packet of any data.
 	data_.clear();
-
-	// Creating an instance on input.
-	// Placing all of the data from the level into the network struct for sending.
-	Input client_input;
-	client_input.up = commands.up;
-	client_input.right = commands.right;
-	client_input.left = commands.left;
-	client_input.time = time;
 
 	// Placing client input into some data for transferring.
 	data_ << client_input;
@@ -123,9 +109,41 @@ void Network::SendInputMessageToServer(Commands& commands, float time)
 	// If we can successfully send the data.
 	if (SendData(data_))
 	{
-		// We have successfully sent the input message to the server.
-		// TESTING.
-		std::cout << "Up Command = " + client_input.up << std::endl;
+		std::cout << "Data has been sent to the server." << std::endl;
 	}
+
+}
+
+bool Network::ReceivedInputMessagesFromServer()
+{
+
+	// This is the struct that we will be passing the data into from the server.
+	Input input;
+
+	// Clearing the packet of any data.
+	data_.clear();
+
+	// If we have received data from the server.
+	if (ReceivedData(data_))
+	{
+		// Check to see if it is okay to read the data.
+		if (data_ >> input)
+		{
+			// We have received some input data.
+			return true;
+		}
+		// Otherwise, we could not read the data.
+		else
+		{
+			// ERROR: The packet is not okay to read.
+			//DisplayErrorMessage(kDataReadingErrorMessage);
+
+			// We could not read the input message.
+			return false;
+		}
+	}
+	
+	// We have not received any input yet.
+	return false;
 
 }

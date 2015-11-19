@@ -109,6 +109,7 @@
     <ClInclude Include="box2d_conversions.h" />
     <ClInclude Include="game_object.h" />
     <ClInclude Include="category.h" />
+    <ClInclude Include="messages.h" />
     <ClInclude Include="level.h" />
     <ClInclude Include="level_state.h" />
     <ClInclude Include="network.h" />

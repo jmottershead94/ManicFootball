@@ -10,6 +10,7 @@
 
 // Include files here.
 #include "game_object.h"
+#include "messages.h"
 
 // Dynamic Body Rectangle IS A game object, therefore inherits from it.
 class DynamicBodyRectangle : public GameObject
@@ -21,6 +22,19 @@ class DynamicBodyRectangle : public GameObject
 		~DynamicBodyRectangle();
 		void Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world, ObjectID object_id, const sf::Color colour, float bounciness);
 		void Update(float dt);
+
+		// Getters.
+		// This function will return the input struct that is being used.
+		inline Input& GetInput() { return input_; }
+
+		// This function will return the current movement force for players.
+		inline sf::Vector2f GetMovementForce()	{ return movement_force_; }
+
+	private:
+		// Attributes.
+		sf::Vector2f movement_force_;		// A vector2 for the amount of force that should be applied to the player.
+		Input input_;
+
 
 };
 

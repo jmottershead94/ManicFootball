@@ -149,5 +149,8 @@
     <ClInclude Include="network_handler.h">
       <Filter>Framework\Network</Filter>
     </ClInclude>
+    <ClInclude Include="messages.h">
+      <Filter>Framework\Network</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

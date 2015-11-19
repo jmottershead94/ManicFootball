@@ -402,11 +402,32 @@ void Level::HandleLevelObjects(float dt)
 			//	temp->Update(dt);
 			//}
 			// If the level object is a football.
-			if ((**level_object).GetID() == ObjectID::ball
-				|| ((**level_object).GetID() == ObjectID::otherPlayer))
+			if ((**level_object).GetID() == ObjectID::ball)
 			{
-				// Casting this to a dynamic body circle in order to update the sprites position for level object.
+				// Casting this to a dynamic body rectangle in order to update the sprites position for level object.
 				DynamicBodyRectangle* dynamic_rectangle = static_cast<DynamicBodyRectangle*>(*level_object);
+				dynamic_rectangle->Update(dt);
+			}
+			else if ((**level_object).GetID() == ObjectID::otherPlayer)
+			{
+				// Casting this to a dynamic body rectangle in order to update the sprites position for level object.
+				DynamicBodyRectangle* dynamic_rectangle = static_cast<DynamicBodyRectangle*>(*level_object);
+
+				// If we have received any data from the network.
+				//if (network_->ReceivedData(network_->GetData()))
+				//{
+					//// If the data we have received is input data.
+					//if (network_->ReceivedInputMessagesFromServer())
+					//{
+						//// Place the input data into the input struct for the other player.
+						//if (network_->GetData() >> dynamic_rectangle->GetInput())
+						//{
+						//	// Apply the input to the other player.
+						//	ApplyPlayerInput(*dynamic_rectangle, dt);
+						//}
+					//}
+				//}
+
 				dynamic_rectangle->Update(dt);
 			}
 			// Otherwise, if the object is a player.
@@ -415,10 +436,42 @@ void Level::HandleLevelObjects(float dt)
 				// Casting this to a player in order to update the sprites position for level object.
 				Player* temp = static_cast<Player*>(*level_object);
 				
+				// Sending the current input message data to the server.
+				network_->SendInputMessageToServer(temp->GetInput());
+
+				// Updating the player.
 				temp->Update(dt);
 			}
 		}
 	}
+
+}
+
+void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
+{
+
+	// If player one pressed up.
+	if (player.GetInput().up)
+	{
+		player.GetBody()->ApplyLinearImpulse(b2Vec2(0.0f, player.GetMovementForce().y * dt), player.GetBody()->GetWorldCenter(), player.GetBody()->IsAwake());
+		std::cout << "Player " + player.GetID() << " has pressed up!" << std::endl;
+	}
+
+	if (player.GetInput().right)
+	{
+		// Move the body to the right.
+		player.GetBody()->ApplyLinearImpulse(b2Vec2((player.GetMovementForce().x * dt), 0.0f), player.GetBody()->GetWorldCenter(), player.GetBody()->IsAwake());
+		std::cout << "Player " + player.GetID() << " has pressed right!" << std::endl;
+	}
+
+	if (player.GetInput().left)
+	{
+		// Move the body to the left.
+		player.GetBody()->ApplyLinearImpulse(b2Vec2(((player.GetMovementForce().x * -1.0f) * dt), 0.0f), player.GetBody()->GetWorldCenter(), player.GetBody()->IsAwake());
+		std::cout << "Player " + player.GetID() << " has pressed left!" << std::endl;
+	}
+
+	player.Update(dt);
 
 }
 
