@@ -30,7 +30,7 @@ class Game
 
 	private:
 		// Attributes.
-		const unsigned int frame_rate_= 60;
+		const unsigned int kFrameRate = 60;
 		b2World* world_;
 		sf::Clock clock_;
 		sf::Event event_;

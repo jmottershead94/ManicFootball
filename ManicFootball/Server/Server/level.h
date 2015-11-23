@@ -29,7 +29,7 @@ class Level
 		// Methods.
 		Level();
 		~Level();
-		void Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution, Network& network);
+		void Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution, Network& network, sf::Clock& game_clock);
 		void CreateGround();
 		void CreateWall(sf::Vector2f& position, sf::Vector2f& dimension);
 		void CreateNets(bool left_of_the_field);
@@ -44,6 +44,7 @@ class Level
 		void CheckPlayerInput(DynamicBodyRectangle& player, float dt);
 		void MovePlayers(float dt);
 		void ApplyPlayerInput(DynamicBodyRectangle& player, float dt);
+		void CorrectPositions();
 		void Clear();
 		void Render(sf::RenderWindow& game_window);
 		void Update(float dt);
@@ -79,6 +80,7 @@ class Level
 		b2World* world_;										// Points to the box2D world.
 		sf::Font* font_;										// Points to the game font.
 		sf::Vector2f* screen_resolution_;						// Points to the screen resolution.
+		sf::Clock clock_;										// Points to the game clock.
 		std::ostringstream red_convert_;						// Convert the red score integer to a string.
 		std::ostringstream blue_convert_;						// Convert the blue score integer to a string.
 		Network* network_;										// Points to the game network.

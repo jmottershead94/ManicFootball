@@ -9,7 +9,7 @@ Level::~Level()
 {
 }
 
-void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution, Network& network)
+void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution, Network& network, sf::Clock& game_clock)
 {
 
 	// Initialising local attributes.
@@ -21,6 +21,7 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 	world_ = world;									// Access to the box2D world.
 	font_ = &font;									// Access to the game font.
 	screen_resolution_ = &game_screen_resolution;	// Access to the game resolution.
+	clock_ = game_clock;							// Access to the game clock.
 	red_convert_ << red_team_score_;				// Places the textual representation of the red team score integer into red_convert_.
 	blue_convert_ << blue_team_score_;				// Places the textual representation of the blue team score integer into blue_convert_.
 	network_ = &network;							// Access to the game network.
@@ -39,6 +40,9 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.25f, screen_resolution_->y * 0.25f));
 	CreateFootball(sf::Vector2f(screen_resolution_->x * 0.5f, screen_resolution_->y * 0.25f));
 	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.75f, screen_resolution_->y * 0.25f));
+
+	// This may need to be here? Unsure as of yet.
+	clock_.restart();
 
 }
 
@@ -432,6 +436,61 @@ void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
 
 }
 
+void Level::CorrectPositions()
+{
+
+	// If there are objects in the level.
+	if (!level_objects_.empty())
+	{
+		// Iterating through all of the level objects.
+		for (auto& level_object : level_objects_)
+		{
+			// All dynamic objects.
+			PositionCorrection player_one_correction;
+			PositionCorrection player_two_correction;
+			PositionCorrection ball_correction;
+
+			// If the level object is the first player.
+			if (level_object->GetID() == ObjectID::playerOne)
+			{
+				// Create the position correction struct for the first player.
+				player_one_correction.x = level_object->GetPosition().x;
+				player_one_correction.y = level_object->GetPosition().y;
+				player_one_correction.object_id = level_object->GetID();
+				player_one_correction.time = clock_.getElapsedTime().asMilliseconds();
+			}
+			// Otherwise, if the level object is the second player.
+			else if (level_object->GetID() == ObjectID::playerTwo)
+			{
+				// Create the position correction struct for the second player.
+				player_two_correction.x = level_object->GetPosition().x;
+				player_two_correction.y = level_object->GetPosition().y;
+				player_two_correction.object_id = level_object->GetID();
+				player_two_correction.time = clock_.getElapsedTime().asMilliseconds();
+			}
+			// Otherwise, if the level object is a ball.
+			else if (level_object->GetID() == ObjectID::ball)
+			{
+				// Create the position correction struct for the ball.
+				ball_correction.x = level_object->GetPosition().x;
+				ball_correction.y = level_object->GetPosition().y;
+				ball_correction.object_id = level_object->GetID();
+				ball_correction.time = clock_.getElapsedTime().asMilliseconds();
+			}
+
+			// For all of the sockets in the connected match.
+			for (auto& socket : network_->GetClientSockets())
+			{
+				// Send the all of the corrections to each player.
+				network_->SendPositionCorrectionToClients(*socket, player_one_correction);
+				network_->SendPositionCorrectionToClients(*socket, player_two_correction);
+				network_->SendPositionCorrectionToClients(*socket, ball_correction);
+			}
+		}
+	}
+
+}
+
 void Level::Clear()
 {
 
@@ -502,6 +561,13 @@ void Level::Render(sf::RenderWindow& game_window)
 
 void Level::Update(float dt)
 {
+
+	//// Every 3 seconds on the server match.
+	//if ((int)clock_.getElapsedTime().asSeconds() % 10 == 0)
+	//{
+	//	// Send out a message to correct the position of the clients.
+	//	CorrectPositions();
+	//}
 
 	HandleLevelObjects(dt);
 	CollisionTest();

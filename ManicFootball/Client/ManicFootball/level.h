@@ -43,6 +43,7 @@ class Level
 		void CollisionTest();
 		void HandleLevelObjects(float dt);
 		void ApplyPlayerInput(DynamicBodyRectangle& player, float dt);
+		void CorrectPositions();
 		void Clear();
 		void Update(float dt);
 
@@ -74,8 +75,8 @@ class Level
 		std::ostringstream red_convert_;			// Convert the red score integer to a string.
 		std::ostringstream blue_convert_;			// Convert the blue score integer to a string.
 		std::vector<GameObject*> level_objects_;	// The vector of level objects, stores all game objects in the world.
-		std::vector<sf::Text*> scores_;
-		float lag_offset_;							// The lag offset for each message from the server.
+		std::vector<sf::Text*> scores_;				// The vector of level scores.
+		sf::Int32 lag_offset_;						// The lag offset for each message from the server.
 		b2World* world_;							// Points to the box2D world.
 		sf::Font* font_;							// Points to the game font.
 		sf::Vector2f* screen_resolution_;			// Points to the screen resolution.

@@ -16,7 +16,7 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 	window_ = new sf::RenderWindow(sf::VideoMode((unsigned int)screen_resolution_.x, (unsigned int)screen_resolution_.y), "Manic Football");
 	
 	// This will lock the frame rate of the game window to 60 fps.
-	window_->setFramerateLimit(frame_rate_);
+	window_->setFramerateLimit(kFrameRate);
 
 	// Handling the font loading.
 	if (!font_.loadFromFile("Resources/Fonts/heavy_data.ttf"))
@@ -88,7 +88,7 @@ void Game::Update()
 {
 
 	// Set up Box2D variables.
-	float time_step = 1.0f / (float)frame_rate_;
+	float time_step = 1.0f / (float)kFrameRate;
 	int32 velocity_iterations = 8;
 	int32 position_iterations = 6;
 

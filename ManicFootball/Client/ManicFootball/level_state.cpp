@@ -168,6 +168,13 @@ void LevelState::Render()
 void LevelState::Update(float dt)
 {
 
+	//// If 3 seconds have passed on the client side.
+	//if (game_clock_.getElapsedTime().asSeconds % 1 == 0)
+	//{
+	//	// Receive a position correction message from the server.
+
+	//}
+
 	// Update the level.
 	level_.Update(dt);
 

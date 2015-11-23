@@ -469,6 +469,36 @@ void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
 
 }
 
+void Level::CorrectPositions()
+{
+
+	// If we have received a position correction message from the server.
+	if (network_->ReceivedPositionMessageFromServer())
+	{
+		// Setting up the correction struct.
+		PositionCorrection correct_position;
+
+		// Place the data into the struct we just made.
+		network_->GetData() >> correct_position;
+
+		// If there are objects in the level.
+		if (!level_objects_.empty())
+		{
+			// Iterating through all of the level objects.
+			for (auto& level_object : level_objects_)
+			{
+				if (((level_object->GetID() == correct_position.object_id) && (correct_position.object_id == ObjectID::player))
+					|| ((level_object->GetID() == correct_position.object_id) && (correct_position.object_id == ObjectID::otherPlayer))
+					|| ((level_object->GetID() == correct_position.object_id) && (correct_position.object_id == ObjectID::ball)))
+				{
+					level_object->TranslateBody(correct_position.x, correct_position.y);
+				}
+			}
+		}
+	}
+
+}
+
 void Level::Clear()
 {
 
@@ -502,6 +532,11 @@ void Level::Clear()
 
 void Level::Update(float dt)
 {
+
+	/*if ((int)clock_.getElapsedTime().asSeconds() % 5 == 0)
+	{
+		CorrectPositions();
+	}*/
 
 	HandleLevelObjects(dt);
 	CollisionTest();

@@ -28,11 +28,12 @@ class Network : public NetworkHandler
 		bool ConnectionsAreReady();
 		bool ReceivedInputMessageFromClient();
 		void SendInputToClients(sf::TcpSocket& client_socket, Input& client_input);
+		void SendPositionCorrectionToClients(sf::TcpSocket& client_socket, PositionCorrection& server_positions);
 		void Update();
 		
 		// Getters.
 		// This will return the current number of clients in the network.
-		inline int GetNumberOfConnectedClients()	{ return connected_clients_; }
+		inline unsigned int GetNumberOfConnectedClients()	{ return connected_clients_; }
 
 		// This will return whether or not the server has all of the connections it can have.
 		inline bool IsReady()						{ return ready_; }
@@ -46,7 +47,7 @@ class Network : public NetworkHandler
 	private:
 		// Attributes.
 		bool ready_;																			// Whether the server is ready to start the level or not.
-		int connected_clients_;																	// The current number of connected clients to this server.
+		unsigned int connected_clients_;														// The current number of connected clients to this server.
 		std::array< sf::TcpSocket*, MAX_NUMBER_OF_CONNECTIONS > sockets_;						// A data structure holding all of the connected client's TCP sockets.
 		sf::Packet data_;																		// Packet data used to store and pass along messages.
 		

@@ -50,11 +50,16 @@ void Network::AcceptConnection(sf::TcpSocket& client_socket, bool team, sf::Cloc
 		// Telling them what team they are on. (bool red_team = true).
 		// Sending them the initial server timestamp for timing offsets on the client side.
 		StartMessage starting_message;
-		starting_message.player_team = team;							// Setting player one to be on the red team.
-		starting_message.time = clock.restart().asMilliseconds();		// Restarting the game clock for player one to determine lag offset.
+		starting_message.player_team = team;						// Setting player one to be on the red team.
+		starting_message.time = clock.restart().asMilliseconds();	// Restarting the game clock for player one to determine lag offset.
+				
+		// Print out the current time server side.
+		std::cout << "Starting message time is: " << starting_message.time << std::endl;
 
 		// Placing the starting message into the data packet for sending.
 		data_ << starting_message;
+
+		std::cout << "Starting message time is: " << starting_message.time << std::endl;
 
 		// If we can send the data over to the client.
 		if (SendData(client_socket, data_))
@@ -145,6 +150,23 @@ void Network::SendInputToClients(sf::TcpSocket& client_socket, Input& client_inp
 
 	// Placing the starting message into the data packet for sending.
 	data_ << client_input;
+
+	// If we can send the data over to the client.
+	if (SendData(client_socket, data_))
+	{
+		// We have sent the data!
+	}
+
+}
+
+void Network::SendPositionCorrectionToClients(sf::TcpSocket& client_socket, PositionCorrection& server_positions)
+{
+
+	// Clearing the packet of any data.
+	data_.clear();
+
+	// Placing the starting message into the data packet for sending.
+	data_ << server_positions;
 
 	// If we can send the data over to the client.
 	if (SendData(client_socket, data_))

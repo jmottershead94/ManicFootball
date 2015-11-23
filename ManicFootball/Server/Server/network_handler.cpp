@@ -38,3 +38,17 @@ bool NetworkHandler::ReceivedData(sf::TcpSocket& client_socket, sf::Packet& data
 	// We could not receive the data, notify the server.
 	return false;
 }
+
+// Add in standard procedure for a client disconnecting...
+bool NetworkHandler::HasClientDisconnected(sf::TcpSocket& client_socket)
+{
+
+	// If a client has disconnected.
+	//if (client_socket.disconnect)
+	//{
+	//		return true;
+	//}
+
+	return false;
+
+}

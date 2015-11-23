@@ -22,13 +22,14 @@ class Network : public NetworkHandler
 		bool ReceivedReadyMessage();
 		void SendInputMessageToServer(Input& client_input);
 		bool ReceivedInputMessagesFromServer();
+		bool ReceivedPositionMessageFromServer();
 
 		// Getters.
 		// This will return the team that the client is on.
 		inline bool GetAssignedTeam()		{ return team_; };
 
 		// This will return the amount of lag that was calculate between the server and client.
-		inline float GetLagOffset()			{ return lag_offset_; }
+		inline sf::Int32 GetLagOffset()			{ return lag_offset_; }
 		
 		// This will return the current set of data.
 		inline sf::Packet& GetData() { return data_; }
@@ -36,7 +37,7 @@ class Network : public NetworkHandler
 	private:
 		// Attributes.
 		bool team_;
-		float lag_offset_;
+		sf::Int32 lag_offset_;
 		sf::Packet data_;
 
 };

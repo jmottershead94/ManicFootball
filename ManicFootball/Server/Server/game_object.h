@@ -26,58 +26,58 @@ class GameObject
 		void TranslateBody(float x, float y);
 
 		// Setters.
-		// This will allow us to set an object on a surface..
-		inline void OnSurface(bool on_surface) { on_surface_ = on_surface; }
-
 		// This will set the remove flag.
-		inline void SetRemove(bool should_remove) { remove_ = should_remove; }
+		inline void SetRemove(bool should_remove)							{ remove_ = should_remove; }
 
 		// This function will set the current body of the game object with the body passed in.
-		inline void SetBody(b2Body* body)	{ body_ = body; }
+		inline void SetBody(b2Body* body)									{ body_ = body; }
 
 		// This function will set the new position of the game object.
-		inline void SetPosition(sf::Vector2f new_position) { position_ = new_position; }
+		inline void SetPosition(sf::Vector2f new_position)					{ position_ = new_position; }
+
+		// This function will set the previous position to an updated previous position.
+		inline void SetPreviousPosition(sf::Vector2f new_previous_position) { previous_position_ = new_previous_position; }
 
 		// Getters.
-		// This function will tell us if the object is on a surface or not.
-		inline bool IsOnSurface() { return on_surface_; }
-
 		// This function will tell us if the game object needs removing from the level.
-		inline bool NeedsRemoving() { return remove_; }
+		inline bool NeedsRemoving()						{ return remove_; }
 
 		// This function will return and let us know if the shape has a rectangle shape or not.
-		inline bool IsRectangle() { return is_rectangle_; }
+		inline bool IsRectangle()						{ return is_rectangle_; }
 
 		// This function will provide access to the body of the game object.
-		inline b2Body* GetBody()			{ return body_; }
+		inline b2Body* GetBody()						{ return body_; }
 
 		// This function will return the rectangle shape.
-		inline sf::RectangleShape GetRectangleShape()	{ return rectangle_; }
+		inline sf::RectangleShape& GetRectangleShape()	{ return rectangle_; }
 
 		// This function will return the circle shape.
-		inline sf::CircleShape GetCircleShape() { return circle_; }
+		inline sf::CircleShape& GetCircleShape()		{ return circle_; }
 
 		// This function will return the current position of the game object.
-		inline sf::Vector2f GetPosition() { return position_; }
+		inline sf::Vector2f& GetPosition()				{ return position_; }
 
+		// This function will return the previous position of the game object.
+		inline sf::Vector2f& GetPreviousPosition()		{ return previous_position_; }
+		
 		// This function will return the current respawn position of the game object.
-		inline sf::Vector2f GetRespawnPosition() { return respawn_position_; }
+		inline sf::Vector2f& GetRespawnPosition()		{ return respawn_position_; }
 
 		// This function will return the current dimension of the game object.
-		inline sf::Vector2f GetDimension() { return dimension_; }
+		inline sf::Vector2f& GetDimension()				{ return dimension_; }
 
 		// This function will return the id number of the object.
-		inline int GetID()					{ return id_; }
+		inline int GetID()								{ return id_; }
 
 	protected:
 		// Attributes.
-		bool on_surface_;
 		bool remove_;
 		bool is_rectangle_;
 		b2Body* body_;
 		sf::RectangleShape rectangle_;
 		sf::CircleShape circle_;
 		sf::Vector2f position_;
+		sf::Vector2f previous_position_;
 		sf::Vector2f respawn_position_;
 		sf::Vector2f dimension_;
 		ObjectID id_;
