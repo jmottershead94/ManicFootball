@@ -12,6 +12,7 @@ void LevelGenerator::Init(b2World* world, sf::Font& font, sf::Vector2f& game_scr
 {
 
 	// Initialising the level generator attributes.
+	finished_ = false;								// The match has not yet finished.
 	red_team_score_ = 2;							// The current score of the red team.
 	blue_team_score_ = 2;							// The current score of the blue team.
 	previous_red_team_score_ = red_team_score_;		// The current previous score of the red team.
