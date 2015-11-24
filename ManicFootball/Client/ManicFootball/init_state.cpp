@@ -88,7 +88,7 @@ void InitState::OnEnter()
 		text_controls_->setPosition(0.0f, 100.0f);
 		text_controls_->setFont(*font_);
 		text_controls_->setString("Left mouse button - Main Menu");
-		text_controls_->setCharacterSize(24);
+		text_controls_->setCharacterSize(32);
 		text_controls_->setColor(sf::Color::White);
 		text_controls_->setStyle(sf::Text::Bold);
 	}

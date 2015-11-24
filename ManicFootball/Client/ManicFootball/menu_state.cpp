@@ -75,7 +75,7 @@ void MenuState::OnEnter()
 		// Set the font of the text that is going to be displayed and set what the text will display.
 		text_->setFont(*font_);
 		text_->setString("The Menu State");
-		text_->setCharacterSize(32);
+		text_->setCharacterSize(64);
 		text_->setColor(sf::Color::Red);
 		text_->setStyle(sf::Text::Bold | sf::Text::Underlined);
 
