@@ -66,10 +66,10 @@ void Game::CheckIfLevelHasFinished()
 {
 
 	// If the current match has finished.
-	if (level_.HasFinished())
+	if (level_.GetLevelGenerator().HasFinished())
 	{
 		// Clear the level.
-		level_.Clear();
+		level_.GetLevelGenerator().Clear();
 
 		// Terminate all of the connections here...
 		
@@ -122,7 +122,7 @@ void Game::Render()
 	window_->clear();
 
 	// Render everything in the level.
-	level_.Render(*window_);
+	level_.GetLevelGenerator().Render(*window_);
 
 	// Display the new layout of the window.
 	window_->display();

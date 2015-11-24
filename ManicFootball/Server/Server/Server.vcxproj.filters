@@ -57,6 +57,9 @@
     <ClCompile Include="network_handler.cpp">
       <Filter>Framework\Network</Filter>
     </ClCompile>
+    <ClCompile Include="level_generator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="box2d_conversions.h">
@@ -100,6 +103,12 @@
     </ClInclude>
     <ClInclude Include="messages.h">
       <Filter>Framework\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="tk_spline.h">
+      <Filter>Framework\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="level_generator.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -26,10 +26,11 @@ class Network : public NetworkHandler
 		~Network();
 		void AcceptConnection(sf::TcpSocket& client_socket, bool team, sf::Clock& clock);
 		bool ConnectionsAreReady();
-		bool ReceivedInputMessageFromClient();
+		bool ReceivedInputMessageFromClient(sf::TcpSocket& client_socket);
 		void SendInputToClients(sf::TcpSocket& client_socket, Input& client_input);
-		void SendPositionCorrectionToClients(sf::TcpSocket& client_socket, PositionCorrection& server_positions);
-		void Update();
+		void SendDeadReckoningToClients(sf::TcpSocket& client_socket, PositionUpdate& client_position);
+		//void SendPositionCorrectionToClients(sf::TcpSocket& client_socket, PositionCorrection& server_positions);
+		bool ReceivedPositionMessageFromClient();
 		
 		// Getters.
 		// This will return the current number of clients in the network.

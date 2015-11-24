@@ -30,19 +30,30 @@ struct Commands
 	bool left = false;
 };
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// ADD IN FORCE APPLIED 2 FLOATS (X AND Y).
-
-// The structure for correcting dynamic object's positions.
-// This will be sent every so often to make sure that objects are in the correct place.
-struct PositionCorrection
+// The struct for updating the dynamic object positions.
+// This will be sent to the server for a few seconds, then let prediction do the rest.
+struct PositionUpdate
 {
-	float x = 0.0f;					// The correct x position.
-	float y = 0.0f;					// The correct y position.
-	int object_id = 0;				// The id of the game object.
-	sf::Int32 time = 0;				// The current time that the positions were given at.
+	float x = 0.0f;
+	float y = 0.0f;
+	sf::Int32 time = 0;
 };
-////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//// ADD IN FORCE APPLIED 2 FLOATS (X AND Y).
+//
+//// The structure for correcting dynamic object's positions.
+//// This will be sent every so often to make sure that objects are in the correct place.
+//struct PositionCorrection
+//{
+//	float x = 0.0f;					// The correct x position.
+//	float y = 0.0f;					// The correct y position.
+//	float velocity_x = 0.0f;		// The current x velocity of the object.
+//	float velocity_y = 0.0f;		// The current y velocity of the object.
+//	int object_id = 0;				// The id of the game object.
+//	sf::Int32 time = 0;				// The current time that the positions were given at.
+//};
+//////////////////////////////////////////////////////////////////////////////////////////////
 
 // Overloading packet operator functions.
 // Used for sending packet data.
@@ -58,10 +69,16 @@ inline sf::Packet& operator <<(sf::Packet& packet, const Input& message)				{ re
 // This will allow me to receive Input data through packets.
 inline sf::Packet& operator >>(sf::Packet& packet, Input& message)						{ return packet >> message.up >> message.right >> message.left >> message.time; }
 
-// This will allow me to send Position Correction data through packets.
-inline sf::Packet& operator <<(sf::Packet& packet, const PositionCorrection& message)	{ return packet << message.x << message.y << message.object_id << message.time; }
+// This will allow me to send Position Update data through packets.
+inline sf::Packet& operator <<(sf::Packet& packet, const PositionUpdate& message)		{ return packet << message.x << message.y << message.time; }
 
-// This will allow me to receive Position Correction data through packets.
-inline sf::Packet& operator >>(sf::Packet& packet, PositionCorrection& message)			{ return packet >> message.x >> message.y >> message.object_id >> message.time; }
+// This will allow me to receive Position Update data through packets.
+inline sf::Packet& operator >>(sf::Packet& packet, PositionUpdate& message)				{ return packet >> message.x >> message.y >> message.time; }
+
+//// This will allow me to send Position Correction data through packets.
+//inline sf::Packet& operator <<(sf::Packet& packet, const PositionCorrection& message)	{ return packet << message.x << message.y << message.velocity_x << message.velocity_y << message.object_id << message.time; }
+//
+//// This will allow me to receive Position Correction data through packets.
+//inline sf::Packet& operator >>(sf::Packet& packet, PositionCorrection& message)			{ return packet >> message.x >> message.y >> message.object_id >> message.velocity_x >> message.velocity_y >> message.time; }
 
 #endif

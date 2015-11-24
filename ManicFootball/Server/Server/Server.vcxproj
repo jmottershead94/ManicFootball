@@ -87,6 +87,7 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="game_object.cpp" />
     <ClCompile Include="level.cpp" />
+    <ClCompile Include="level_generator.cpp" />
     <ClCompile Include="network.cpp" />
     <ClCompile Include="network_handler.cpp" />
     <ClCompile Include="server.cpp" />
@@ -100,6 +101,8 @@
     <ClInclude Include="dynamic_body_rectangle.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="game_object.h" />
+    <ClInclude Include="level_generator.h" />
+    <ClInclude Include="tk_spline.h" />
     <ClInclude Include="messages.h" />
     <ClInclude Include="level.h" />
     <ClInclude Include="network.h" />
