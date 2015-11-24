@@ -1,6 +1,10 @@
 #include "level.h"
 
-Level::Level()
+Level::Level() : world_(nullptr),
+	font_(nullptr),
+	screen_resolution_(nullptr),
+	clock_(nullptr),
+	network_(nullptr)
 {
 }
 
@@ -14,12 +18,14 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 	// Initialising local attributes.
 	world_ = world;									// Access to the box2D world.
 	font_ = &font;									// Access to the game font.
-	clock_ = game_clock;							// Access to the game clock.
+	clock_ = &game_clock;							// Access to the game clock.
 	network_ = &network;							// Access to the game network.
 
+	// Creating the level.
 	level_generator_.Init(world, font, game_screen_resolution);
+	
 	// This may need to be here? Unsure as of yet.
-	//clock_.restart();
+	clock_->restart().asMilliseconds();
 
 }
 
@@ -232,8 +238,6 @@ void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
 
 }
 
-// Just pass in player_one_x_ and player_one_y_ somewhere.
-// Same for player_two_x_ and player_two_y_.
 void Level::CorrectPositions(sf::TcpSocket& client_socket, std::vector<double>& player_x, std::vector<double>& player_y, tk::spline& player_interpolation)
 {
 
@@ -301,75 +305,6 @@ void Level::StorePositions()
 	}
 
 }
-
-//
-//void Level::Clear()
-//{
-//
-//	// Destroying the fixtures that were created during the set up of the text file levels.
-//	// This means that there will be no random collisions in the level.
-//	for (std::vector<GameObject*>::iterator level_object = level_objects_.begin(); level_object != level_objects_.end(); level_object++)
-//	{
-//		(**level_object).GetBody()->DestroyFixture((**level_object).GetBody()->GetFixtureList());
-//		(**level_object).~GameObject();
-//		world_->DestroyBody((**level_object).GetBody());
-//	}
-//
-//	// If there are objects in the level.
-//	if (!level_objects_.empty())
-//	{
-//		// Remove all of the objects from the level objects vector.
-//		level_objects_.clear();
-//	}
-//
-//	// If there is a set of scores stored in the level.
-//	if (!scores_.empty())
-//	{
-//		// Clear the data for the scores.
-//		scores_.clear();
-//	}
-//
-//	// Resetting the finished flag.
-//	finished_ = false;
-//
-//}
-//
-//void Level::Render(sf::RenderWindow& game_window)
-//{
-//
-//	// If there are objects in the level.
-//	if (!level_objects_.empty())
-//	{
-//		// Iterating through all of the level objects.
-//		for (auto level_object = level_objects_.begin(); level_object != level_objects_.end(); level_object++)
-//		{
-//			// If the level object has a rectangle shape.
-//			if ((**level_object).IsRectangle())
-//			{
-//				// Therefore, draw the rectangle shape.
-//				game_window.draw((**level_object).GetRectangleShape());
-//			}
-//			// Otherwise, the level object will have a circle shape.
-//			else
-//			{
-//				// Draw the circle shape for the football.
-//				game_window.draw((**level_object).GetCircleShape());
-//			}
-//		}
-//	}
-//
-//	// If there is a set of scores in the level.
-//	if (!scores_.empty())
-//	{
-//		// Iterating through all of the level scores.
-//		for (auto score = scores_.begin(); score != scores_.end(); score++)
-//		{
-//			// Draw the score on the screen.
-//			game_window.draw((**score));
-//		}
-//	}
-//
-//}
 
 void Level::Update(float dt)
 {
