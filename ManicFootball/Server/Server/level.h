@@ -31,16 +31,21 @@ class Level
 		void UpdateTheScore(int score, int previous_score, std::ostringstream& conversion, bool red_team);
 		void CollisionTest();
 		void HandleLevelObjects(float dt);
+		void DataResponse(sf::TcpSocket& client_socket, sf::Packet& data, DynamicBodyRectangle& object, float dt);
 		void CheckPlayerInput(DynamicBodyRectangle& player, float dt);
 		void MovePlayers(float dt);
 		void ApplyPlayerInput(DynamicBodyRectangle& player, float dt);
 		void CorrectPositions(sf::TcpSocket& client_socket, std::vector<double>& player_x, std::vector<double>& player_y, tk::spline& player_interpolation);
 		void StorePositions();
+		//void CheckForFinishingMessage(sf::TcpSocket& client_socket_one, sf::TcpSocket& client_socket_two);
 		void Update(float dt);
 
 		// Getters.
 		// This will return the current level generator.
 		inline LevelGenerator& GetLevelGenerator()		{ return level_generator_; }
+
+		// This will return the current network.
+		inline Network& GetNetwork()					{ return *network_; }
 
 	private:
 		// Attributes.

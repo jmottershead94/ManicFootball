@@ -180,18 +180,11 @@ void Level::HandleLevelObjects(float dt)
 			{
 				// Casting this to a dynamic body rectangle in order to update the sprites position for level object.
 				DynamicBodyRectangle* dynamic_rectangle = static_cast<DynamicBodyRectangle*>(level_object);
-
-				// If the data we have received is input data.
-				if (network_->ReceivedInputMessageFromServer())
-				{
-					// Place the input data into the input struct for the other player.
-					if (network_->GetData() >> dynamic_rectangle->GetInput())
-					{
-						// Apply the input to the other player.
-						ApplyPlayerInput(*dynamic_rectangle, dt);
-					}
-				}
-
+				
+				// Provide the appropriate data response for the player, depending on the package that they have received.
+				DataResponse(network_->GetData(), *dynamic_rectangle, dt);
+				
+				// Update the other player.
 				dynamic_rectangle->Update(dt);
 			}
 			// Otherwise, if the object is a player.
@@ -206,6 +199,35 @@ void Level::HandleLevelObjects(float dt)
 				// Updating the player.
 				temp->Update(dt);
 			}
+		}
+	}
+
+}
+
+void Level::DataResponse(sf::Packet& data, DynamicBodyRectangle& object, float dt)
+{
+
+	// Add in additional structs here for any further information.
+	FinishMessage finish_message;
+
+	// If the data we have received is input data.
+	if (network_->ReceivedInputMessageFromServer())
+	{
+		// Place the input data into the input struct for the other player.
+		if (network_->GetData() >> object.GetInput())
+		{
+			// Apply the input to the other player.
+			ApplyPlayerInput(object, dt);
+		}
+	}
+	// Otherwise, if we have received finish message data.
+	else if (network_->ReceivedFinishMessageFromServer())
+	{
+		// Place the finish message data into the finish message struct for the other player.
+		if (network_->GetData() >> finish_message)
+		{
+			// Finish the match.
+			level_generator_.SetFinished(true);
 		}
 	}
 
@@ -305,6 +327,14 @@ void Level::UpdatePositions()
 
 void Level::Update(float dt)
 {
+
+	// If we have not actually finished the match ourselves.
+	// But the other player has, and we have received a notification for it.
+	//if (network_->ReceivedFinishMessageFromServer())
+	//{
+	//	// Set out match state to finished too.
+	//	level_generator_.SetFinished(true);
+	//}
 
 	/*if ((int)clock_.getElapsedTime().asSeconds() % 5 == 0)
 	{

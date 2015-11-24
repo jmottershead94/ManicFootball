@@ -183,12 +183,7 @@ void Level::HandleLevelObjects(float dt)
 					// Check to see if we have received any input data for player one.
 					if (network_->ReceivedData(*network_->GetClientSockets()[0], network_->GetData()))
 					{
-						// Check to see if we can read the input data for player one.
-						if (network_->GetData() >> dynamic_rectangle->GetInput())
-						{
-							ApplyPlayerInput(*dynamic_rectangle, dt);
-							network_->SendInputToClients(*network_->GetClientSockets()[1], dynamic_rectangle->GetInput());
-						}
+						DataResponse(*network_->GetClientSockets()[1], network_->GetData(), *dynamic_rectangle, dt);
 					}
 				}
 				else if (dynamic_rectangle->GetID() == ObjectID::playerTwo)
@@ -196,18 +191,38 @@ void Level::HandleLevelObjects(float dt)
 					// Check to see if we have received any input data for player one.
 					if (network_->ReceivedData(*network_->GetClientSockets()[1], network_->GetData()))
 					{
-						// Check to see if we can read the input data for player one.
-						if (network_->GetData() >> dynamic_rectangle->GetInput())
-						{
-							ApplyPlayerInput(*dynamic_rectangle, dt);
-							network_->SendInputToClients(*network_->GetClientSockets()[0], dynamic_rectangle->GetInput());
-						}
+						DataResponse(*network_->GetClientSockets()[0], network_->GetData(), *dynamic_rectangle, dt);
 					}
 				}
 
 				dynamic_rectangle->Update(dt);
 			}
 		}
+	}
+
+}
+
+void Level::DataResponse(sf::TcpSocket& client_socket, sf::Packet& data, DynamicBodyRectangle& object, float dt)
+{
+
+	// Add in additional structs here for any further information.
+	FinishMessage finish_message;
+
+	// If the data contains input.
+	if (data >> object.GetInput())
+	{
+		// Process input data.
+		ApplyPlayerInput(object, dt);
+		network_->SendInputToClients(client_socket, object.GetInput());
+	}
+	// Otherwise, if the data contains a finish message.
+	else if (data >> finish_message)
+	{
+		// Send the message out to the other clients.
+		network_->SendFinishMessageToClients(client_socket, finish_message);
+
+		// End the level on the server.
+		level_generator_.SetFinished(true);
 	}
 
 }
@@ -241,9 +256,10 @@ void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
 void Level::CorrectPositions(sf::TcpSocket& client_socket, std::vector<double>& player_x, std::vector<double>& player_y, tk::spline& player_interpolation)
 {
 
-	// If there are 5 positions in the x and y vectors.
+	// If there are 4 positions in the x and y vectors.
 	if ((player_x.size() == 4) && (player_y.size() == 4))
 	{
+		// The struct for handling the position data.
 		PositionUpdate position_update;
 
 		// Plot the points using a cubic function.

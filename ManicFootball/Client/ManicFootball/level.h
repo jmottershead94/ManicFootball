@@ -30,6 +30,7 @@ class Level
 		void UpdateTheScore(int score, int previous_score, std::ostringstream& conversion, bool red_team);
 		void CollisionTest();
 		void HandleLevelObjects(float dt);
+		void DataResponse(sf::Packet& data, DynamicBodyRectangle& object, float dt);
 		void ApplyPlayerInput(DynamicBodyRectangle& player, float dt);
 		void CorrectPositions();
 		void UpdatePositions();
