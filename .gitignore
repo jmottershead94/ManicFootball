@@ -195,5 +195,5 @@ FakesAssemblies/
 # Visual Studio 6 workspace options file
 *.opt
 
-# Excluding the SFML library folder.
-SFML-2.3.2/
+# Excluding the external library folder.
+ManicFootball/External/
