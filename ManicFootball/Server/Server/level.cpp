@@ -225,9 +225,23 @@ void Level::DataResponse(sf::TcpSocket& client_socket, sf::Packet& data, Dynamic
 	// Otherwise, if the data contains a position update message.
 	else if (data >> position_update)
 	{
+		// Store both ball positions somehow, and compare the times on the messages.
+		// If one is closer to our server timer, then that ball update will be the one we use.
+		/*if (position_update.id = ObjectID::ball)
+		{
+			CompareBallPositions();
+		}*/
+		
 		// Send the interpolated positions to the other client.
 		network_->SendDeadReckoningToClients(client_socket, position_update);
 	}
+
+}
+
+void Level::CompareBallPositions()
+{
+
+
 
 }
 
