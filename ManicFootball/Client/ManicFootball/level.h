@@ -11,13 +11,11 @@
 #include <array>
 #include <iostream>
 #include <sstream>
-#include <vector>
-#include "tk_spline.h"
 #include "static_body.h"
-#include "dynamic_body_circle.h"
 #include "player.h"
 #include "network.h"
 #include "level_generator.h"
+#include "interpolation.h"
 
 class Level
 {
@@ -43,16 +41,13 @@ class Level
 
 	private:
 		// Attributes.
-		bool update_positions_;
-		std::vector < double > other_player_x_, other_player_y_;	// Vectors for storing the player coordinates over time.
-		std::vector < double > other_player_position_time_;			// The vector storing the times that the positions were sent at.
-		tk::spline cubic_interpolation_x_, cubic_interpolation_y_;	// This will be used to interpolate the other player's position.
 		b2World* world_;											// Points to the box2D world.
 		sf::Int32 lag_offset_;										// The lag offset for each message from the server.
 		sf::Font* font_;											// Points to the game font.
 		sf::Vector2f* screen_resolution_;							// Points to the screen resolution.
 		Network* network_;											// This will provide us access to the network.
 		LevelGenerator level_generator_;							// Builds the level and handles rendering.
+		Interpolation other_player_;
 
 };
 

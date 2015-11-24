@@ -28,6 +28,9 @@ class Network : public NetworkHandler
 		bool ReceivedFinishMessageFromServer();
 
 		// Getters.
+		// This will return the current threshold for interpolation to obey.
+		inline float GetThreshold()		{ return kThreshold; }
+
 		// This will return the team that the client is on.
 		inline bool GetAssignedTeam()	{ return team_; };
 
@@ -39,6 +42,7 @@ class Network : public NetworkHandler
 
 	private:
 		// Attributes.
+		const float kThreshold = 100.0f;
 		bool team_;
 		sf::Int32 lag_offset_;
 		sf::Packet data_;

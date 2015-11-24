@@ -89,6 +89,7 @@
     <ClCompile Include="game_object.cpp" />
     <ClCompile Include="init_state.cpp" />
     <ClCompile Include="client.cpp" />
+    <ClCompile Include="interpolation.cpp" />
     <ClCompile Include="level.cpp" />
     <ClCompile Include="level_generator.cpp" />
     <ClCompile Include="level_state.cpp" />
@@ -110,6 +111,7 @@
     <ClInclude Include="box2d_conversions.h" />
     <ClInclude Include="game_object.h" />
     <ClInclude Include="category.h" />
+    <ClInclude Include="interpolation.h" />
     <ClInclude Include="level_generator.h" />
     <ClInclude Include="tk_spline.h" />
     <ClInclude Include="messages.h" />

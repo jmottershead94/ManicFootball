@@ -1,7 +1,6 @@
 #include "level.h"
 
-Level::Level() : update_positions_(false),
-	world_(nullptr),
+Level::Level() : world_(nullptr),
 	font_(nullptr),
 	screen_resolution_(nullptr),
 	network_(nullptr)
@@ -225,9 +224,7 @@ void Level::DataResponse(sf::Packet& data, DynamicBodyRectangle& object, float d
 			position_update.time = network_->GetClock().getElapsedTime().asMilliseconds();
 
 			// Place the positions in the vector of positions for interpolation/prediction.
-			other_player_x_.push_back(position_update.x);
-			other_player_y_.push_back(position_update.y);
-			other_player_position_time_.push_back(position_update.time);
+			other_player_.UpdateVectors(position_update.x, position_update.y, position_update.time);
 		}
 	}
 	// Otherwise, if we have received finish message data.
@@ -247,9 +244,11 @@ void Level::DataResponse(sf::Packet& data, DynamicBodyRectangle& object, float d
 		if (network_->GetData() >> position_update)
 		{
 			// Place the positions in the vector of positions for interpolation/prediction.
-			other_player_x_.push_back(position_update.x);
+			/*other_player_x_.push_back(position_update.x);
 			other_player_y_.push_back(position_update.y);
-			other_player_position_time_.push_back(position_update.time);
+			other_player_position_time_.push_back(position_update.time);*/
+
+			other_player_.UpdateVectors(position_update.x, position_update.y, position_update.time);
 		}
 	}
 	
@@ -284,31 +283,16 @@ void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
 void Level::CorrectPositions()
 {
 
-	// If we have 4 x and y coordinates.
-	if ((other_player_x_.size() == 16) && (other_player_y_.size() == 16))
+	// If we have 16 x and y coordinates.
+	if ((other_player_.GetXPositions().size() == 16) && (other_player_.GetYPositions().size() == 16))
 	{
 		PositionUpdate position_update;
 
 		// Place in the points for the other player x position and the time they were received at.
-		cubic_interpolation_x_.set_points(other_player_position_time_, other_player_x_);
+		other_player_.SetXPoints();
 
 		// Place in the points for the other player y position and the time they were received at.
-		cubic_interpolation_y_.set_points(other_player_position_time_, other_player_y_);
-
-		if (!other_player_x_.empty())
-		{
-			other_player_x_.clear();
-		}
-
-		if (!other_player_y_.empty())
-		{
-			other_player_y_.clear();
-		}
-
-		if (!other_player_position_time_.empty())
-		{
-			other_player_position_time_.clear();
-		}
+		other_player_.SetYPoints();
 
 		for (auto& object : level_generator_.GetLevelObjects())
 		{
@@ -316,18 +300,30 @@ void Level::CorrectPositions()
 			{
 				// This should interpolate/predict the next however many points.
 				// Place in a check to make sure it doesn't stray too far.
-				//std::cout << "Interpolation Data X = " << cubic_interpolation_x_(network_->GetClock().getElapsedTime().asMilliseconds()) << std::endl;
-				//std::cout << "Interpolation Data Y = " << cubic_interpolation_y_(network_->GetClock().getElapsedTime().asMilliseconds()) << std::endl;
+				// If the absolute value of the x position minus the previous x position is less than the network difference in x threshold.
+				if (abs(other_player_.GetInterpolationX()(network_->GetClock().getElapsedTime().asMilliseconds()) - object->GetPosition().x) < network_->GetThreshold())
+				{
+					// If the absolute value of the y position minus the previous y position is less than the network difference in y threshold.
+					if (abs(other_player_.GetInterpolationY()(network_->GetClock().getElapsedTime().asMilliseconds()) - object->GetPosition().y) < network_->GetThreshold())
+					{
+						//std::cout << "We are interpolating." << std::endl;
 
-				// Update the struct values.
-				position_update.x = cubic_interpolation_x_(network_->GetClock().getElapsedTime().asMilliseconds());
-				position_update.y = cubic_interpolation_y_(network_->GetClock().getElapsedTime().asMilliseconds());
-				position_update.time = network_->GetClock().getElapsedTime().asMilliseconds();
+						// We can move the body through interpolation.
+						object->TranslateBody(other_player_.GetInterpolationX()(network_->GetClock().getElapsedTime().asMilliseconds()), other_player_.GetInterpolationY()(network_->GetClock().getElapsedTime().asMilliseconds()));
+					
+						// Update the struct values.
+						position_update.x = other_player_.GetInterpolationX()(network_->GetClock().getElapsedTime().asMilliseconds());
+						position_update.y = other_player_.GetInterpolationY()(network_->GetClock().getElapsedTime().asMilliseconds());
+						position_update.time = network_->GetClock().getElapsedTime().asMilliseconds();
 
-				// Send the updated struct to the server.
-				network_->SendDeadReckoningMessageToServer(position_update);
+						// Send the updated struct to the server.
+						network_->SendDeadReckoningMessageToServer(position_update);
+					}
+				}		
 			}
 		}
+
+		other_player_.ClearVectors();
 	}
 
 }

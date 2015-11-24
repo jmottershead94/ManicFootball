@@ -87,6 +87,9 @@
     <ClCompile Include="level_generator.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
+    <ClCompile Include="interpolation.cpp">
+      <Filter>Framework\Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="init_state.h">
@@ -160,6 +163,9 @@
     </ClInclude>
     <ClInclude Include="level_generator.h">
       <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="interpolation.h">
+      <Filter>Framework\Network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
