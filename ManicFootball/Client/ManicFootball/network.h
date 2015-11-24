@@ -21,8 +21,9 @@ class Network : public NetworkHandler
 		bool ReceivedStartingMessage();
 		bool ReceivedReadyMessage();
 		void SendInputMessageToServer(Input& client_input);
-		bool ReceivedInputMessagesFromServer();
+		bool ReceivedInputMessageFromServer();
 		bool ReceivedPositionMessageFromServer();
+		void SendPositionMessageToServer(PositionUpdate& client_position);
 
 		// Getters.
 		// This will return the team that the client is on.

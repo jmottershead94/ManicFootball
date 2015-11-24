@@ -114,7 +114,7 @@ void Network::SendInputMessageToServer(Input& client_input)
 
 }
 
-bool Network::ReceivedInputMessagesFromServer()
+bool Network::ReceivedInputMessageFromServer()
 {
 
 	// This is the struct that we will be passing the data into from the server.
@@ -153,39 +153,56 @@ bool Network::ReceivedInputMessagesFromServer()
 
 }
 
-bool Network::ReceivedPositionMessageFromServer()
+void Network::SendPositionMessageToServer(PositionUpdate& client_position)
 {
-
-	// This is the struct that we will be passing the data into from the server.
-	PositionCorrection position;
 
 	// Clearing the packet of any data.
 	data_.clear();
 
-	// If we have received data from the server.
-	if (ReceivedData(data_))
+	// Placing client input into some data for transferring.
+	data_ << client_position;
+
+	// If we can successfully send the data.
+	if (SendData(data_))
 	{
-		// Check to see if it is okay to read the data.
-		if (data_ >> position)
-		{
-			// Place the input data back into the packet data to be used by the client.
-			data_ << position;
-
-			// We have received some input data.
-			return true;
-		}
-		// Otherwise, we could not read the data.
-		else
-		{
-			// ERROR: The packet is not okay to read.
-			DisplayErrorMessage(kDataReadingErrorMessage);
-
-			// We could not read the input message.
-			return false;
-		}
+		//std::cout << "Data has been sent to the server." << std::endl;
 	}
 
-	// We have not received any input yet.
-	return false;
-
 }
+
+//bool Network::ReceivedPositionMessageFromServer()
+//{
+//
+//	// This is the struct that we will be passing the data into from the server.
+//	PositionCorrection position;
+//
+//	// Clearing the packet of any data.
+//	data_.clear();
+//
+//	// If we have received data from the server.
+//	if (ReceivedData(data_))
+//	{
+//		// Check to see if it is okay to read the data.
+//		if (data_ >> position)
+//		{
+//			// Place the input data back into the packet data to be used by the client.
+//			data_ << position;
+//
+//			// We have received some input data.
+//			return true;
+//		}
+//		// Otherwise, we could not read the data.
+//		else
+//		{
+//			// ERROR: The packet is not okay to read.
+//			DisplayErrorMessage(kDataReadingErrorMessage);
+//
+//			// We could not read the input message.
+//			return false;
+//		}
+//	}
+//
+//	// We have not received any input yet.
+//	return false;
+//
+//}

@@ -44,6 +44,7 @@ class Level
 		void HandleLevelObjects(float dt);
 		void ApplyPlayerInput(DynamicBodyRectangle& player, float dt);
 		void CorrectPositions();
+		void UpdatePositions();
 		void Clear();
 		void Update(float dt);
 

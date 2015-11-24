@@ -37,56 +37,117 @@ void Player::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world
 void Player::Controls(float dt)
 {
 
-	// If the player presses the right arrow key.
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	// If the player is on the red team.
+	// Set up the controls for the red team player.
+	if (is_red_team_)
 	{
-		// The player is moving right.
-		input_.right = true;
-		input_.left = false;
+		// If the player presses the right arrow key.
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+		{
+			// The player is moving right.
+			input_.right = true;
+			input_.left = false;
 
-		// Wake up the body.
-		body_->SetAwake(true);
+			// Wake up the body.
+			body_->SetAwake(true);
 
-		// Move the body to the right.
-		body_->ApplyLinearImpulse(b2Vec2((GetMovementForce().x * dt), 0.0f), body_->GetWorldCenter(), body_->IsAwake());
+			// Move the body to the right.
+			body_->ApplyLinearImpulse(b2Vec2((GetMovementForce().x * dt), 0.0f), body_->GetWorldCenter(), body_->IsAwake());
+		}
+		// If the player has pressed the left arrow key.
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+		{
+			// The player is moving left.
+			input_.right = false;
+			input_.left = true;
+
+			// Wake up the body.
+			body_->SetAwake(true);
+
+			// Move the body to the left.
+			body_->ApplyLinearImpulse(b2Vec2(((GetMovementForce().x * -1.0f) * dt), 0.0f), body_->GetWorldCenter(), body_->IsAwake());
+		}
+		// Otherwise, if the player is not pressing anything.
+		else
+		{
+			// The player is not moving.
+			input_.right = false;
+			input_.left = false;
+		}
+
+		// If the player has pressed the up arrow key.
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+		{
+			// The player is moving upwards.
+			input_.up = true;
+
+			// Wake up the body.
+			body_->SetAwake(true);
+
+			// Make the player jump.
+			Jump(dt);
+		}
+		else
+		{
+			// The player is not moving upwards.
+			input_.up = false;
+		}
 	}
-	// If the player has pressed the left arrow key.
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	// Otherwise, if the player is on the blue team.
+	// Set up the controls for the blue team player.
+	else if (!is_red_team_)
 	{
-		// The player is moving left.
-		input_.right = false;
-		input_.left = true;
+		// If the player presses the right arrow key.
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+		{
+			// The player is moving right.
+			input_.right = true;
+			input_.left = false;
 
-		// Wake up the body.
-		body_->SetAwake(true);
+			// Wake up the body.
+			body_->SetAwake(true);
 
-		// Move the body to the left.
-		body_->ApplyLinearImpulse(b2Vec2(((GetMovementForce().x * -1.0f) * dt), 0.0f), body_->GetWorldCenter(), body_->IsAwake());
-	}
-	// Otherwise, if the player is not pressing anything.
-	else
-	{
-		// The player is not moving.
-		input_.right = false;
-		input_.left = false;
-	}
-	
-	// If the player has pressed the up arrow key.
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-	{
-		// The player is moving upwards.
-		input_.up = true;
+			// Move the body to the right.
+			body_->ApplyLinearImpulse(b2Vec2((GetMovementForce().x * dt), 0.0f), body_->GetWorldCenter(), body_->IsAwake());
+		}
+		// If the player has pressed the left arrow key.
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+		{
+			// The player is moving left.
+			input_.right = false;
+			input_.left = true;
 
-		// Wake up the body.
-		body_->SetAwake(true);
+			// Wake up the body.
+			body_->SetAwake(true);
 
-		// Make the player jump.
-		Jump(dt);
-	}
-	else
-	{
-		// The player is not moving upwards.
-		input_.up = false;
+			// Move the body to the left.
+			body_->ApplyLinearImpulse(b2Vec2(((GetMovementForce().x * -1.0f) * dt), 0.0f), body_->GetWorldCenter(), body_->IsAwake());
+		}
+		// Otherwise, if the player is not pressing anything.
+		else
+		{
+			// The player is not moving.
+			input_.right = false;
+			input_.left = false;
+		}
+
+		// If the player has pressed the up arrow key.
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+		{
+			// The player is moving upwards.
+			input_.up = true;
+
+			// Wake up the body.
+			body_->SetAwake(true);
+
+			// Make the player jump.
+			Jump(dt);
+		}
+		else
+		{
+			// The player is not moving upwards.
+			input_.up = false;
+		}
 	}
 
 }
