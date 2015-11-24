@@ -31,6 +31,8 @@ class Network : public NetworkHandler
 		void SendDeadReckoningToClients(sf::TcpSocket& client_socket, PositionUpdate& client_position);
 		//void SendPositionCorrectionToClients(sf::TcpSocket& client_socket, PositionCorrection& server_positions);
 		bool ReceivedPositionMessageFromClient();
+		bool ReceivedFinishMessageFromClients(sf::TcpSocket& client_socket);
+		void SendFinishMessageToClients(sf::TcpSocket& client_socket, FinishMessage& client_finished);
 		
 		// Getters.
 		// This will return the current number of clients in the network.

@@ -170,39 +170,58 @@ void Network::SendPositionMessageToServer(PositionUpdate& client_position)
 
 }
 
-//bool Network::ReceivedPositionMessageFromServer()
-//{
-//
-//	// This is the struct that we will be passing the data into from the server.
-//	PositionCorrection position;
-//
-//	// Clearing the packet of any data.
-//	data_.clear();
-//
-//	// If we have received data from the server.
-//	if (ReceivedData(data_))
-//	{
-//		// Check to see if it is okay to read the data.
-//		if (data_ >> position)
-//		{
-//			// Place the input data back into the packet data to be used by the client.
-//			data_ << position;
-//
-//			// We have received some input data.
-//			return true;
-//		}
-//		// Otherwise, we could not read the data.
-//		else
-//		{
-//			// ERROR: The packet is not okay to read.
-//			DisplayErrorMessage(kDataReadingErrorMessage);
-//
-//			// We could not read the input message.
-//			return false;
-//		}
-//	}
-//
-//	// We have not received any input yet.
-//	return false;
-//
-//}
+void Network::SendFinishMessageToServer(FinishMessage& client_finished)
+{
+
+	// Clearing the packet of any data.
+	data_.clear();
+
+	// Placing client input into some data for transferring.
+	data_ << client_finished;
+
+	// If we can successfully send the data.
+	if (SendData(data_))
+	{
+		//std::cout << "Data has been sent to the server." << std::endl;
+	}
+
+}
+
+bool Network::ReceivedFinishMessageFromServer()
+{
+
+	// This is the struct that we will be passing the data into from the server.
+	FinishMessage finish_message;
+
+	// Clearing the packet of any data.
+	data_.clear();
+
+	// If we have received data from the server.
+	if (ReceivedData(data_))
+	{
+		// Check to see if it is okay to read the data.
+		if (data_ >> finish_message)
+		{
+			// Place the input data back into the packet data to be used by the client.
+			data_ << finish_message;
+
+			// We have received some finish message data.
+			return true;
+		}
+		// Otherwise, we could not read the data.
+		else
+		{
+			// ERROR: The packet is not okay to read.
+			DisplayErrorMessage(kDataReadingErrorMessage);
+
+			// We could not read the finish message data.
+			return false;
+		}
+
+		return false;
+	}
+
+	// We have not received any finish message data yet.
+	return false;
+
+}

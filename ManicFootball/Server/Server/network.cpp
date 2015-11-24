@@ -172,23 +172,6 @@ void Network::SendDeadReckoningToClients(sf::TcpSocket& client_socket, PositionU
 
 }
 
-//void Network::SendPositionCorrectionToClients(sf::TcpSocket& client_socket, PositionCorrection& server_positions)
-//{
-//
-//	// Clearing the packet of any data.
-//	data_.clear();
-//
-//	// Placing the starting message into the data packet for sending.
-//	data_ << server_positions;
-//
-//	// If we can send the data over to the client.
-//	if (SendData(client_socket, data_))
-//	{
-//		// We have sent the data!
-//	}
-//
-//}
-
 bool Network::ReceivedPositionMessageFromClient()
 {
 
@@ -228,5 +211,59 @@ bool Network::ReceivedPositionMessageFromClient()
 	DisplayErrorMessage(kDataReceivingErrorMessage);
 
 	return false;
+
+}
+
+bool Network::ReceivedFinishMessageFromClients(sf::TcpSocket& client_socket)
+{
+
+	// This is the struct that we will be passing the data into from the server.
+	FinishMessage finish_message;
+
+	// Clearing the packet of any data.
+	data_.clear();
+
+	// If we have received data from the server.
+	if (ReceivedData(client_socket, data_))
+	{
+		// Check to see if it is okay to read the data.
+		if (data_ >> finish_message)
+		{
+			// Place the input data back into the packet data to be used by the client.
+			data_ << finish_message;
+
+			// We have received some finish message data.
+			return true;
+		}
+		// Otherwise, we could not read the data.
+		else
+		{
+			// ERROR: The packet is not okay to read.
+			DisplayErrorMessage(kDataReadingErrorMessage);
+
+			// We could not read the finish message data.
+			return false;
+		}
+	}
+
+	// We have not received any finish message data yet.
+	return false;
+
+}
+
+void Network::SendFinishMessageToClients(sf::TcpSocket& client_socket, FinishMessage& client_finished)
+{
+
+	// Clearing the packet of any data.
+	data_.clear();
+
+	// Placing the starting message into the data packet for sending.
+	data_ << client_finished;
+
+	// If we can send the data over to the client.
+	if (SendData(client_socket, data_))
+	{
+		// We have sent the data!
+	}
 
 }
