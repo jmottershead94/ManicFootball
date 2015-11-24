@@ -28,7 +28,7 @@ bool Network::ReceivedStartingMessage()
 			//////////////////////////////////////////////////////////////////////////////////
 			// Conversion from float to sf::Int32 may be causing strange lag offset result?
 			sf::Int32 lag = lag_offset_clock_.getElapsedTime().asMilliseconds();
-			sf::Int32 half_round_trip_time = (starting_message.time / 2);
+			sf::Int32 half_round_trip_time = (lag /2);
 			//////////////////////////////////////////////////////////////////////////////////
 			
 			// FOR TESTING.
@@ -36,7 +36,8 @@ bool Network::ReceivedStartingMessage()
 			std::cout << "The lag server side is = " << half_round_trip_time << std::endl;
 
 			// Calculate the lag offset.
-			lag_offset_ = lag - half_round_trip_time;
+			// When we get a message from the server add on this time.
+			lag_offset_ = lag - (starting_message.time + half_round_trip_time);
 
 			// FOR TESTING.
 			std::cout << "The lag offset is = " << lag_offset_ << std::endl;

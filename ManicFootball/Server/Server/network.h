@@ -52,7 +52,8 @@ class Network : public NetworkHandler
 		bool ready_;																			// Whether the server is ready to start the level or not.
 		unsigned int connected_clients_;														// The current number of connected clients to this server.
 		std::array< sf::TcpSocket*, MAX_NUMBER_OF_CONNECTIONS > sockets_;						// A data structure holding all of the connected client's TCP sockets.
-		sf::Packet data_;																		// Packet data used to store and pass along messages.
+		sf::Packet data_;	// Packet data used to store and pass along messages.
+		
 		
 };
 

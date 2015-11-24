@@ -51,8 +51,8 @@ void Network::AcceptConnection(sf::TcpSocket& client_socket, bool team, sf::Cloc
 		// Sending them the initial server timestamp for timing offsets on the client side.
 		StartMessage starting_message;
 		starting_message.player_team = team;						// Setting player one to be on the red team.
-		starting_message.time = clock.restart().asMilliseconds();	// Restarting the game clock for player one to determine lag offset.
-				
+		starting_message.time = clock.getElapsedTime().asMilliseconds();	// Restarting the game clock for player one to determine lag offset.
+		
 		// Print out the current time server side.
 		std::cout << "Starting message time is: " << starting_message.time << std::endl;
 
