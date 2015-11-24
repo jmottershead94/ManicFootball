@@ -49,9 +49,27 @@ State* LevelState::HandleInput()
 		return new MenuState(*this);
 	}
 
+	//// If we have disconnected from the network.
+	//if (network_->Disconnected())
+	//{
+	//	// Take the player back to the main menu.
+	//	return new MenuState(*this);
+	//}
+
 	// If the current match has finished.
 	if (level_.GetLevelGenerator().HasFinished())
 	{
+		// Disconnect the clients from the server.
+		network_->GetConnection().GetSocket()->disconnect();
+
+		// Constructing the last message.
+		FinishMessage last_message;
+		last_message.finished = true;
+		last_message.time = game_clock_.getElapsedTime().asMilliseconds();
+
+		// Sending the last message to the server.
+		network_->SendFinishMessageToServer(last_message);
+
 		// If the red team won.
 		if (level_.GetLevelGenerator().GetRedTeamScore() == 3)
 		{
