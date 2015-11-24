@@ -328,14 +328,6 @@ void Level::UpdatePositions()
 void Level::Update(float dt)
 {
 
-	// If we have not actually finished the match ourselves.
-	// But the other player has, and we have received a notification for it.
-	//if (network_->ReceivedFinishMessageFromServer())
-	//{
-	//	// Set out match state to finished too.
-	//	level_generator_.SetFinished(true);
-	//}
-
 	/*if ((int)clock_.getElapsedTime().asSeconds() % 5 == 0)
 	{
 		CorrectPositions();
