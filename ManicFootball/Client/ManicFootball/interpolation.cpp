@@ -18,6 +18,47 @@ void Interpolation::UpdateVectors(float& x, float& y, sf::Int32& time)
 
 }
 
+void Interpolation::Calculate(GameObject& object, Network& network)
+{
+
+	// If we have 16 x and y coordinates.
+	if ((x_positions_.size() == 16) && (y_positions_.size() == 16))
+	{
+		// Place in the points for the other player x position and the time they were received at.
+		SetXPoints();
+
+		// Place in the points for the other player y position and the time they were received at.
+		SetYPoints();
+
+		// This should interpolate/predict the next however many points.
+		// Place in a check to make sure it doesn't stray too far.
+		// If the absolute value of the x position minus the previous x position is less than the network difference in x threshold.
+		if (abs(interpolation_x_(network.GetClock().getElapsedTime().asMilliseconds()) - object.GetPosition().x) < network.GetThreshold())
+		{
+			// If the absolute value of the y position minus the previous y position is less than the network difference in y threshold.
+			if (abs(interpolation_y_(network.GetClock().getElapsedTime().asMilliseconds()) - object.GetPosition().y) < network.GetThreshold())
+			{
+				std::cout << "We are interpolating." << std::endl;
+
+				// We can move the body through interpolation.
+				object.TranslateBody(interpolation_x_(network.GetClock().getElapsedTime().asMilliseconds()), interpolation_y_(network.GetClock().getElapsedTime().asMilliseconds()));
+
+				// Update the struct values.
+				position_update_.x = interpolation_x_(network.GetClock().getElapsedTime().asMilliseconds());
+				position_update_.y = interpolation_y_(network.GetClock().getElapsedTime().asMilliseconds());
+				position_update_.time = network.GetClock().getElapsedTime().asMilliseconds();
+
+				// Send the updated struct to the server.
+				network.SendDeadReckoningMessageToServer(position_update_);
+			}
+		}
+
+		// Clear all of the vectors for the next set of positions.
+		ClearVectors();
+	}
+
+}
+
 void Interpolation::ClearVectors()
 {
 
