@@ -21,6 +21,7 @@ class NetworkHandler : protected Utilities
 		// Methods.
 		bool SendData(sf::Packet& data);
 		bool ReceivedData(sf::Packet& data);
+		bool Disconnected();
 
 		// Getters.
 		// This will return the current connection that the network is using.

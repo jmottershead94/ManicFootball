@@ -38,3 +38,25 @@ bool NetworkHandler::ReceivedData(sf::Packet& data)
 	// We could not receive the data, notify the client.
 	return false;
 }
+
+bool NetworkHandler::Disconnected()
+{
+
+	// Empty packet to see if our socket responds.
+	sf::Packet check;
+
+	// If a client wants to disconnect.
+	if (connection_.GetSocket()->receive(check) == sf::Socket::Disconnected)
+	{
+		// Standard disconnection response here...
+		DisplayErrorMessage(KDisconnectionErrorMessage);
+		connection_.GetSocket()->disconnect();
+
+		// A client has disconnected.
+		return true;
+	}
+
+	// A client has not disconnected.
+	return false;
+
+}

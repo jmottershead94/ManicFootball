@@ -21,7 +21,7 @@ class NetworkHandler : protected Utilities
 		// Methods.
 		bool SendData(sf::TcpSocket& client_socket, sf::Packet& data);
 		bool ReceivedData(sf::TcpSocket& client_socket, sf::Packet& data);
-		bool HasClientDisconnected(sf::TcpSocket& client_socket);
+		bool DisconnectingClients(sf::TcpSocket& client_socket);
 
 		// Getters.
 		// This will return the current connection we are using to handle the network connections.

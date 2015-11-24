@@ -40,15 +40,24 @@ bool NetworkHandler::ReceivedData(sf::TcpSocket& client_socket, sf::Packet& data
 }
 
 // Add in standard procedure for a client disconnecting...
-bool NetworkHandler::HasClientDisconnected(sf::TcpSocket& client_socket)
+bool NetworkHandler::DisconnectingClients(sf::TcpSocket& client_socket)
 {
+	
+	// Empty packet to see if the client is still there.
+	sf::Packet check;
 
-	// If a client has disconnected.
-	//if (client_socket.disconnect)
-	//{
-	//		return true;
-	//}
+	// If a client wants to disconnect.
+	if (client_socket.receive(check) == sf::Socket::Disconnected)
+	{
+		// Standard disconnection response here...
+		DisplayErrorMessage(KDisconnectionErrorMessage);
+		client_socket.disconnect();
 
+		// A client has disconnected.
+		return true;
+	}
+
+	// A client has not disconnected.
 	return false;
 
 }
