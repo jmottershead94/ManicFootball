@@ -22,8 +22,8 @@ class Network : public NetworkHandler
 		bool ReceivedReadyMessage();
 		void SendInputMessageToServer(Input& client_input);
 		bool ReceivedInputMessageFromServer();
-		bool ReceivedPositionMessageFromServer();
-		void SendPositionMessageToServer(PositionUpdate& client_position);
+		bool ReceivedDeadReckoningMessageFromServer();
+		void SendDeadReckoningMessageToServer(PositionUpdate& client_position);
 		void SendFinishMessageToServer(FinishMessage& client_finished);
 		bool ReceivedFinishMessageFromServer();
 

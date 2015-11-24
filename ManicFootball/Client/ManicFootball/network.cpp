@@ -74,8 +74,7 @@ bool Network::ReceivedReadyMessage()
 		bool ready = false;
 		
 		// Pass this time along with the message.
-		SetTime();
-		sf::Int32 current_time = GetTime().asMilliseconds() + lag_offset_;
+		sf::Int32 current_time = GetClock().getElapsedTime().asMilliseconds() + lag_offset_;
 		SetCurrentTime(current_time);
 
 		// Check to see if it is okay to read the data.
@@ -132,6 +131,13 @@ bool Network::ReceivedInputMessageFromServer()
 		// Check to see if it is okay to read the data.
 		if (data_ >> input)
 		{
+			// Pass this time along with the message.
+			sf::Int32 current_time = GetClock().getElapsedTime().asMilliseconds() + lag_offset_;
+			SetCurrentTime(current_time);
+
+			// Add on the offset gathered from the trip to the server.
+			input.time = GetCurrentTime();
+
 			// Place the input data back into the packet data to be used by the client.
 			data_ << input;
 
@@ -156,7 +162,7 @@ bool Network::ReceivedInputMessageFromServer()
 
 }
 
-void Network::SendPositionMessageToServer(PositionUpdate& client_position)
+void Network::SendDeadReckoningMessageToServer(PositionUpdate& client_position)
 {
 
 	// Clearing the packet of any data.
@@ -170,6 +176,52 @@ void Network::SendPositionMessageToServer(PositionUpdate& client_position)
 	{
 		//std::cout << "Data has been sent to the server." << std::endl;
 	}
+
+}
+
+bool Network::ReceivedDeadReckoningMessageFromServer()
+{
+
+	// This is the struct that we will be passing the data into from the server.
+	PositionUpdate position_update;
+
+	// Clearing the packet of any data.
+	data_.clear();
+
+	// If we have received data from the server.
+	if (ReceivedData(data_))
+	{
+		// Check to see if it is okay to read the data.
+		if (data_ >> position_update)
+		{
+			// Pass this time along with the message.
+			sf::Int32 current_time = GetClock().getElapsedTime().asMilliseconds() + lag_offset_;
+			SetCurrentTime(current_time);
+
+			// Add on the offset gathered from the trip to the server.
+			position_update.time = GetCurrentTime();
+
+			// Place the input data back into the packet data to be used by the client.
+			data_ << position_update;
+
+			// We have received some input data.
+			return true;
+		}
+		// Otherwise, we could not read the data.
+		else
+		{
+			// ERROR: The packet is not okay to read.
+			DisplayErrorMessage(kDataReadingErrorMessage);
+
+			// We could not read the input message.
+			return false;
+		}
+
+		return false;
+	}
+
+	// We have not received any input yet.
+	return false;
 
 }
 
@@ -205,6 +257,13 @@ bool Network::ReceivedFinishMessageFromServer()
 		// Check to see if it is okay to read the data.
 		if (data_ >> finish_message)
 		{
+			// Pass this time along with the message.
+			sf::Int32 current_time = GetClock().getElapsedTime().asMilliseconds() + lag_offset_;
+			SetCurrentTime(current_time);
+
+			// Add on the offset gathered from the trip to the server.
+			finish_message.time = GetCurrentTime();
+
 			// Place the input data back into the packet data to be used by the client.
 			data_ << finish_message;
 

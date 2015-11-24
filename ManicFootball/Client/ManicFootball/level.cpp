@@ -1,6 +1,7 @@
 #include "level.h"
 
-Level::Level() :	world_(nullptr),
+Level::Level() : update_positions_(false),
+	world_(nullptr),
 	font_(nullptr),
 	screen_resolution_(nullptr),
 	network_(nullptr)
@@ -206,6 +207,7 @@ void Level::DataResponse(sf::Packet& data, DynamicBodyRectangle& object, float d
 
 	// Add in additional structs here for any further information.
 	FinishMessage finish_message;
+	PositionUpdate position_update;
 
 	// If the data we have received is input data.
 	if (network_->ReceivedInputMessageFromServer())
@@ -215,6 +217,17 @@ void Level::DataResponse(sf::Packet& data, DynamicBodyRectangle& object, float d
 		{
 			// Apply the input to the other player.
 			ApplyPlayerInput(object, dt);
+
+			// Just update the positions.
+			// Filling the position update every frame.
+			position_update.x = object.GetPosition().x;
+			position_update.y = object.GetPosition().y;
+			position_update.time = network_->GetClock().getElapsedTime().asMilliseconds();
+
+			// Place the positions in the vector of positions for interpolation/prediction.
+			other_player_x_.push_back(position_update.x);
+			other_player_y_.push_back(position_update.y);
+			other_player_position_time_.push_back(position_update.time);
 		}
 	}
 	// Otherwise, if we have received finish message data.
@@ -227,7 +240,19 @@ void Level::DataResponse(sf::Packet& data, DynamicBodyRectangle& object, float d
 			level_generator_.SetFinished(true);
 		}
 	}
-
+	// Otherwise, if we have received some position updates.
+	else if (network_->ReceivedDeadReckoningMessageFromServer())
+	{
+		// See if we can place the data into a position update struct.
+		if (network_->GetData() >> position_update)
+		{
+			// Place the positions in the vector of positions for interpolation/prediction.
+			other_player_x_.push_back(position_update.x);
+			other_player_y_.push_back(position_update.y);
+			other_player_position_time_.push_back(position_update.time);
+		}
+	}
+	
 }
 
 void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
@@ -259,82 +284,58 @@ void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
 void Level::CorrectPositions()
 {
 
-	//// If we have received a position correction message from the server.
-	//if (network_->ReceivedPositionMessageFromServer())
-	//{
-	//	// Setting up the correction struct.
-	//	PositionCorrection correct_position;
-
-	//	// Place the data into the struct we just made.
-	//	network_->GetData() >> correct_position;
-
-	//	// If there are objects in the level.
-	//	if (!level_objects_.empty())
-	//	{
-	//		// Iterating through all of the level objects.
-	//		for (auto& level_object : level_objects_)
-	//		{
-	//			if (((level_object->GetID() == correct_position.object_id) && (correct_position.object_id == ObjectID::player))
-	//				|| ((level_object->GetID() == correct_position.object_id) && (correct_position.object_id == ObjectID::otherPlayer))
-	//				|| ((level_object->GetID() == correct_position.object_id) && (correct_position.object_id == ObjectID::ball)))
-	//			{
-	//				level_object->TranslateBody(correct_position.x, correct_position.y);
-	//			}
-	//		}
-	//	}
-	//}
-
-}
-
-void Level::UpdatePositions()
-{
-
-	PositionUpdate player;
-	//PositionUpdate otherPlayer;
-	//PositionUpdate ball;
-
-	// If there are objects in the level.
-	if (!level_generator_.GetLevelObjects().empty())
+	// If we have 4 x and y coordinates.
+	if ((other_player_x_.size() == 16) && (other_player_y_.size() == 16))
 	{
-		// Iterating through all of the level objects.
-		for (auto& level_object : level_generator_.GetLevelObjects())
+		PositionUpdate position_update;
+
+		// Place in the points for the other player x position and the time they were received at.
+		cubic_interpolation_x_.set_points(other_player_position_time_, other_player_x_);
+
+		// Place in the points for the other player y position and the time they were received at.
+		cubic_interpolation_y_.set_points(other_player_position_time_, other_player_y_);
+
+		if (!other_player_x_.empty())
 		{
-			// If the level object is the first player.
-			if (level_object->GetID() == ObjectID::player)
+			other_player_x_.clear();
+		}
+
+		if (!other_player_y_.empty())
+		{
+			other_player_y_.clear();
+		}
+
+		if (!other_player_position_time_.empty())
+		{
+			other_player_position_time_.clear();
+		}
+
+		for (auto& object : level_generator_.GetLevelObjects())
+		{
+			if (object->GetID() == ObjectID::otherPlayer)
 			{
-				// Update the struct with player coordinates.
-				player.x = level_object->GetPosition().x;
-				player.y = level_object->GetPosition().y;
+				// This should interpolate/predict the next however many points.
+				// Place in a check to make sure it doesn't stray too far.
+				//std::cout << "Interpolation Data X = " << cubic_interpolation_x_(network_->GetClock().getElapsedTime().asMilliseconds()) << std::endl;
+				//std::cout << "Interpolation Data Y = " << cubic_interpolation_y_(network_->GetClock().getElapsedTime().asMilliseconds()) << std::endl;
 
-				network_->SetTime();
-				sf::Int32 current_time = network_->GetTime().asMilliseconds() + lag_offset_;
-				network_->SetCurrentTime(current_time);
+				// Update the struct values.
+				position_update.x = cubic_interpolation_x_(network_->GetClock().getElapsedTime().asMilliseconds());
+				position_update.y = cubic_interpolation_y_(network_->GetClock().getElapsedTime().asMilliseconds());
+				position_update.time = network_->GetClock().getElapsedTime().asMilliseconds();
 
-				player.time = network_->GetCurrentTime();
-
-				// Send the position information to the server.
-				network_->SendPositionMessageToServer(player);
+				// Send the updated struct to the server.
+				network_->SendDeadReckoningMessageToServer(position_update);
 			}
-			/*else if (level_object->GetID() == ObjectID::ball)
-			{
-				ball.x = level_object->GetPosition().x;
-				ball.y = level_object->GetPosition().y;
-				ball.time = clock_.getElapsedTime().asMilliseconds();
-			}*/
 		}
 	}
-	
 
 }
 
 void Level::Update(float dt)
 {
 
-	/*if ((int)clock_.getElapsedTime().asSeconds() % 5 == 0)
-	{
-		CorrectPositions();
-	}*/
-
+	CorrectPositions();
 	HandleLevelObjects(dt);
 	CollisionTest();
 
