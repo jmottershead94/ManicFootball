@@ -23,13 +23,25 @@ class NetworkHandler : protected Utilities
 		bool ReceivedData(sf::TcpSocket& client_socket, sf::Packet& data);
 		bool DisconnectingClients(sf::TcpSocket& client_socket);
 
+		// Setters.
+		// Set the current time value for the client.
+		inline void SetCurrentTime(sf::Int32& current_time)	{ current_time_ = current_time; }
+
 		// Getters.
 		// This will return the current connection we are using to handle the network connections.
-		inline Connection& GetConnection() { return connection_; }
+		inline Connection& GetConnection()	{ return connection_; }
+
+		// This will return the current game time for the client.
+		inline sf::Time& GetTime()			{ return game_time_; }
+
+		// This will return the current time value for the client.
+		inline sf::Int32& GetCurrentTime()  { return current_time_; }
 
 	private:
 		// Attributes.
 		Connection connection_;
+		sf::Time game_time_;
+		sf::Int32 current_time_;
 
 };
 

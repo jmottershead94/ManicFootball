@@ -24,8 +24,7 @@ class Utilities
 		const std::string kDataSendingErrorMessage = "ERROR: Data could not be sent.";			// The error message if the SFML packets cannot send.
 		const std::string kDataReceivingErrorMessage = "ERROR: Data could not be received.";	// The error message if the SFML packets cannot be received.
 		const std::string kDataReadingErrorMessage = "ERROR: Data could not be read.";			// The error message if the SFML packets cannot be read.
-		sf::Clock lag_offset_clock_;															// This will be used to work out the lag offset from the server.
-
+		
 		// Methods.
 		// This function will be responsible for displaying any error messages when an error occurs.
 		inline void DisplayErrorMessage(const std::string& error_message) { std::cout << error_message << std::endl; }
