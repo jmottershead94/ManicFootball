@@ -253,6 +253,7 @@ void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
 
 }
 
+// Move this interpolation over to the client.
 void Level::CorrectPositions(sf::TcpSocket& client_socket, std::vector<double>& player_x, std::vector<double>& player_y, tk::spline& player_interpolation)
 {
 
@@ -325,6 +326,8 @@ void Level::StorePositions()
 void Level::Update(float dt)
 {
 
+	//StorePositions();
+	
 	//// Every X seconds on the server match.
 	//if ((int)clock_.getElapsedTime().asSeconds() % 6 == 0)
 	//{
