@@ -25,7 +25,7 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 	level_generator_.Init(world, font, game_screen_resolution);
 	
 	// This may need to be here? Unsure as of yet.
-	clock_->restart().asMilliseconds();
+	//clock_->restart().asMilliseconds();
 
 }
 
@@ -207,6 +207,7 @@ void Level::DataResponse(sf::TcpSocket& client_socket, sf::Packet& data, Dynamic
 
 	// Add in additional structs here for any further information.
 	FinishMessage finish_message;
+	PositionUpdate position_update;
 
 	// If the data contains input.
 	if (data >> object.GetInput())
@@ -223,6 +224,12 @@ void Level::DataResponse(sf::TcpSocket& client_socket, sf::Packet& data, Dynamic
 
 		// End the level on the server.
 		level_generator_.SetFinished(true);
+	}
+	// Otherwise, if the data contains a position update message.
+	else if (data >> position_update)
+	{
+		// Send the predicted positions to the other client.
+		network_->SendDeadReckoningToClients(client_socket, position_update);
 	}
 
 }
@@ -253,88 +260,8 @@ void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
 
 }
 
-// Move this interpolation over to the client.
-void Level::CorrectPositions(sf::TcpSocket& client_socket, std::vector<double>& player_x, std::vector<double>& player_y, tk::spline& player_interpolation)
-{
-
-	// If there are 4 positions in the x and y vectors.
-	if ((player_x.size() == 4) && (player_y.size() == 4))
-	{
-		// The struct for handling the position data.
-		PositionUpdate position_update;
-
-		// Plot the points using a cubic function.
-		player_interpolation.set_points(player_one_x_, player_one_y_);
-		
-		// ASK ABOUT THIS: Interpolate and see if a point is located in the cubic function?
-		// 
-		//player_interpolation();
-
-		player_x.clear();
-		player_y.clear();
-
-		//network_->SendDeadReckoningToClients(client_socket, );
-	}
-
-}
-
-// Do this every several seconds?
-void Level::StorePositions()
-{
-	
-	// If there are objects in the level.
-	if (!level_generator_.GetLevelObjects().empty())
-	{
-		PositionUpdate player_position_update;
-
-		// Iterating through all of the level objects.
-		for (auto& level_object : level_generator_.GetLevelObjects())
-		{
-			// If the level object is the first player.
-			if (level_object->GetID() == ObjectID::playerOne)
-			{
-				// Check to see if we have received any input data for player one.
-				if (network_->ReceivedInputMessageFromClient(*network_->GetClientSockets()[0]))
-				{
-					// Check to see if we can read the input data for player one.
-					if (network_->GetData() >> player_position_update)
-					{
-						player_one_x_.push_back(player_position_update.x);
-						player_one_y_.push_back(player_position_update.y);
-					}
-				}
-			}
-			// If the level object is the second player.
-			else if (level_object->GetID() == ObjectID::playerTwo)
-			{
-				// Check to see if we have received any input data for player one.
-				if (network_->ReceivedInputMessageFromClient(*network_->GetClientSockets()[1]))
-				{
-					// Check to see if we can read the input data for player one.
-					if (network_->GetData() >> player_position_update)
-					{
-						player_two_x_.push_back(player_position_update.x);
-						player_two_y_.push_back(player_position_update.y);
-					}
-				}
-			}
-		}
-	}
-
-}
-
 void Level::Update(float dt)
 {
-
-	//StorePositions();
-	
-	//// Every X seconds on the server match.
-	//if ((int)clock_.getElapsedTime().asSeconds() % 6 == 0)
-	//{
-	//	// Send out a message to correct the position of the clients.
-	//	CorrectPositions(*network_->GetClientSockets()[0], player_one_x_, player_one_y_, player_one_spline_);
-	//	CorrectPositions(*network_->GetClientSockets()[1], player_two_x_, player_two_y_, player_two_spline_);
-	//}
 
 	HandleLevelObjects(dt);
 	CollisionTest();
