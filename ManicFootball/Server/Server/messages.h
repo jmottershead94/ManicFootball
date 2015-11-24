@@ -39,21 +39,11 @@ struct PositionUpdate
 	sf::Int32 time = 0;
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-//// ADD IN FORCE APPLIED 2 FLOATS (X AND Y).
-//
-//// The structure for correcting dynamic object's positions.
-//// This will be sent every so often to make sure that objects are in the correct place.
-//struct PositionCorrection
-//{
-//	float x = 0.0f;					// The correct x position.
-//	float y = 0.0f;					// The correct y position.
-//	float velocity_x = 0.0f;		// The current x velocity of the object.
-//	float velocity_y = 0.0f;		// The current y velocity of the object.
-//	int object_id = 0;				// The id of the game object.
-//	sf::Int32 time = 0;				// The current time that the positions were given at.
-//};
-//////////////////////////////////////////////////////////////////////////////////////////////
+struct FinishMessage
+{
+	bool finished = false;
+	sf::Int32 time = 0;
+};
 
 // Overloading packet operator functions.
 // Used for sending packet data.
@@ -75,10 +65,11 @@ inline sf::Packet& operator <<(sf::Packet& packet, const PositionUpdate& message
 // This will allow me to receive Position Update data through packets.
 inline sf::Packet& operator >>(sf::Packet& packet, PositionUpdate& message)				{ return packet >> message.x >> message.y >> message.time; }
 
-//// This will allow me to send Position Correction data through packets.
-//inline sf::Packet& operator <<(sf::Packet& packet, const PositionCorrection& message)	{ return packet << message.x << message.y << message.velocity_x << message.velocity_y << message.object_id << message.time; }
-//
-//// This will allow me to receive Position Correction data through packets.
-//inline sf::Packet& operator >>(sf::Packet& packet, PositionCorrection& message)			{ return packet >> message.x >> message.y >> message.object_id >> message.velocity_x >> message.velocity_y >> message.time; }
+// This will allow me to send Finish Message data through packets.
+inline sf::Packet& operator <<(sf::Packet& packet, const FinishMessage& message)		{ return packet << message.finished << message.time; }
+
+// This will allow me to receive Finish Message data through packets.
+inline sf::Packet& operator >>(sf::Packet& packet, FinishMessage& message)				{ return packet >> message.finished >> message.time; }
+
 
 #endif
