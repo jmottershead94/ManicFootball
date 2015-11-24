@@ -55,6 +55,9 @@ State* StartState::HandleInput()
 			// Check to see if the client is now ready.
 			if (network_->ReceivedReadyMessage())
 			{
+				// Initially set to blocking-mode.
+				//network_->GetConnection().GetSocket()->setBlocking(false);
+
 				// Continue with the game.
 				return new LevelState(*this);
 			}
