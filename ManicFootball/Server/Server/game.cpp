@@ -25,26 +25,8 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 	world_ = new b2World(gravity);
 	world_->SetContinuousPhysics(true);
 	
-	// Accept connections from two clients.
-	network_.AcceptConnection(player_one_socket_, true, clock_);
-	network_.AcceptConnection(player_two_socket_, false, clock_);
-
-	// If the network is sending ready messages (i.e. the clients have successfully connected).
-	if (network_.IsReady())
-	{
-		// Check to see if the clients are ready to play a match.
-		if (network_.ConnectionsAreReady())
-		{
-			// Setting up the game window with variable screen resolution.
-			window_ = new sf::RenderWindow(sf::VideoMode((unsigned int)screen_resolution_.x, (unsigned int)screen_resolution_.y), "Manic Football");
-
-			// This will lock the frame rate of the game window to 60 fps.
-			window_->setFramerateLimit(kFrameRate);
-
-			// Initialise the server level.
-			level_.Init(world_, font_, screen_resolution_, network_, clock_);
-		}
-	}
+	// Accept connections from clients.
+	StartAcceptingConnections();
 
 }
 
@@ -60,22 +42,54 @@ Game::~Game()
 
 }
 
+void Game::StartAcceptingConnections()
+{
+
+	// Accept connections from two clients.
+	network_.AcceptConnection(player_one_socket_, true, clock_);
+	network_.AcceptConnection(player_two_socket_, false, clock_);
+
+	// If the network is sending ready messages (i.e. the clients have successfully connected).
+	if (network_.IsReady())
+	{
+		// Check to see if the clients are ready to play a match.
+		if (network_.ConnectionsAreReady())
+		{
+			// Initially set to blocking mode.
+			/*network_.GetClientSockets()[0]->setBlocking(false);
+			network_.GetClientSockets()[1]->setBlocking(false);*/
+
+			// Setting up the game window with variable screen resolution.
+			window_ = new sf::RenderWindow(sf::VideoMode((unsigned int)screen_resolution_.x, (unsigned int)screen_resolution_.y), "Manic Football");
+
+			// This will lock the frame rate of the game window to 60 fps.
+			window_->setFramerateLimit(kFrameRate);
+
+			// Initialise the server level.
+			level_.Init(world_, font_, screen_resolution_, network_, clock_);
+		}
+	}
+
+}
+
 // This will check the current state of the match.
 // When someone has won the match.
 void Game::CheckIfLevelHasFinished()
 {
 
-	// If the current match has finished.
+	// If the current match has finished, or any of the clients have disconnected from the server.
 	if (level_.GetLevelGenerator().HasFinished())
+		//|| level_.GetNetwork().DisconnectingClients(*level_.GetNetwork().GetClientSockets()[0])
+		//|| level_.GetNetwork().DisconnectingClients(*level_.GetNetwork().GetClientSockets()[1]))
 	{
 		// Clear the level.
 		level_.GetLevelGenerator().Clear();
 
 		// Terminate all of the connections here...
-		
+		window_->close();
 
-		// Close the server connection.
-		//this->~Game();
+		// Look out for anymore connections.
+		StartAcceptingConnections();
 	}
 
 }

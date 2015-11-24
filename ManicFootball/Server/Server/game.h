@@ -27,7 +27,6 @@ class Game
 		// Methods.
 		Game(const float game_screen_width, const float game_screen_height);
 		~Game();
-		void CheckIfLevelHasFinished();
 		void Update();
 		void Render();
 
@@ -50,7 +49,8 @@ class Game
 		Network network_;
 
 		// Methods.
-		void SetUpNetwork();
+		void CheckIfLevelHasFinished();
+		void StartAcceptingConnections();
 	
 };
 
