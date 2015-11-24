@@ -24,9 +24,6 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 	// Creating the level.
 	level_generator_.Init(world, font, game_screen_resolution);
 	
-	// This may need to be here? Unsure as of yet.
-	//clock_->restart().asMilliseconds();
-
 }
 
 void Level::UpdateTheScoreboard()
@@ -228,7 +225,7 @@ void Level::DataResponse(sf::TcpSocket& client_socket, sf::Packet& data, Dynamic
 	// Otherwise, if the data contains a position update message.
 	else if (data >> position_update)
 	{
-		// Send the predicted positions to the other client.
+		// Send the interpolated positions to the other client.
 		network_->SendDeadReckoningToClients(client_socket, position_update);
 	}
 
@@ -264,6 +261,6 @@ void Level::Update(float dt)
 {
 
 	HandleLevelObjects(dt);
-	CollisionTest();
+	//CollisionTest();
 
 }

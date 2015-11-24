@@ -77,20 +77,20 @@ void Game::StartAcceptingConnections()
 void Game::CheckIfLevelHasFinished()
 {
 
-	// If the current match has finished, or any of the clients have disconnected from the server.
-	if (level_.GetLevelGenerator().HasFinished())
-		//|| level_.GetNetwork().DisconnectingClients(*level_.GetNetwork().GetClientSockets()[0])
-		//|| level_.GetNetwork().DisconnectingClients(*level_.GetNetwork().GetClientSockets()[1]))
-	{
-		// Clear the level.
-		level_.GetLevelGenerator().Clear();
+	//// If the current match has finished, or any of the clients have disconnected from the server.
+	//if (level_.GetLevelGenerator().HasFinished())
+	//	//|| level_.GetNetwork().DisconnectingClients(*level_.GetNetwork().GetClientSockets()[0])
+	//	//|| level_.GetNetwork().DisconnectingClients(*level_.GetNetwork().GetClientSockets()[1]))
+	//{
+	//	// Clear the level.
+	//	level_.GetLevelGenerator().Clear();
 
-		// Terminate all of the connections here...
-		window_->close();
+	//	// Terminate all of the connections here...
+	//	window_->close();
 
-		// Look out for anymore connections.
-		StartAcceptingConnections();
-	}
+	//	// Look out for anymore connections.
+	//	StartAcceptingConnections();
+	//}
 
 }
 
