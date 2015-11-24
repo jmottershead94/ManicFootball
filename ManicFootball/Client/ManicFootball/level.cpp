@@ -23,10 +23,7 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 
 	// Creating the level.
 	level_generator_.Init(world, font, game_screen_resolution, network);
-
-	// Starting the game clock for the player.
-	clock_.restart().asMilliseconds();
-
+	
 }
 
 void Level::UpdateTheScoreboard()
@@ -308,7 +305,12 @@ void Level::UpdatePositions()
 				// Update the struct with player coordinates.
 				player.x = level_object->GetPosition().x;
 				player.y = level_object->GetPosition().y;
-				player.time = clock_.getElapsedTime().asMilliseconds();
+
+				network_->SetTime();
+				sf::Int32 current_time = network_->GetTime().asMilliseconds() + lag_offset_;
+				network_->SetCurrentTime(current_time);
+
+				player.time = network_->GetCurrentTime();
 
 				// Send the position information to the server.
 				network_->SendPositionMessageToServer(player);

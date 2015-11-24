@@ -46,7 +46,6 @@ class Level
 		sf::Int32 lag_offset_;						// The lag offset for each message from the server.
 		sf::Font* font_;							// Points to the game font.
 		sf::Vector2f* screen_resolution_;			// Points to the screen resolution.
-		sf::Clock clock_;							// This will be the game clock for this player.
 		Network* network_;							// This will provide us access to the network.
 		LevelGenerator level_generator_;			// Builds the level and handles rendering.
 

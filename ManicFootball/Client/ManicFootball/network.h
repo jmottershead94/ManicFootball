@@ -29,13 +29,13 @@ class Network : public NetworkHandler
 
 		// Getters.
 		// This will return the team that the client is on.
-		inline bool GetAssignedTeam()		{ return team_; };
+		inline bool GetAssignedTeam()	{ return team_; };
 
 		// This will return the amount of lag that was calculate between the server and client.
-		inline sf::Int32 GetLagOffset()			{ return lag_offset_; }
+		inline sf::Int32 GetLagOffset()	{ return lag_offset_; }
 		
 		// This will return the current set of data.
-		inline sf::Packet& GetData() { return data_; }
+		inline sf::Packet& GetData()	{ return data_; }
 
 	private:
 		// Attributes.

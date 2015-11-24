@@ -25,11 +25,8 @@ bool Network::ReceivedStartingMessage()
 		{
 			// We have read some data from the starting message!
 			// Get the current time, and the half round trip time from the server message.
-			//////////////////////////////////////////////////////////////////////////////////
-			// Conversion from float to sf::Int32 may be causing strange lag offset result?
-			sf::Int32 lag = lag_offset_clock_.getElapsedTime().asMilliseconds();
+			sf::Int32 lag = GetClock().getElapsedTime().asMilliseconds();
 			sf::Int32 half_round_trip_time = (lag /2);
-			//////////////////////////////////////////////////////////////////////////////////
 			
 			// FOR TESTING.
 			std::cout << "The lag client side is = " << lag << std::endl;
@@ -75,6 +72,11 @@ bool Network::ReceivedReadyMessage()
 	{
 		// Waiting for the second player to connect.
 		bool ready = false;
+		
+		// Pass this time along with the message.
+		SetTime();
+		sf::Int32 current_time = GetTime().asMilliseconds() + lag_offset_;
+		SetCurrentTime(current_time);
 
 		// Check to see if it is okay to read the data.
 		if (data_ >> ready)

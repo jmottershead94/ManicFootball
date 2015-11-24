@@ -26,7 +26,7 @@ bool Connection::ToServer()
 		std::cout << "Connected to the server: " << kIPAddress << std::endl;
 
 		// Start the lag timer.
-		lag_offset_clock_.restart().asMilliseconds();
+		game_clock_.restart().asMilliseconds();
 
 		// The client has connected to the server.
 		return true;

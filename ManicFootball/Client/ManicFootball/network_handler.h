@@ -23,9 +23,25 @@ class NetworkHandler : protected Utilities
 		bool ReceivedData(sf::Packet& data);
 		bool Disconnected();
 
+		// Setters.
+		// This will set the current game time variable to the current time according to the clock.
+		inline void SetTime()								{ game_time_ = game_clock_.getElapsedTime(); }
+
+		// Set the current time value for the client.
+		inline void SetCurrentTime(sf::Int32& current_time)	{ current_time_ = current_time; }
+
 		// Getters.
 		// This will return the current connection that the network is using.
-		inline Connection& GetConnection() { return connection_; }
+		inline Connection& GetConnection()	{ return connection_; }
+
+		// This will return the current clock.
+		inline sf::Clock& GetClock()		{ return game_clock_; }
+
+		// This will return the current game time for the client.
+		inline sf::Time& GetTime()			{ return game_time_; }
+
+		// This will return the current time value for the client.
+		inline sf::Int32& GetCurrentTime()  { return current_time_; }
 
 		// Pure virtual methods.
 		// Every network for a game using this "framework" must have these functions implemented.
@@ -36,6 +52,8 @@ class NetworkHandler : protected Utilities
 	private:
 		// Attributes.
 		Connection connection_;
+		sf::Time game_time_;
+		sf::Int32 current_time_;
 
 };
 
