@@ -244,11 +244,14 @@ void Level::DataResponse(sf::Packet& data, DynamicBodyRectangle& object, float d
 		if (network_->GetData() >> position_update)
 		{
 			// Place the positions in the vector of positions for interpolation/prediction.
-			/*other_player_x_.push_back(position_update.x);
-			other_player_y_.push_back(position_update.y);
-			other_player_position_time_.push_back(position_update.time);*/
-
-			other_player_.UpdateVectors(position_update.x, position_update.y, position_update.time);
+			if (position_update.id == ObjectID::otherPlayer)
+			{
+				other_player_.UpdateVectors(position_update.x, position_update.y, position_update.time);
+			}
+			else if (position_update.id == ObjectID::ball)
+			{
+				ball_.UpdateVectors(position_update.x, position_update.y, position_update.time);
+			}
 		}
 	}
 	
@@ -283,47 +286,21 @@ void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
 void Level::CorrectPositions()
 {
 
-	// If we have 16 x and y coordinates.
-	if ((other_player_.GetXPositions().size() == 16) && (other_player_.GetYPositions().size() == 16))
+	// Iterate through the level objects.
+	for (auto& object : level_generator_.GetLevelObjects())
 	{
-		PositionUpdate position_update;
-
-		// Place in the points for the other player x position and the time they were received at.
-		other_player_.SetXPoints();
-
-		// Place in the points for the other player y position and the time they were received at.
-		other_player_.SetYPoints();
-
-		for (auto& object : level_generator_.GetLevelObjects())
+		// If the object is the other player.
+		if (object->GetID() == ObjectID::otherPlayer)
 		{
-			if (object->GetID() == ObjectID::otherPlayer)
-			{
-				// This should interpolate/predict the next however many points.
-				// Place in a check to make sure it doesn't stray too far.
-				// If the absolute value of the x position minus the previous x position is less than the network difference in x threshold.
-				if (abs(other_player_.GetInterpolationX()(network_->GetClock().getElapsedTime().asMilliseconds()) - object->GetPosition().x) < network_->GetThreshold())
-				{
-					// If the absolute value of the y position minus the previous y position is less than the network difference in y threshold.
-					if (abs(other_player_.GetInterpolationY()(network_->GetClock().getElapsedTime().asMilliseconds()) - object->GetPosition().y) < network_->GetThreshold())
-					{
-						//std::cout << "We are interpolating." << std::endl;
-
-						// We can move the body through interpolation.
-						object->TranslateBody(other_player_.GetInterpolationX()(network_->GetClock().getElapsedTime().asMilliseconds()), other_player_.GetInterpolationY()(network_->GetClock().getElapsedTime().asMilliseconds()));
-					
-						// Update the struct values.
-						position_update.x = other_player_.GetInterpolationX()(network_->GetClock().getElapsedTime().asMilliseconds());
-						position_update.y = other_player_.GetInterpolationY()(network_->GetClock().getElapsedTime().asMilliseconds());
-						position_update.time = network_->GetClock().getElapsedTime().asMilliseconds();
-
-						// Send the updated struct to the server.
-						network_->SendDeadReckoningMessageToServer(position_update);
-					}
-				}		
-			}
+			// Interpolate the other player.
+			other_player_.Calculate(*object, *network_);
 		}
-
-		other_player_.ClearVectors();
+		// If the object is a ball.
+		else if (object->GetID() == ObjectID::ball)
+		{
+			// Interpolate the ball.
+			ball_.Calculate(*object, *network_);
+		}
 	}
 
 }

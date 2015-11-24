@@ -48,7 +48,7 @@ class Level
 		Network* network_;											// This will provide us access to the network.
 		LevelGenerator level_generator_;							// Builds the level and handles rendering.
 		Interpolation other_player_;
-
+		Interpolation ball_;
 };
 
 #endif
