@@ -50,10 +50,10 @@ State* LevelState::HandleInput()
 	}
 
 	// If the current match has finished.
-	if (level_.HasFinished())
+	if (level_.GetLevelGenerator().HasFinished())
 	{
 		// If the red team won.
-		if (level_.GetRedTeamScore() == 3)
+		if (level_.GetLevelGenerator().GetRedTeamScore() == 3)
 		{
 			// Go to the winning screen with red team as the winner.
 			return new EndMatchState(*this, true);
@@ -69,7 +69,7 @@ State* LevelState::HandleInput()
 	// USED FOR DEBUGGING.
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
 	{
-		level_.Reset();
+		level_.GetLevelGenerator().Reset();
 	}
 
 	// Returns nothing because there has been no input from the player yet.
@@ -107,7 +107,7 @@ void LevelState::OnExit()
 
 	// Stopping the level state specific stuff.
 	// Clear the level.
-	level_.Clear();
+	level_.GetLevelGenerator().Clear();
 
 }
 
@@ -125,34 +125,34 @@ void LevelState::Render()
 	if (window_)
 	{
 		// If there are objects in the level.
-		if (!level_.GetObjects().empty())
+		if (!level_.GetLevelGenerator().GetLevelObjects().empty())
 		{
 			// Iterating through all of the level objects.
-			for (auto level_object = level_.GetObjects().begin(); level_object != level_.GetObjects().end(); level_object++)
+			for (auto& level_object : level_.GetLevelGenerator().GetLevelObjects())
 			{
 				// If the level object has a rectangle shape.
-				if ((**level_object).IsRectangle())
+				if (level_object->IsRectangle())
 				{
 					// Therefore, draw the rectangle shape.
-					window_->draw((**level_object).GetRectangleShape());
+					window_->draw(level_object->GetRectangleShape());
 				}
 				// Otherwise, the level object will have a circle shape.
 				else
 				{
 					// Draw the circle shape for the football.
-					window_->draw((**level_object).GetCircleShape());
+					window_->draw(level_object->GetCircleShape());
 				}
 			}
 		}
 
 		// If there is a set of scores in the level.
-		if (!level_.GetScore().empty())
+		if (!level_.GetLevelGenerator().GetScoresText().empty())
 		{
 			// Iterating through all of the level scores.
-			for (auto score = level_.GetScore().begin(); score != level_.GetScore().end(); score++)
+			for (auto& score : level_.GetLevelGenerator().GetScoresText())
 			{
 				// Draw the score on the screen.
-				window_->draw((**score));
+				window_->draw(*score);
 			}
 		}
 	}
