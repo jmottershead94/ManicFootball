@@ -33,29 +33,42 @@ void Interpolation::Calculate(GameObject& object, Network& network)
 		// This should interpolate/predict the next however many points.
 		// Place in a check to make sure it doesn't stray too far.
 		// If the absolute value of the x position minus the previous x position is less than the network difference in x threshold.
-		if (abs(interpolation_x_(network.GetClock().getElapsedTime().asMilliseconds()) - object.GetPosition().x) < network.GetThreshold())
+		if (abs(interpolation_x_(network.GetClock().getElapsedTime().asMilliseconds() + network.GetLagOffset()) - object.GetPosition().x) < (network.GetThreshold()))
 		{
 			// If the absolute value of the y position minus the previous y position is less than the network difference in y threshold.
-			if (abs(interpolation_y_(network.GetClock().getElapsedTime().asMilliseconds()) - object.GetPosition().y) < network.GetThreshold())
+			if (abs(interpolation_y_(network.GetClock().getElapsedTime().asMilliseconds() + network.GetLagOffset()) - object.GetPosition().y) < (network.GetThreshold()))
 			{
-				std::cout << "We are interpolating." << std::endl;
-
-				// We can move the body through interpolation.
-				object.TranslateBody(interpolation_x_(network.GetClock().getElapsedTime().asMilliseconds()), interpolation_y_(network.GetClock().getElapsedTime().asMilliseconds()));
+				std::cout << "We are doing something." << std::endl;
 
 				// Update the struct values.
 				position_update_.x = interpolation_x_(network.GetClock().getElapsedTime().asMilliseconds());
 				position_update_.y = interpolation_y_(network.GetClock().getElapsedTime().asMilliseconds());
-				position_update_.time = network.GetClock().getElapsedTime().asMilliseconds();
+				position_update_.time = network.GetClock().getElapsedTime().asMilliseconds() + network.GetLagOffset();
 
+				// We can move the body through interpolation.
+				object.TranslateBody(interpolation_x_(network.GetClock().getElapsedTime().asMilliseconds() + network.GetLagOffset()), interpolation_y_(network.GetClock().getElapsedTime().asMilliseconds() + network.GetLagOffset()));
+				
 				// Send the updated struct to the server.
 				network.SendDeadReckoningMessageToServer(position_update_);
 			}
 		}
+		//// If we are too far out with our prediction.
+		//else
+		//{
+		//	for (int x = 0; x < x_positions_.size(); x++)
+		//	{
+		//		for (int y = 0; y < y_positions_.size(); y++)
+		//		{
+		//			object.TranslateBody(x_positions_[x], y_positions_[y]);
+		//		}
+		//	}
+		//}
 
 		// Clear all of the vectors for the next set of positions.
 		ClearVectors();
 	}
+
+	
 
 }
 

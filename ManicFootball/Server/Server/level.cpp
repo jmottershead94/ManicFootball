@@ -166,7 +166,7 @@ void Level::HandleLevelObjects(float dt)
 		// Iterating through all of the level objects.
 		for (auto& level_object : level_generator_.GetLevelObjects())
 		{
-			// If the level object is a football.
+			// If the level object is a football, or a player.
 			if ((level_object->GetID() == ObjectID::ball)
 				|| (level_object->GetID() == ObjectID::playerOne)
 				|| (level_object->GetID() == ObjectID::playerTwo))
@@ -189,6 +189,21 @@ void Level::HandleLevelObjects(float dt)
 					if (network_->ReceivedData(*network_->GetClientSockets()[1], network_->GetData()))
 					{
 						DataResponse(*network_->GetClientSockets()[0], network_->GetData(), *dynamic_rectangle, dt);
+					}
+				}
+				else if (dynamic_rectangle->GetID() == ObjectID::ball)
+				{
+					// Updating the position of the ball.
+					PositionUpdate ball_position;
+					ball_position.x = dynamic_rectangle->GetPosition().x;
+					ball_position.y = dynamic_rectangle->GetPosition().y;
+					ball_position.id = dynamic_rectangle->GetID();
+					ball_position.time = clock_->getElapsedTime().asMilliseconds();
+
+					for (auto& socket : network_->GetClientSockets())
+					{
+						// Send the ball's position to the clients.
+						network_->SendDeadReckoningToClients(*socket, ball_position);
 					}
 				}
 
@@ -225,13 +240,6 @@ void Level::DataResponse(sf::TcpSocket& client_socket, sf::Packet& data, Dynamic
 	// Otherwise, if the data contains a position update message.
 	else if (data >> position_update)
 	{
-		// Store both ball positions somehow, and compare the times on the messages.
-		// If one is closer to our server timer, then that ball update will be the one we use.
-		/*if (position_update.id = ObjectID::ball)
-		{
-			CompareBallPositions();
-		}*/
-		
 		// Send the interpolated positions to the other client.
 		network_->SendDeadReckoningToClients(client_socket, position_update);
 	}

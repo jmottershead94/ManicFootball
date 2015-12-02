@@ -171,6 +171,26 @@ void Level::HandleLevelObjects(float dt)
 			{
 				// Casting this to a dynamic body rectangle in order to update the sprites position for level object.
 				DynamicBodyRectangle* dynamic_rectangle = static_cast<DynamicBodyRectangle*>(level_object);
+				
+				if (network_->ReceivedDeadReckoningMessageFromServer())
+				{
+					PositionUpdate position_update;
+
+					// See if we can place the data into a position update struct.
+					if (network_->GetData() >> position_update)
+					{
+						// Place the positions in the vector of positions for interpolation/prediction.
+						if (position_update.id == ObjectID::ball)
+						{
+							dynamic_rectangle->TranslateBody(position_update.x, position_update.y);
+						}
+						else
+						{
+							network_->GetData() << position_update;
+						}
+					}
+				}
+				
 				dynamic_rectangle->Update(dt);
 			}
 			else if (level_object->GetID() == ObjectID::otherPlayer)
@@ -223,6 +243,9 @@ void Level::DataResponse(sf::Packet& data, DynamicBodyRectangle& object, float d
 			position_update.y = object.GetPosition().y;
 			position_update.time = network_->GetClock().getElapsedTime().asMilliseconds();
 
+			// Moving the body depending on the current position.
+			//object.TranslateBody(position_update.x, position_update.y);
+
 			// Place the positions in the vector of positions for interpolation/prediction.
 			other_player_.UpdateVectors(position_update.x, position_update.y, position_update.time);
 		}
@@ -248,9 +271,9 @@ void Level::DataResponse(sf::Packet& data, DynamicBodyRectangle& object, float d
 			{
 				other_player_.UpdateVectors(position_update.x, position_update.y, position_update.time);
 			}
-			else if (position_update.id == ObjectID::ball)
+			else
 			{
-				ball_.UpdateVectors(position_update.x, position_update.y, position_update.time);
+				network_->GetData() << position_update;
 			}
 		}
 	}
@@ -295,12 +318,12 @@ void Level::CorrectPositions()
 			// Interpolate the other player.
 			other_player_.Calculate(*object, *network_);
 		}
-		// If the object is a ball.
-		else if (object->GetID() == ObjectID::ball)
-		{
-			// Interpolate the ball.
-			ball_.Calculate(*object, *network_);
-		}
+		//// If the object is a ball.
+		//else if (object->GetID() == ObjectID::ball)
+		//{
+		//	// Interpolate the ball.
+		//	ball_.Calculate(*object, *network_);
+		//}
 	}
 
 }

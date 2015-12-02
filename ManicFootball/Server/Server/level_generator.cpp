@@ -153,13 +153,13 @@ void LevelGenerator::CreatePlayer(bool red_team)
 	if (red_team)
 	{
 		// Initialising one of the players on the red team.
-		player->Init(sf::Vector2f(300.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_, ObjectID::playerOne, sf::Color::Red, 0.2f);
+		player->Init(sf::Vector2f(300.0f, 400.0f), sf::Vector2f(25.0f, 75.0f), world_, ObjectID::playerOne, sf::Color::Red, 0.2f);
 	}
 	// Otherwise, the player is on the blue team.
 	else
 	{
 		// Initialising one of the players on the blue team.
-		player->Init(sf::Vector2f(800.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_, ObjectID::playerTwo, sf::Color::Blue, 0.2f);
+		player->Init(sf::Vector2f(800.0f, 400.0f), sf::Vector2f(25.0f, 75.0f), world_, ObjectID::playerTwo, sf::Color::Blue, 0.2f);
 	}
 
 	// Adding the game object to the level objects vector.

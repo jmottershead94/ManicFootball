@@ -152,13 +152,13 @@ void LevelGenerator::CreatePlayer(bool red_team)
 	if (red_team)
 	{
 		// Initialising the player on the red team.
-		player->Init(sf::Vector2f(300.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_, red_team);
+		player->Init(sf::Vector2f(300.0f, 400.0f), sf::Vector2f(25.0f, 75.0f), world_, red_team);
 	}
 	// Otherwise, the player is on the blue team.
 	else
 	{
 		// Initialising the player on the blue team.
-		player->Init(sf::Vector2f(800.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_, red_team);
+		player->Init(sf::Vector2f(800.0f, 400.0f), sf::Vector2f(25.0f, 75.0f), world_, red_team);
 	}
 
 	// Adding the game object to the level objects vector.
@@ -176,13 +176,13 @@ void LevelGenerator::CreateOtherPlayer(bool red_team)
 	if (red_team)
 	{
 		// Initialising the dynamic body for the other player on the blue team.
-		other_player->Init(sf::Vector2f(800.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_, ObjectID::otherPlayer, sf::Color::Blue, 0.2f);
+		other_player->Init(sf::Vector2f(800.0f, 400.0f), sf::Vector2f(25.0f, 75.0f), world_, ObjectID::otherPlayer, sf::Color::Blue, 0.2f);
 	}
 	// Otherwise, the player is on the blue team.
 	else
 	{
 		// Initialising the dynamic body for the other player on the red team.
-		other_player->Init(sf::Vector2f(300.0f, 200.0f), sf::Vector2f(25.0f, 75.0f), world_, ObjectID::otherPlayer, sf::Color::Red, 0.2f);
+		other_player->Init(sf::Vector2f(300.0f, 400.0f), sf::Vector2f(25.0f, 75.0f), world_, ObjectID::otherPlayer, sf::Color::Red, 0.2f);
 	}
 
 	// Adding the game object to the level objects vector.

@@ -27,7 +27,6 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 	
 	// Accept connections from clients.
 	StartAcceptingConnections();
-
 }
 
 // This will clean up any pointers.
