@@ -45,7 +45,6 @@ class NetworkHandler : protected Utilities
 
 		// Pure virtual methods.
 		// Every network for a game using this "framework" must have these functions implemented.
-		// This is just to make sure that I implement these message structs.
 		virtual bool ReceivedStartingMessage() = 0;
 		virtual bool ReceivedReadyMessage() = 0;
 		virtual void SendInputMessageToServer(Input& client_input) = 0;

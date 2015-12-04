@@ -19,7 +19,7 @@ class Player : public DynamicBodyRectangle
 		// Methods.
 		Player();
 		~Player();
-		void Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world, bool& red_team);
+		void Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world, bool red_team);
 		void Controls(float dt);
 		void Jump(float dt);
 		void Respawn();
