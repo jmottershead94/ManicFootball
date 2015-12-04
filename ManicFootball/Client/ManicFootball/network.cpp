@@ -134,7 +134,7 @@ bool Network::ReceivedInputMessageFromServer()
 			// Pass this time along with the message.
 			sf::Int32 current_time = GetClock().getElapsedTime().asMilliseconds() + lag_offset_;
 			SetCurrentTime(current_time);
-
+			
 			// Add on the offset gathered from the trip to the server.
 			input.time = GetCurrentTime();
 
@@ -201,7 +201,7 @@ bool Network::ReceivedDeadReckoningMessageFromServer()
 			// Add on the offset gathered from the trip to the server.
 			position_update.time = GetCurrentTime();
 
-			// Place the input data back into the packet data to be used by the client.
+			// Place the position update data back into the packet data to be used by the client.
 			data_ << position_update;
 
 			// We have received some input data.
@@ -210,6 +210,8 @@ bool Network::ReceivedDeadReckoningMessageFromServer()
 		// Otherwise, we could not read the data.
 		else
 		{
+			//data_ << position_update;
+
 			// ERROR: The packet is not okay to read.
 			DisplayErrorMessage(kDataReadingErrorMessage);
 

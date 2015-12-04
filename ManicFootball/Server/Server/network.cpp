@@ -115,6 +115,7 @@ bool Network::ReceivedInputMessageFromClient(sf::TcpSocket& client_socket)
 		// Check to see if it is okay to read the data.
 		if (data_ >> client_input)
 		{
+			// If it is, place the current client input data back into the packet.
 			data_ << client_input;
 
 			// Apply input to the level objects.
@@ -190,6 +191,7 @@ bool Network::ReceivedPositionMessageFromClient()
 			// Check to see if it is okay to read the data.
 			if (data_ >> client_position)
 			{
+				// Place the data back into the packet.
 				data_ << client_position;
 
 				// Apply input to the level objects.

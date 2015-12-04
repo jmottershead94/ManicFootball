@@ -181,6 +181,7 @@ void Level::HandleLevelObjects(float dt)
 					if (network_->ReceivedData(*network_->GetClientSockets()[0], network_->GetData()))
 					{
 						DataResponse(*network_->GetClientSockets()[1], network_->GetData(), *dynamic_rectangle, dt);
+						//DataResponse(*network_->GetClientSockets()[0], network_->GetData(), *dynamic_rectangle, dt);
 					}
 				}
 				else if (dynamic_rectangle->GetID() == ObjectID::playerTwo)
@@ -189,6 +190,7 @@ void Level::HandleLevelObjects(float dt)
 					if (network_->ReceivedData(*network_->GetClientSockets()[1], network_->GetData()))
 					{
 						DataResponse(*network_->GetClientSockets()[0], network_->GetData(), *dynamic_rectangle, dt);
+						//DataResponse(*network_->GetClientSockets()[1], network_->GetData(), *dynamic_rectangle, dt);
 					}
 				}
 				else if (dynamic_rectangle->GetID() == ObjectID::ball)
@@ -260,21 +262,21 @@ void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
 	if (player.GetInput().up)
 	{
 		player.GetBody()->SetAwake(true);
-		player.GetBody()->ApplyLinearImpulse(b2Vec2(0.0f, kPlayerMovementForce.y * dt), player.GetBody()->GetWorldCenter(), player.GetBody()->IsAwake());
+		player.GetBody()->ApplyLinearImpulse(b2Vec2(0.0f, kPlayerMovementForce.y * player.GetInput().time), player.GetBody()->GetWorldCenter(), player.GetBody()->IsAwake());
 	}
 
 	// Move the body to the right.
 	if (player.GetInput().right)
 	{
 		player.GetBody()->SetAwake(true);
-		player.GetBody()->ApplyLinearImpulse(b2Vec2((kPlayerMovementForce.x * dt), 0.0f), player.GetBody()->GetWorldCenter(), player.GetBody()->IsAwake());
+		player.GetBody()->ApplyLinearImpulse(b2Vec2((kPlayerMovementForce.x * player.GetInput().time), 0.0f), player.GetBody()->GetWorldCenter(), player.GetBody()->IsAwake());
 	}
 
 	// Move the body to the left.
 	if (player.GetInput().left)
 	{
 		player.GetBody()->SetAwake(true);
-		player.GetBody()->ApplyLinearImpulse(b2Vec2(((kPlayerMovementForce.x * -1.0f) * dt), 0.0f), player.GetBody()->GetWorldCenter(), player.GetBody()->IsAwake());
+		player.GetBody()->ApplyLinearImpulse(b2Vec2(((kPlayerMovementForce.x * -1.0f) * player.GetInput().time), 0.0f), player.GetBody()->GetWorldCenter(), player.GetBody()->IsAwake());
 	}
 
 }

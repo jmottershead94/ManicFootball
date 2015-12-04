@@ -9,7 +9,7 @@ Player::~Player()
 {
 }
 
-void Player::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world, bool red_team)
+void Player::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world, bool& red_team)
 {
 
 	// If the player is on the red team.
@@ -92,7 +92,7 @@ void Player::Controls(float dt)
 			// The player is not moving upwards.
 			input_.up = false;
 		}
-	}
+	}	
 	// Otherwise, if the player is on the blue team.
 	// Set up the controls for the blue team player.
 	else if (!is_red_team_)
