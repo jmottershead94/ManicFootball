@@ -16,6 +16,7 @@ class Interpolation
 		~Interpolation();
 		void UpdateVectors(float& x, float& y, sf::Int32& time);
 		void Calculate(GameObject& object, Network& network);
+		void CalculateTest(GameObject& object, Network& network);
 		void ClearVectors();
 
 		// Setters.

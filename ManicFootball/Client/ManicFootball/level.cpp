@@ -179,11 +179,13 @@ void Level::HandleLevelObjects(float dt)
 					// See if we can place the data into a position update struct.
 					if (network_->GetData() >> position_update)
 					{
-						// Place the positions in the vector of positions for interpolation/prediction.
+						// We need to place the ball in the server position.
 						if (position_update.id == ObjectID::ball)
 						{
+							// Place the ball into the correct position.
 							dynamic_rectangle->TranslateBody(position_update.x, position_update.y);
 						}
+						// We need to apply the position update else where!
 						else
 						{
 							network_->GetData() << position_update;
@@ -241,11 +243,8 @@ void Level::DataResponse(sf::Packet& data, DynamicBodyRectangle& object, float d
 			// Filling the position update every frame.
 			position_update.x = object.GetPosition().x;
 			position_update.y = object.GetPosition().y;
-			position_update.time = network_->GetClock().getElapsedTime().asMilliseconds();
-
-			// Moving the body depending on the current position.
-			//object.TranslateBody(position_update.x, position_update.y);
-
+			position_update.time = network_->GetClock().getElapsedTime().asMilliseconds() + network_->GetLagOffset();
+			
 			// Place the positions in the vector of positions for interpolation/prediction.
 			other_player_.UpdateVectors(position_update.x, position_update.y, position_update.time);
 		}
@@ -269,6 +268,7 @@ void Level::DataResponse(sf::Packet& data, DynamicBodyRectangle& object, float d
 			// Place the positions in the vector of positions for interpolation/prediction.
 			if (position_update.id == ObjectID::otherPlayer)
 			{
+				position_update.time = network_->GetClock().getElapsedTime().asMilliseconds() + network_->GetLagOffset();
 				other_player_.UpdateVectors(position_update.x, position_update.y, position_update.time);
 			}
 			else
@@ -282,12 +282,14 @@ void Level::DataResponse(sf::Packet& data, DynamicBodyRectangle& object, float d
 
 void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
 {
+	//PositionUpdate position_update;
 
-	// If player one pressed up.
+	// Move the body up.
 	if (player.GetInput().up)
 	{
 		player.GetBody()->SetAwake(true);
 		player.GetBody()->ApplyLinearImpulse(b2Vec2(0.0f, player.GetMovementForce().y * dt), player.GetBody()->GetWorldCenter(), player.GetBody()->IsAwake());
+		
 	}
 
 	// Move the body to the right.
