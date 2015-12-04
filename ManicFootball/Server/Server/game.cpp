@@ -23,6 +23,7 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 
 	// Creating the Box2D physics world.
 	world_ = new b2World(gravity);
+	world_->SetContinuousPhysics(true);
 	
 	// Accept connections from clients.
 	StartAcceptingConnections();

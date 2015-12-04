@@ -40,7 +40,7 @@ void LevelGenerator::BuildLevel(Network& game_network)
 	CreatePlayer(game_network.GetAssignedTeam());
 	CreateOtherPlayer(game_network.GetAssignedTeam());
 	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.25f, screen_resolution_->y * 0.25f));
-	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.5f, screen_resolution_->y * 0.25f));
+	CreateFootball(sf::Vector2f(screen_resolution_->x * 0.5f, screen_resolution_->y * 0.25f));
 	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.75f, screen_resolution_->y * 0.25f));
 
 }
