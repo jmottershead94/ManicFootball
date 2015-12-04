@@ -30,7 +30,6 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 
 	// Creating the Box2D physics world.
 	world_ = new b2World(gravity);
-	world_->SetContinuousPhysics(true);
 
 	// Setting up the state machine here.
 	current_state_ = new InitState(*window_, font_, screen_resolution_, world_);

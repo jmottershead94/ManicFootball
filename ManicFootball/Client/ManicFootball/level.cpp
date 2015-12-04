@@ -333,7 +333,7 @@ void Level::CorrectPositions()
 void Level::Update(float dt)
 {
 
-	CorrectPositions();
+	//CorrectPositions();
 	HandleLevelObjects(dt);
 	CollisionTest();
 
