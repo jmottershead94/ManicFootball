@@ -21,7 +21,7 @@ void Interpolation::UpdateVectors(float& x, float& y, sf::Int32& time)
 void Interpolation::Calculate(GameObject& object, Network& network)
 {
 
-	// If we have 16 x and y coordinates.
+	// If we have 4 x and y coordinates.
 	if ((x_positions_.size() == 4) && (y_positions_.size() == 4))
 	{
 		// Place in the points for the other player x position and the time they were received at.
@@ -74,12 +74,58 @@ void Interpolation::Calculate(GameObject& object, Network& network)
 		ClearVectors();
 	}
 
-	
-
 }
 
-void Interpolation::CalculateTest(GameObject& object, Network& network)
+//void Interpolate(deltaTime)
+//{
+//	difference = unit.RemoteX - unit.LocalX
+//		if (difference < threshold)
+//			unit.LocalX = unit.RemoteX
+//		else
+//		unit.LocalX += difference * deltaTime * interpolation_constant
+//}
+
+void Interpolation::CalculateTest(GameObject& object, Network& network, float dt)
 {
+
+	// And if we have "X" x and y coordinates.
+	if ((x_positions_.size() == kPositionSampleSize) && (y_positions_.size() == kPositionSampleSize))
+	{
+		// Store the latest position from the server.
+		sf::Vector2f remote_position(x_positions_[kPositionSampleSize - 1], y_positions_[kPositionSampleSize - 1]);
+
+		// Calculate the difference in the server and client positions.
+		sf::Vector2f difference(abs(remote_position.x - object.GetPosition().x), abs(remote_position.y - object.GetPosition().y));
+			
+		// If our calculated x position difference is within the network threshold.
+		if (difference.x < network.GetThreshold())
+		{
+			// And if our calculated y position difference is within the network threshold.
+			if (difference.y < network.GetThreshold())
+			{
+				// We can move the body just through interpolation.
+				object.TranslateBody(remote_position.x, remote_position.y);
+			}
+		}
+		// Otherwise, we are too far out with our positions from the server, we will use interpolation.
+		else
+		{
+			// Place in the points for the other player x position and the time they were received at.
+			SetXPoints();
+
+			// Place in the points for the other player y position and the time they were received at.
+			SetYPoints();
+
+			// Calculating the interpolation distance for our next point.
+			sf::Vector2f interpolating_distance(interpolation_x_(network.GetClock().getElapsedTime().asMilliseconds()), interpolation_y_(network.GetClock().getElapsedTime().asMilliseconds()));
+
+			// This should move slowly towards the position we should be currently in!
+			object.TranslateBody(interpolating_distance.x, interpolating_distance.y);
+		}
+
+		// Clear all of the vectors for the next set of positions.
+		ClearVectors();
+	}
 
 }
 

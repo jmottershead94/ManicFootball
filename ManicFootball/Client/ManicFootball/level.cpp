@@ -308,7 +308,7 @@ void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
 
 }
 
-void Level::CorrectPositions()
+void Level::CorrectPositions(float dt)
 {
 
 	// Iterate through the level objects.
@@ -318,7 +318,8 @@ void Level::CorrectPositions()
 		if (object->GetID() == ObjectID::otherPlayer)
 		{
 			// Interpolate the other player.
-			other_player_.Calculate(*object, *network_);
+			//other_player_.Calculate(*object, *network_);
+			other_player_.CalculateTest(*object, *network_, dt);
 		}
 		//// If the object is a ball.
 		//else if (object->GetID() == ObjectID::ball)
@@ -333,7 +334,7 @@ void Level::CorrectPositions()
 void Level::Update(float dt)
 {
 
-	//CorrectPositions();
+	CorrectPositions(dt);
 	HandleLevelObjects(dt);
 	CollisionTest();
 

@@ -30,17 +30,13 @@ class NetworkHandler : protected Utilities
 		// Getters.
 		// This will return the current connection we are using to handle the network connections.
 		inline Connection& GetConnection()	{ return connection_; }
-
-		// This will return the current game time for the client.
-		inline sf::Time& GetTime()			{ return game_time_; }
-
+		
 		// This will return the current time value for the client.
 		inline sf::Int32& GetCurrentTime()  { return current_time_; }
 
 	private:
 		// Attributes.
 		Connection connection_;
-		sf::Time game_time_;
 		sf::Int32 current_time_;
 
 };

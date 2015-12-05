@@ -31,8 +31,7 @@ class Level
 		void HandleLevelObjects(float dt);
 		void DataResponse(sf::Packet& data, DynamicBodyRectangle& object, float dt);
 		void ApplyPlayerInput(DynamicBodyRectangle& player, float dt);
-		void CorrectPositions();
-		void UpdatePositions();
+		void CorrectPositions(float dt);
 		void Update(float dt);
 
 		// Getters.

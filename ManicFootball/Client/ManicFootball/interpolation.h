@@ -16,7 +16,7 @@ class Interpolation
 		~Interpolation();
 		void UpdateVectors(float& x, float& y, sf::Int32& time);
 		void Calculate(GameObject& object, Network& network);
-		void CalculateTest(GameObject& object, Network& network);
+		void CalculateTest(GameObject& object, Network& network, float dt);
 		void ClearVectors();
 
 		// Setters.
@@ -47,10 +47,12 @@ class Interpolation
 
 	private:
 		// Attributes.
+		const int kPositionSampleSize = 4;						// The amount of positions we want from the other player on the server.
+		const float kInterpolationConstant = 0.5f;				// This set the scale of the movement from our current position to the new position. (0 will ignore network updates, 1 will jump straight to it).
 		std::vector < double > x_positions_, y_positions_;		// Vectors for storing the player coordinates over time.
 		std::vector < double > times_;							// The vector storing the times that the positions were sent at.
 		tk::spline interpolation_x_, interpolation_y_;			// This will be used to interpolate the other player's position.
-		PositionUpdate position_update_;
+		PositionUpdate position_update_;						// The current position update message for our interpolation.
 
 };
 
