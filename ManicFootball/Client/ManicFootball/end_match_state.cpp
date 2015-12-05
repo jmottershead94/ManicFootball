@@ -74,9 +74,9 @@ void EndMatchState::OnEnter()
 		text_ = new sf::Text();
 		text_->setFont(*font_);
 		text_->setPosition((screen_resolution_->x * 0.25f), (screen_resolution_->y * 0.3f));
-		text_->setString("The Red Team Won!");
+		text_->setString("Finished!");
 		text_->setCharacterSize(64);
-		text_->setColor(sf::Color::Red);
+		text_->setColor(sf::Color::White);
 		text_->setStyle(sf::Text::Bold);
 	}
 	// Otherwise, if the blue team won.

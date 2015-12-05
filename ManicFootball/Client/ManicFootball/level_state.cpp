@@ -35,7 +35,6 @@ LevelState::~LevelState()
 State* LevelState::HandleInput()
 {
 
-	// Basically any rage quitters here.
 	// If the player presses the escape button.
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 	{
@@ -57,29 +56,29 @@ State* LevelState::HandleInput()
 	//}
 
 	// If the current match has finished.
-	//if (level_.GetLevelGenerator().HasFinished())
-	//{
+	if (level_.GetLevelGenerator().HasFinished())
+	{
 		//// Disconnect the clients from the server.
 		//network_->GetConnection().GetSocket()->disconnect();
 
 		// If the red team won.
-		if (level_.GetLevelGenerator().GetRedTeamScore() == 3)
-		{
+		//if (level_.GetLevelGenerator().GetRedTeamScore() == 3)
+		//{
 			// Go to the winning screen with red team as the winner.
 			return new EndMatchState(*this, true);
-		}
-		else if (level_.GetLevelGenerator().GetBlueTeamScore() == 3)
-		{
+		//}
+		//else if (level_.GetLevelGenerator().GetBlueTeamScore() == 3)
+		//{
 			// Go to the winning screen with blue team as the winner.
-			return new EndMatchState(*this, false);
-		}
+		//	return new EndMatchState(*this, false);
+		//}
 		//
 		//if (level_.GetLevelGenerator().GetBlueTeamScore() == 3)
 		//{
 		//	// Go to the winning screen with blue team as the winner.
 		//	return new EndMatchState(*this, false);
 		//}
-	//}
+	}
 
 	// USED FOR DEBUGGING.
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
@@ -106,6 +105,15 @@ void LevelState::OnEnter()
 	// Starting the level state specific stuff.
 	// Load the level.
 	level_.Init(world_, *font_, *screen_resolution_, *network_);
+
+	// Display finished text.
+	text_ = new sf::Text();
+	text_->setFont(*font_);
+	text_->setPosition((screen_resolution_->x * 0.25f), (screen_resolution_->y * 0.3f));
+	text_->setString("Finished!");
+	text_->setCharacterSize(64);
+	text_->setColor(sf::Color::White);
+	text_->setStyle(sf::Text::Bold);
 
 }
 
@@ -171,6 +179,13 @@ void LevelState::Render()
 				// Draw the score on the screen.
 				window_->draw(*score);
 			}
+		}
+
+		// If the current match has finished.
+		if (level_.GetLevelGenerator().HasFinished())
+		{
+			window_->draw(*text_);
+
 		}
 	}
 

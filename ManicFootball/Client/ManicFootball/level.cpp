@@ -112,7 +112,7 @@ void Level::CollisionTest()
 				std::cout << "The blue team have scored!" << std::endl;
 
 				// Increment the blue team's score.
-				level_generator_.IncrementBlueTeamScore();
+				//level_generator_.IncrementBlueTeamScore();
 
 				// If the blue team has reached three goals.
 				if (level_generator_.GetBlueTeamScore() == 3)
@@ -137,7 +137,7 @@ void Level::CollisionTest()
 				std::cout << "The red team have scored!" << std::endl;
 
 				// Increment the red team's score.
-				level_generator_.IncrementRedTeamScore();
+				//level_generator_.IncrementRedTeamScore();
 
 				// If the red team has reached three goals.
 				if (level_generator_.GetRedTeamScore() == 3)
@@ -180,13 +180,13 @@ void Level::HandleLevelObjects(float dt)
 			// If the level object is a football.
 			if (level_object->GetID() == ObjectID::ball)
 			{
+				PositionUpdate position_update;
+
 				// Casting this to a dynamic body rectangle in order to update the sprites position for level object.
 				DynamicBodyRectangle* dynamic_rectangle = static_cast<DynamicBodyRectangle*>(level_object);
 				
 				if (network_->ReceivedDeadReckoningMessageFromServer())
 				{
-					PositionUpdate position_update;
-
 					// See if we can place the data into a position update struct.
 					if (network_->GetData() >> position_update)
 					{
@@ -196,10 +196,10 @@ void Level::HandleLevelObjects(float dt)
 							// Checking to see if we have a new score from the server.
 							if (position_update.red_score > level_generator_.GetRedTeamScore())
 							{
-								//if (position_update.red_score == 3)
-								//{
-								//	level_generator_.SetFinished(true);
-								//}
+								/*if (position_update.red_score == 3)
+								{
+									level_generator_.SetFinished(true);
+								}*/
 
 								UpdateTheScore(position_update.red_score, level_generator_.GetPreviousRedTeamScore(), level_generator_.red_convert_, true);
 								//UpdateTheScoreboard();
@@ -207,10 +207,10 @@ void Level::HandleLevelObjects(float dt)
 							
 							if (position_update.blue_score > level_generator_.GetBlueTeamScore())
 							{
-								//if (position_update.blue_score == 3)
-								//{
-								//	level_generator_.SetFinished(true);
-								//}
+								/*if (position_update.blue_score == 3)
+								{
+									level_generator_.SetFinished(true);
+								}*/
 
 								UpdateTheScore(position_update.blue_score, level_generator_.GetPreviousBlueTeamScore(), level_generator_.blue_convert_, false);
 								//UpdateTheScoreboard();
@@ -227,6 +227,11 @@ void Level::HandleLevelObjects(float dt)
 					}
 				}
 				
+				if ((position_update.red_score == 3) || (position_update.blue_score == 3))
+				{
+					level_generator_.SetFinished(true);
+				}
+
 				dynamic_rectangle->Update(dt);
 			}
 			else if (level_object->GetID() == ObjectID::otherPlayer)

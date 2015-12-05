@@ -127,7 +127,7 @@ void Level::CollisionTest()
 				UpdateTheScoreboard();
 
 				//// If the blue team has reached three goals.
-				//if (level_generator_.GetBlueTeamScore() == 1)
+				//if (level_generator_.GetBlueTeamScore() == 3)
 				//{
 				//	// The match has now finished.
 				//	level_generator_.SetFinished(true);
