@@ -30,10 +30,10 @@ void Interpolation::UpdateVectors(float& x, float& y, sf::Int32& time)
 void Interpolation::Interpolate(DynamicBodyRectangle& object, Network& network, float dt)
 {
 
-	// And if we have "X" x and y coordinates.
+	// And if we have "X" amount of x and y coordinates.
 	if ((x_positions_.size() == kPositionSampleSize) && (y_positions_.size() == kPositionSampleSize))
 	{
-		// Store the first position from the server.
+		// Store the latest position obtained from the server bool commands.
 		sf::Vector2f remote_position(x_positions_[kPositionSampleSize - 1], y_positions_[kPositionSampleSize - 1]);
 
 		// Calculate the difference in the server and client positions.
@@ -73,13 +73,15 @@ void Interpolation::Interpolate(DynamicBodyRectangle& object, Network& network, 
 			for (auto& time : times_)
 			{
 				// Calculating the interpolation distance for our next position (which was in the past!).
+				// These times were recorded at the times we received them from the server.
+				// We can go back into the past and interpolate.
 				interpolating_distance.x = interpolation_x_(time);
 				interpolating_distance.y = interpolation_y_(time);
 
 				// TESTING.
 				std::cout << "Interpolation Distance X = " << interpolating_distance.x << " Y = " << interpolating_distance.y << std::endl;
 
-				// This should move slowly towards the position we should be currently in!
+				// This should move slowly towards the position we may need to be in.
 				object.TranslateBody(interpolating_distance.x, interpolating_distance.y);
 			}
 		}
@@ -88,13 +90,13 @@ void Interpolation::Interpolate(DynamicBodyRectangle& object, Network& network, 
 		ClearVectors();
 	}
 
-	// We are not interpolating positions anymore.
-	interpolating_ = false;
-
 }
 
 void Interpolation::ClearVectors()
 {
+
+	// We are not interpolating positions anymore.
+	interpolating_ = false;
 
 	// If there are values in the vector.
 	if (!x_positions_.empty())
@@ -111,6 +113,6 @@ void Interpolation::ClearVectors()
 	if (!times_.empty())
 	{
 		times_.clear();
-	}
+	}	
 
 }

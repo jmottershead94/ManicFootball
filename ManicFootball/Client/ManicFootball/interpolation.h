@@ -50,7 +50,7 @@ class Interpolation
 	private:
 		// Attributes.
 		const unsigned int kPositionSampleSize = 4;				// The amount of positions we want from the other player on the server.
-		bool interpolating_;										// Whether or not we should currently be interpolating and not using player input.
+		bool interpolating_;									// Whether or not we should currently be interpolating and not using player input.
 		std::vector < double > x_positions_, y_positions_;		// Vectors for storing the player coordinates over time.
 		std::vector < double > times_;							// The vector storing the times that the positions were sent at.
 		tk::spline interpolation_x_, interpolation_y_;			// This will be used to interpolate the other player's position.
