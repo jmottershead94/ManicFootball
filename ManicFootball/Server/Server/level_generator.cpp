@@ -41,7 +41,7 @@ void LevelGenerator::BuildLevel()
 	CreatePlayer(true);
 	CreatePlayer(false);
 	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.25f, screen_resolution_->y * 0.25f));
-	CreateFootball(sf::Vector2f(screen_resolution_->x * 0.5f, screen_resolution_->y * 0.25f));
+	CreateFootball(sf::Vector2f(screen_resolution_->x * 0.5f, screen_resolution_->y * 0.6f));
 	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.75f, screen_resolution_->y * 0.25f));
 
 }
@@ -67,7 +67,7 @@ void LevelGenerator::CreateWall(sf::Vector2f& position, sf::Vector2f& dimension)
 	StaticBody* wall = new StaticBody();
 
 	// Initialising the static body for the ground.
-	wall->Init(sf::Vector2f(position.x, position.y), sf::Vector2f(dimension.x, dimension.y), world_, ObjectID::surface, sf::Color::Black, true);
+	wall->Init(sf::Vector2f(position.x, position.y), sf::Vector2f(dimension.x, dimension.y), world_, ObjectID::surface, sf::Color::Cyan, true);
 
 	// Adding the game object to the level objects vector.
 	level_objects_.push_back(wall);
@@ -191,9 +191,7 @@ void LevelGenerator::Reset()
 		for (auto& level_object : level_objects_)
 		{
 			// If the level object is a football.
-			if (level_object->GetID() == ObjectID::ball
-				|| (level_object->GetID() == ObjectID::playerOne)
-				|| (level_object->GetID() == ObjectID::playerTwo))
+			if (level_object->GetID() == ObjectID::ball)
 			{
 				// Casting this to a dynamic body rectangle in order to update the sprites position for level object.
 				DynamicBodyRectangle* dynamic_rectangle = static_cast<DynamicBodyRectangle*>(level_object);

@@ -126,21 +126,12 @@ void Level::CollisionTest()
 				// Update with the new scores.
 				UpdateTheScoreboard();
 
-				// If the blue team has reached three goals.
-				if (level_generator_.GetBlueTeamScore() == 1)
-				{
-					// The match has now finished.
-					level_generator_.SetFinished(true);
-
-					for (auto& client_socket : network_->GetClientSockets())
-					{
-						FinishMessage finish_message;
-						finish_message.finished = true;
-						finish_message.time = clock_->getElapsedTime().asMilliseconds();
-
-						network_->SendFinishMessageToClients(*client_socket, finish_message);
-					}
-				}
+				//// If the blue team has reached three goals.
+				//if (level_generator_.GetBlueTeamScore() == 1)
+				//{
+				//	// The match has now finished.
+				//	level_generator_.SetFinished(true);
+				//}
 			}
 			// Otherwise, if the ball has collided with the blue team's net.
 			else if (game_object->GetID() == ObjectID::blueNet
@@ -157,21 +148,18 @@ void Level::CollisionTest()
 				// Update with the new scores.
 				UpdateTheScoreboard();
 
-				// If the red team has reached three goals.
-				if (level_generator_.GetRedTeamScore() == 1)
-				{
-					// The match has now finished.
-					level_generator_.SetFinished(true);
-
-					for (auto& client_socket : network_->GetClientSockets())
-					{
-						FinishMessage finish_message;
-						finish_message.finished = true;
-						finish_message.time = clock_->getElapsedTime().asMilliseconds();
-
-						network_->SendFinishMessageToClients(*client_socket, finish_message);
-					}
-				}
+				//// If the red team has reached three goals.
+				//if (level_generator_.GetRedTeamScore() == 1)
+				//{
+				//	// The match has now finished.
+				//	level_generator_.SetFinished(true);
+				//}
+			}
+			else if (game_object->GetID() == ObjectID::playerOne
+				&& game_object2->GetID() == ObjectID::playerTwo)
+			{
+				//game_object->GetBody()->SetAwake(false);
+				//game_object2->GetBody()->SetAwake(false);
 			}
 
 			// Get the next contact point.
@@ -191,9 +179,9 @@ void Level::HandleLevelObjects(float dt)
 		for (auto& level_object : level_generator_.GetLevelObjects())
 		{
 			// If the level object is a football, or a player.
-			if ((level_object->GetID() == ObjectID::ball)
-				|| (level_object->GetID() == ObjectID::playerOne)
-				|| (level_object->GetID() == ObjectID::playerTwo))
+			if ((level_object->GetID() == ObjectID::playerOne)
+				|| (level_object->GetID() == ObjectID::playerTwo)
+				|| (level_object->GetID() == ObjectID::ball))
 			{
 				// Casting this to a dynamic body circle in order to update the sprites position for level object.
 				DynamicBodyRectangle* dynamic_rectangle = static_cast<DynamicBodyRectangle*>(level_object);
@@ -217,17 +205,39 @@ void Level::HandleLevelObjects(float dt)
 				}
 				else if (dynamic_rectangle->GetID() == ObjectID::ball)
 				{
-					// Updating the position of the ball.
-					PositionUpdate ball_position;
-					ball_position.x = dynamic_rectangle->GetPosition().x;
-					ball_position.y = dynamic_rectangle->GetPosition().y;
-					ball_position.id = dynamic_rectangle->GetID();
-					ball_position.time = clock_->getElapsedTime().asMilliseconds();
+					//// Updating the position of the ball.
+					//PositionUpdate ball_position;
+					//ball_position.x = dynamic_rectangle->GetPosition().x;
+					//ball_position.y = dynamic_rectangle->GetPosition().y;
+					//ball_position.id = dynamic_rectangle->GetID();
+					//ball_position.red_score = level_generator_.GetRedTeamScore();
+					//ball_position.blue_score = level_generator_.GetBlueTeamScore();
+					//ball_position.time = clock_->getElapsedTime().asMilliseconds();
 
+					/*network_->SendDeadReckoningToClients(*network_->GetClientSockets()[0], ball_position);
+					network_->SendDeadReckoningToClients(*network_->GetClientSockets()[1], ball_position);*/
+					
 					for (auto& socket : network_->GetClientSockets())
 					{
+						// Updating the position of the ball.
+						PositionUpdate ball_position;
+						ball_position.x = dynamic_rectangle->GetPosition().x;
+						ball_position.y = dynamic_rectangle->GetPosition().y;
+						ball_position.id = dynamic_rectangle->GetID();
+						ball_position.red_score = level_generator_.GetRedTeamScore();
+						ball_position.blue_score = level_generator_.GetBlueTeamScore();
+						ball_position.time = clock_->getElapsedTime().asMilliseconds();
+
 						// Send the ball's position to the clients.
 						network_->SendDeadReckoningToClients(*socket, ball_position);
+					}
+
+					// If the red or blue team have reached three goals.
+					if (level_generator_.GetRedTeamScore() == 3
+						|| level_generator_.GetBlueTeamScore() == 3)
+					{
+						// The match has now finished.
+						level_generator_.SetFinished(true);
 					}
 				}
 
@@ -251,15 +261,15 @@ void Level::DataResponse(sf::TcpSocket& client_socket, sf::Packet& data, Dynamic
 		ApplyPlayerInput(object, dt);
 		network_->SendInputToClients(client_socket, object.GetInput());
 	}
-	// Otherwise, if the data should contain a finish message.
-	else if (data >> finish_message)
-	{
-		// Send the message out to the other clients.
-		network_->SendFinishMessageToClients(client_socket, finish_message);
+	//// Otherwise, if the data should contain a finish message.
+	//else if (data >> finish_message)
+	//{
+	//	// Send the message out to the other clients.
+	//	network_->SendFinishMessageToClients(client_socket, finish_message);
 
-		// End the level on the server.
-		level_generator_.SetFinished(true);
-	}
+	//	// End the level on the server.
+	//	level_generator_.SetFinished(true);
+	//}
 
 }
 
@@ -309,5 +319,12 @@ void Level::Update(float dt)
 
 	HandleLevelObjects(dt);
 	CollisionTest();
+
+	//// If the red or blue team have reached three goals.
+	//if ((level_generator_.GetRedTeamScore() == 3) || (level_generator_.GetBlueTeamScore() == 3))
+	//{
+	//	// The match has now finished.
+	//	level_generator_.SetFinished(true);
+	//}
 
 }

@@ -32,6 +32,7 @@ class Level
 		void DataResponse(sf::Packet& data, DynamicBodyRectangle& object, float dt);
 		void ApplyPlayerInput(DynamicBodyRectangle& player, float dt);
 		void CorrectPositions(float dt);
+		//void CheckScores();
 		void Update(float dt);
 
 		// Getters.

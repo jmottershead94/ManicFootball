@@ -7,6 +7,10 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
+	
+	/*body_->DestroyFixture(body_->GetFixtureList());
+	body_->GetWorld()->DestroyBody(body_);*/
+
 }
 
 void GameObject::Init(sf::Vector2f position, sf::Vector2f dimensions, ObjectID object_id, bool is_rectangle)

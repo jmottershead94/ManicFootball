@@ -48,25 +48,25 @@ class LevelGenerator
 
 		// Getters.
 		// This function will return if the level has finished or not.
-		inline bool HasFinished()							{ return finished_; }
+		inline bool& HasFinished()							{ return finished_; }
 
 		// This will return the current red team score.
-		inline int GetRedTeamScore()						{ return red_team_score_; }
+		inline int& GetRedTeamScore()						{ return red_team_score_; }
 
 		// This will return the current blue team score.
-		inline int GetBlueTeamScore()						{ return blue_team_score_; }
+		inline int& GetBlueTeamScore()						{ return blue_team_score_; }
 
 		// This will return the previous red team score.
-		inline int GetPreviousRedTeamScore()				{ return previous_red_team_score_; }
+		inline int& GetPreviousRedTeamScore()				{ return previous_red_team_score_; }
 
 		// This will return the previous blue team score.
-		inline int GetPreviousBlueTeamScore()				{ return previous_blue_team_score_; }
+		inline int& GetPreviousBlueTeamScore()				{ return previous_blue_team_score_; }
 
 		// This will return the array of scores.
-		inline std::array<sf::Text*, 2> GetScoresText()		{ return scores_; }
+		inline std::array<sf::Text*, 2>& GetScoresText()		{ return scores_; }
 
 		// This will return the vector of game objects in the level.
-		inline std::vector<GameObject*> GetLevelObjects()	{ return level_objects_; }
+		inline std::vector<GameObject*>& GetLevelObjects()	{ return level_objects_; }
 
 	private:
 		// Attributes.

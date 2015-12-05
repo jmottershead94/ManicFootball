@@ -57,32 +57,29 @@ State* LevelState::HandleInput()
 	//}
 
 	// If the current match has finished.
-	if (level_.GetLevelGenerator().HasFinished())
-	{
+	//if (level_.GetLevelGenerator().HasFinished())
+	//{
 		//// Disconnect the clients from the server.
 		//network_->GetConnection().GetSocket()->disconnect();
 
-		//// Constructing the last message.
-		//FinishMessage last_message;
-		//last_message.finished = true;
-		//last_message.time = game_clock_.getElapsedTime().asMilliseconds();
-
-		//// Sending the last message to the server.
-		//network_->SendFinishMessageToServer(last_message);
-
 		// If the red team won.
-		if (level_.GetLevelGenerator().GetRedTeamScore() == 1)
+		if (level_.GetLevelGenerator().GetRedTeamScore() == 3)
 		{
 			// Go to the winning screen with red team as the winner.
 			return new EndMatchState(*this, true);
 		}
-		// Otherwise, blue team won.
-		else
+		else if (level_.GetLevelGenerator().GetBlueTeamScore() == 3)
 		{
 			// Go to the winning screen with blue team as the winner.
 			return new EndMatchState(*this, false);
 		}
-	}
+		//
+		//if (level_.GetLevelGenerator().GetBlueTeamScore() == 3)
+		//{
+		//	// Go to the winning screen with blue team as the winner.
+		//	return new EndMatchState(*this, false);
+		//}
+	//}
 
 	// USED FOR DEBUGGING.
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))

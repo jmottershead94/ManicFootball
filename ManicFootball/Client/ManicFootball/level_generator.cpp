@@ -40,7 +40,7 @@ void LevelGenerator::BuildLevel(Network& game_network)
 	CreatePlayer(game_network.GetAssignedTeam());
 	CreateOtherPlayer(game_network.GetAssignedTeam());
 	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.25f, screen_resolution_->y * 0.25f));
-	CreateFootball(sf::Vector2f(screen_resolution_->x * 0.5f, screen_resolution_->y * 0.25f));
+	CreateFootball(sf::Vector2f(screen_resolution_->x * 0.5f, screen_resolution_->y * 0.6f));
 	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.75f, screen_resolution_->y * 0.25f));
 
 }
@@ -66,7 +66,7 @@ void LevelGenerator::CreateWall(sf::Vector2f& position, sf::Vector2f& dimension)
 	StaticBody* wall = new StaticBody();
 
 	// Initialising the static body for the ground.
-	wall->Init(sf::Vector2f(position.x, position.y), sf::Vector2f(dimension.x, dimension.y), world_, ObjectID::surface, sf::Color::Black, true);
+	wall->Init(sf::Vector2f(position.x, position.y), sf::Vector2f(dimension.x, dimension.y), world_, ObjectID::surface, sf::Color::Cyan, true);
 
 	// Adding the game object to the level objects vector.
 	level_objects_.push_back(wall);
@@ -207,16 +207,19 @@ void LevelGenerator::CreateFootball(sf::Vector2f& position)
 void LevelGenerator::Reset()
 {
 
+	/*if (red_team_score_ == 3 || blue_team_score_ == 3)
+	{
+		finished_ = true;
+	}*/
+
 	// If there are objects in the level.
 	if (!level_objects_.empty())
 	{
 		// Iterating through all of the level objects.
 		for (auto& level_object : level_objects_)
 		{
-			// If the level object is a football.
-			if (level_object->GetID() == ObjectID::ball
-				|| (level_object->GetID() == ObjectID::player)
-				|| (level_object->GetID() == ObjectID::otherPlayer))
+			// If the level object is a football, or a player.
+			if (level_object->GetID() == ObjectID::ball)
 			{
 				// Casting this to a dynamic body rectangle in order to update the sprites position for level object.
 				DynamicBodyRectangle* dynamic_rectangle = static_cast<DynamicBodyRectangle*>(level_object);
@@ -234,12 +237,11 @@ void LevelGenerator::Clear()
 	// This means that there will be no random collisions in the level.
 	for (auto& level_object : level_objects_)
 	{
-		level_object->GetBody()->DestroyFixture(level_object->GetBody()->GetFixtureList());
-		
+		//level_object->GetBody()->DestroyFixture(level_object->GetBody()->GetFixtureList());
+		level_object->~GameObject();
+
 		delete level_object;
 		level_object = nullptr;
-		//level_object->~GameObject();
-		//world_->DestroyBody(level_object->GetBody());
 	}
 
 	// If there are objects in the level.
@@ -255,18 +257,18 @@ void LevelGenerator::Clear()
 	blue_convert_.clear();
 	blue_convert_.str("");
 
-	// If there is a set of scores stored in the level.
-	if (!scores_.empty())
-	{
-		// Clear the data for the scores.
-		for (int i = 0; i < 2; i++)
-		{
-			delete scores_[i];
-			scores_[i] = nullptr;
-		}
-	}
+	//// If there is a set of scores stored in the level.
+	//if (!scores_.empty())
+	//{
+	//	// Clear the data for the scores.
+	//	for (int i = 0; i < 2; i++)
+	//	{
+	//		delete scores_[i];
+	//		scores_[i] = nullptr;
+	//	}
+	//}
 
 	// Resetting the finished flag.
-	finished_ = false;
+	//finished_ = false;
 
 }

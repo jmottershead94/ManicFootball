@@ -37,6 +37,8 @@ struct PositionUpdate
 	float x = 0.0f;
 	float y = 0.0f;
 	int id = 0;
+	int red_score = 0;
+	int blue_score = 0;
 	sf::Int32 time = 0;
 };
 
@@ -63,10 +65,10 @@ inline sf::Packet& operator <<(sf::Packet& packet, const Input& message)				{ re
 inline sf::Packet& operator >>(sf::Packet& packet, Input& message)						{ return packet >> message.up >> message.right >> message.left >> message.time; }
 
 // This will allow me to send Position Update data through packets.
-inline sf::Packet& operator <<(sf::Packet& packet, const PositionUpdate& message)		{ return packet << message.x << message.y << message.id << message.time; }
+inline sf::Packet& operator <<(sf::Packet& packet, const PositionUpdate& message)		{ return packet << message.x << message.y << message.id << message.red_score << message.blue_score << message.time; }
 
 // This will allow me to receive Position Update data through packets.
-inline sf::Packet& operator >>(sf::Packet& packet, PositionUpdate& message)				{ return packet >> message.x >> message.y >> message.id >> message.time; }
+inline sf::Packet& operator >>(sf::Packet& packet, PositionUpdate& message)				{ return packet >> message.x >> message.y >> message.id >> message.red_score >> message.blue_score >> message.time; }
 
 // This will allow me to send Finish Message data through packets.
 inline sf::Packet& operator <<(sf::Packet& packet, const FinishMessage& message)		{ return packet << message.finished  << message.time; }

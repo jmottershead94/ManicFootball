@@ -82,6 +82,92 @@ void Level::UpdateTheScore(int score, int previous_score, std::ostringstream& co
 	
 }
 
+void Level::CollisionTest()
+{
+
+	// Get the head of the contact list.
+	b2Contact* contact_ = world_->GetContactList();
+
+	// Get the contact count.
+	int contact_count = world_->GetContactCount();
+
+	// Cycle through the contacts.
+	for (int contact_num = 0; contact_num < contact_count; contact_num++)
+	{
+		// If the contact we are currently processing contains bodies actually touching/intersecting.
+		if (contact_->IsTouching())
+		{
+			// Get the colliding bodies.
+			b2Body* body_a = contact_->GetFixtureA()->GetBody();
+			b2Body* body_b = contact_->GetFixtureB()->GetBody();
+
+			// Collision response here.
+			GameObject* game_object = static_cast<GameObject*>(body_a->GetUserData());
+			GameObject* game_object2 = static_cast<GameObject*>(body_b->GetUserData());
+
+			// If a ball collides with the red team's net.
+			if (game_object->GetID() == ObjectID::redNet
+				&& game_object2->GetID() == ObjectID::ball)
+			{
+				std::cout << "The blue team have scored!" << std::endl;
+
+				// Increment the blue team's score.
+				level_generator_.IncrementBlueTeamScore();
+
+				// If the blue team has reached three goals.
+				if (level_generator_.GetBlueTeamScore() == 3)
+				{
+					// The match has now finished.
+					level_generator_.SetFinished(true);
+				}
+				else
+				{
+					// Reset the level for the next round.
+					level_generator_.Reset();
+					
+					// Update with the new scores.
+					UpdateTheScoreboard();
+				}
+				
+			}
+			// Otherwise, if the ball has collided with the blue team's net.
+			else if (game_object->GetID() == ObjectID::blueNet
+				&& game_object2->GetID() == ObjectID::ball)
+			{
+				std::cout << "The red team have scored!" << std::endl;
+
+				// Increment the red team's score.
+				level_generator_.IncrementRedTeamScore();
+
+				// If the red team has reached three goals.
+				if (level_generator_.GetRedTeamScore() == 3)
+				{
+					// The match has now finished.
+					level_generator_.SetFinished(true);
+				}
+				else
+				{
+					// Reset the level for the next round.
+					level_generator_.Reset();
+				
+					// Update with the new scores.
+					UpdateTheScoreboard();
+				}
+			}
+			//if (game_object->GetID() == ObjectID::player
+			//	&& game_object2->GetID() == ObjectID::otherPlayer)
+			//{
+				//game_object->GetBody()->SetAwake(false);
+				//game_object2->GetBody()->SetAwake(false);
+			//}
+
+			// Get the next contact point.
+			contact_ = contact_->GetNext();
+		}
+	}
+
+}
+
 void Level::HandleLevelObjects(float dt)
 {
 	
@@ -107,6 +193,29 @@ void Level::HandleLevelObjects(float dt)
 						// We need to place the ball in the server position.
 						if (position_update.id == ObjectID::ball)
 						{
+							// Checking to see if we have a new score from the server.
+							if (position_update.red_score > level_generator_.GetRedTeamScore())
+							{
+								//if (position_update.red_score == 3)
+								//{
+								//	level_generator_.SetFinished(true);
+								//}
+
+								UpdateTheScore(position_update.red_score, level_generator_.GetPreviousRedTeamScore(), level_generator_.red_convert_, true);
+								//UpdateTheScoreboard();
+							}
+							
+							if (position_update.blue_score > level_generator_.GetBlueTeamScore())
+							{
+								//if (position_update.blue_score == 3)
+								//{
+								//	level_generator_.SetFinished(true);
+								//}
+
+								UpdateTheScore(position_update.blue_score, level_generator_.GetPreviousBlueTeamScore(), level_generator_.blue_convert_, false);
+								//UpdateTheScoreboard();
+							}
+
 							// Place the ball into the correct position.
 							dynamic_rectangle->TranslateBody(position_update.x, position_update.y);
 						}
@@ -227,7 +336,6 @@ void Level::DataResponse(sf::Packet& data, DynamicBodyRectangle& object, float d
 
 void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
 {
-	//PositionUpdate position_update;
 
 	// Move the body up.
 	if (player.GetInput().up)
@@ -267,12 +375,6 @@ void Level::CorrectPositions(float dt)
 			// Interpolate the other player.
 			other_player_.Interpolate(*dynamic_rectangle, *network_, dt);
 		}
-		//// If the object is a ball.
-		//else if (object->GetID() == ObjectID::ball)
-		//{
-		//	// Interpolate the ball.
-		//	ball_.Calculate(*object, *network_);
-		//}
 	}
 
 }
@@ -280,15 +382,13 @@ void Level::CorrectPositions(float dt)
 void Level::Update(float dt)
 {
 
-	//// If we are not currently interpolating the other player's position.
-	//if (!other_player_.IsInterpolating())
-	//{
-	//	// Provide the appropriate data response for the player, depending on the package that they have received.
-	//	DataResponse(network_->GetData(), *dynamic_rectangle, dt);
-	//}
+	if ((level_generator_.GetRedTeamScore() == 3) || (level_generator_.GetBlueTeamScore() == 3))
+	{
+		level_generator_.SetFinished(true);
+	}
 
+	CollisionTest();
 	CorrectPositions(dt);
 	HandleLevelObjects(dt);
-	//CollisionTest();
-
+	
 }
