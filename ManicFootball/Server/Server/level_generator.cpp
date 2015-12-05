@@ -13,8 +13,8 @@ void LevelGenerator::Init(b2World* world, sf::Font& font, sf::Vector2f& game_scr
 
 	// Initialising the level generator attributes.
 	finished_ = false;								// The match has not yet finished.
-	red_team_score_ = 2;							// The current score of the red team.
-	blue_team_score_ = 2;							// The current score of the blue team.
+	red_team_score_ = 0;							// The current score of the red team.
+	blue_team_score_ = 0;							// The current score of the blue team.
 	previous_red_team_score_ = red_team_score_;		// The current previous score of the red team.
 	previous_blue_team_score_ = blue_team_score_;	// The current previous score of the blue team.
 	red_convert_ << red_team_score_;				// Places the textual representation of the red team score integer into red_convert_.
@@ -209,11 +209,14 @@ void LevelGenerator::Clear()
 
 	// Destroying the fixtures that were created during the set up of the text file levels.
 	// This means that there will be no random collisions in the level.
-	for (std::vector<GameObject*>::iterator level_object = level_objects_.begin(); level_object != level_objects_.end(); level_object++)
+	for (auto& level_object : level_objects_)
 	{
-		(**level_object).GetBody()->DestroyFixture((**level_object).GetBody()->GetFixtureList());
-		(**level_object).~GameObject();
-		world_->DestroyBody((**level_object).GetBody());
+		level_object->GetBody()->DestroyFixture(level_object->GetBody()->GetFixtureList());
+		
+		delete level_object;
+		level_object = nullptr;
+		//level_object->~GameObject();
+		//world_->DestroyBody(level_object->GetBody());
 	}
 
 	// If there are objects in the level.
@@ -222,6 +225,12 @@ void LevelGenerator::Clear()
 		// Remove all of the objects from the level objects vector.
 		level_objects_.clear();
 	}
+
+	// Clearing out the previous scores.
+	red_convert_.clear();
+	red_convert_.str("");
+	blue_convert_.clear();
+	blue_convert_.str("");
 
 	// If there is a set of scores stored in the level.
 	if (!scores_.empty())

@@ -55,26 +55,26 @@ State* StartState::HandleInput()
 			// Check to see if the client is now ready.
 			if (network_->ReceivedReadyMessage())
 			{
-				// Initially set to blocking-mode.
+				// Initially set to non blocking-mode.
 				//network_->GetConnection().GetSocket()->setBlocking(false);
 
 				// Continue with the game.
 				return new LevelState(*this);
 			}
 		}
-		// Otherwise, we have not received a starting message.
-		else
-		{
-			// Return to the main menu.
-			return new MenuState(*this);
-		}
+		//// Otherwise, we have not received a starting message.
+		//else
+		//{
+		//	// Return to the main menu.
+		//	return new MenuState(*this);
+		//}
 	}
-	// Otherwise, we have not connected to the server.
-	else
-	{
-		// Return to the main menu.
-		return new MenuState(*this);
-	}
+	//// Otherwise, we have not connected to the server.
+	//else
+	//{
+	//	// Return to the main menu.
+	//	return new MenuState(*this);
+	//}
 
 	// Returns nothing because there has been no input from the player yet.
 	return nullptr;

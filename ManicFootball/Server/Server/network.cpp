@@ -33,6 +33,8 @@ void Network::AcceptConnection(sf::TcpSocket& client_socket, bool team, sf::Cloc
 	// If the array index incrementer is less than the size of the array.
 	if (connected_clients_ < sockets_.size())
 	{
+		//client_socket.setBlocking(false);
+
 		// Place the client sockets into the sockets array.
 		sockets_[connected_clients_] = &client_socket;
 

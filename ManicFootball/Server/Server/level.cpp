@@ -1,6 +1,7 @@
 #include "level.h"
 
-Level::Level() : world_(nullptr),
+Level::Level() : position_update_needed_(false),
+	world_(nullptr),
 	font_(nullptr),
 	screen_resolution_(nullptr),
 	clock_(nullptr),
@@ -20,6 +21,11 @@ void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resol
 	font_ = &font;									// Access to the game font.
 	clock_ = &game_clock;							// Access to the game clock.
 	network_ = &network;							// Access to the game network.
+
+	/*for (auto& client_sockets : network_->GetClientSockets())
+	{
+		client_sockets->setBlocking(false);
+	}*/
 
 	// Creating the level.
 	level_generator_.Init(world, font, game_screen_resolution);
@@ -121,10 +127,19 @@ void Level::CollisionTest()
 				UpdateTheScoreboard();
 
 				// If the blue team has reached three goals.
-				if (level_generator_.GetBlueTeamScore() == 3)
+				if (level_generator_.GetBlueTeamScore() == 1)
 				{
 					// The match has now finished.
 					level_generator_.SetFinished(true);
+
+					for (auto& client_socket : network_->GetClientSockets())
+					{
+						FinishMessage finish_message;
+						finish_message.finished = true;
+						finish_message.time = clock_->getElapsedTime().asMilliseconds();
+
+						network_->SendFinishMessageToClients(*client_socket, finish_message);
+					}
 				}
 			}
 			// Otherwise, if the ball has collided with the blue team's net.
@@ -143,10 +158,19 @@ void Level::CollisionTest()
 				UpdateTheScoreboard();
 
 				// If the red team has reached three goals.
-				if (level_generator_.GetRedTeamScore() == 3)
+				if (level_generator_.GetRedTeamScore() == 1)
 				{
 					// The match has now finished.
 					level_generator_.SetFinished(true);
+
+					for (auto& client_socket : network_->GetClientSockets())
+					{
+						FinishMessage finish_message;
+						finish_message.finished = true;
+						finish_message.time = clock_->getElapsedTime().asMilliseconds();
+
+						network_->SendFinishMessageToClients(*client_socket, finish_message);
+					}
 				}
 			}
 
@@ -182,13 +206,6 @@ void Level::HandleLevelObjects(float dt)
 					{
 						DataResponse(*network_->GetClientSockets()[1], network_->GetData(), *dynamic_rectangle, dt);
 					}
-					
-					//// If 4 seconds have passed.
-					//if ((clock_->getElapsedTime().asMilliseconds() % 4000) == 0)
-					//{
-					//	// Update the position of player one for player two.
-					//	UpdatePositions(*network_->GetClientSockets()[1], *dynamic_rectangle);
-					//}
 				}
 				else if (dynamic_rectangle->GetID() == ObjectID::playerTwo)
 				{
@@ -197,13 +214,6 @@ void Level::HandleLevelObjects(float dt)
 					{
 						DataResponse(*network_->GetClientSockets()[0], network_->GetData(), *dynamic_rectangle, dt);
 					}
-
-					//// If 4 seconds have passed.
-					//if ((clock_->getElapsedTime().asMilliseconds() % 4000) == 0)
-					//{
-					//	// Update the position of player one for player two.
-					//	UpdatePositions(*network_->GetClientSockets()[0], *dynamic_rectangle);
-					//}
 				}
 				else if (dynamic_rectangle->GetID() == ObjectID::ball)
 				{
@@ -233,15 +243,7 @@ void Level::DataResponse(sf::TcpSocket& client_socket, sf::Packet& data, Dynamic
 
 	// Add in additional structs here for any further information.
 	FinishMessage finish_message;
-	//PositionUpdate position_update;
-
-	//// If 4 seconds have passed.
-	//if ((clock_->getElapsedTime().asMilliseconds() % 4000) == 0)
-	//{
-	//	// Update the position of player one for player two.
-	//	UpdatePositions(client_socket, object);
-	//}
-
+	
 	// If the data should contain input.
 	if (data >> object.GetInput())
 	{
@@ -258,18 +260,6 @@ void Level::DataResponse(sf::TcpSocket& client_socket, sf::Packet& data, Dynamic
 		// End the level on the server.
 		level_generator_.SetFinished(true);
 	}
-	//// Otherwise, if the data should contain a position update message.
-	//else if (data >> position_update)
-	//{
-	//	// Place in the server position values.
-	//	position_update.x = object.GetPosition().x;
-	//	position_update.y = object.GetPosition().y;
-	//	position_update.id = object.GetID();
-	//	position_update.time = clock_->getElapsedTime().asMilliseconds();
-
-	//	// Send the interpolated positions to the other client.
-	//	network_->SendDeadReckoningToClients(client_socket, position_update);
-	//}
 
 }
 
@@ -318,6 +308,6 @@ void Level::Update(float dt)
 {
 
 	HandleLevelObjects(dt);
-	//CollisionTest();
+	CollisionTest();
 
 }

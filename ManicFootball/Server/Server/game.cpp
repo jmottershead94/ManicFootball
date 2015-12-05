@@ -43,6 +43,9 @@ Game::~Game()
 void Game::StartAcceptingConnections()
 {
 
+	/*player_one_socket_.setBlocking(false);
+	player_two_socket_.setBlocking(false);*/
+
 	// Accept connections from two clients.
 	network_.AcceptConnection(player_one_socket_, true, clock_);
 	network_.AcceptConnection(player_two_socket_, false, clock_);
@@ -53,10 +56,6 @@ void Game::StartAcceptingConnections()
 		// Check to see if the clients are ready to play a match.
 		if (network_.ConnectionsAreReady())
 		{
-			// Initially set to blocking mode.
-			/*network_.GetClientSockets()[0]->setBlocking(false);
-			network_.GetClientSockets()[1]->setBlocking(false);*/
-
 			// Setting up the game window with variable screen resolution.
 			window_ = new sf::RenderWindow(sf::VideoMode((unsigned int)screen_resolution_.x, (unsigned int)screen_resolution_.y), "Manic Football");
 
@@ -75,20 +74,27 @@ void Game::StartAcceptingConnections()
 void Game::CheckIfLevelHasFinished()
 {
 
-	//// If the current match has finished, or any of the clients have disconnected from the server.
-	//if (level_.GetLevelGenerator().HasFinished())
-	//	//|| level_.GetNetwork().DisconnectingClients(*level_.GetNetwork().GetClientSockets()[0])
-	//	//|| level_.GetNetwork().DisconnectingClients(*level_.GetNetwork().GetClientSockets()[1]))
-	//{
-	//	// Clear the level.
-	//	level_.GetLevelGenerator().Clear();
+	// If the current match has finished, or any of the clients have disconnected from the server.
+	if (level_.GetLevelGenerator().HasFinished())
+		//|| level_.GetNetwork().DisconnectingClients(*level_.GetNetwork().GetClientSockets()[0])
+		//|| level_.GetNetwork().DisconnectingClients(*level_.GetNetwork().GetClientSockets()[1]))
+	{
+		// Resetting the objects.
+		level_.GetLevelGenerator().Reset();
 
-	//	// Terminate all of the connections here...
-	//	window_->close();
+		// Clear the level.
+		level_.GetLevelGenerator().Clear();
 
-	//	// Look out for anymore connections.
-	//	StartAcceptingConnections();
-	//}
+		// Disconnect both clients.
+		network_.GetClientSockets()[0]->disconnect();
+		network_.GetClientSockets()[1]->disconnect();
+
+		// Terminate all of the connections here...
+		window_->close();
+
+		// Look out for anymore connections.
+		StartAcceptingConnections();
+	}
 
 }
 

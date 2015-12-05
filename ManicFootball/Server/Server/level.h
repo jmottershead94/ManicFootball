@@ -46,6 +46,7 @@ class Level
 	private:
 		// Attributes.
 		const b2Vec2 kPlayerMovementForce = {2.0f, 10.0f};		// The force which the players will move at.
+		bool position_update_needed_;							// Whether or not the server needs to send out position correction messages.
 		b2World* world_;										// Points to the box2D world.
 		std::vector < double > player_one_x_, player_one_y_;	// Will be used for DR.
 		std::vector < double > player_two_x_, player_two_y_;	// Will be used for DR.

@@ -5,7 +5,7 @@ Connection::Connection()
 
 	// Initialising a new TCP socket.
 	socket_ = new sf::TcpSocket();
-
+	
 }
 
 Connection::~Connection()
@@ -15,6 +15,8 @@ Connection::~Connection()
 // This will tell us whether or not the client has connected to the server yet.
 bool Connection::ToServer()
 {
+
+	//socket_->setBlocking(false);
 
 	// Use the created socket and connect to 127.0.0.1 (this machine) on port 5000, and use the default time out for this machine.
 	sf::Socket::Status status = socket_->connect(kIPAddress, kPort);
