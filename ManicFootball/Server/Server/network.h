@@ -36,16 +36,16 @@ class Network : public NetworkHandler
 		
 		// Getters.
 		// This will return the current number of clients in the network.
-		inline unsigned int GetNumberOfConnectedClients()								{ return connected_clients_; }
+		inline unsigned int& GetNumberOfConnectedClients()									{ return connected_clients_; }
 
 		// This will return whether or not the server has all of the connections it can have.
-		inline bool IsReady()															{ return ready_; }
+		inline bool& IsReady()																{ return ready_; }
 
 		// This will return all of the sockets that we have.
-		inline std::array<sf::TcpSocket*, MAX_NUMBER_OF_CONNECTIONS> GetClientSockets() { return sockets_; }
+		inline std::array<sf::TcpSocket*, MAX_NUMBER_OF_CONNECTIONS>& GetClientSockets()	{ return sockets_; }
 
 		// This will return the current data that we can have access to.
-		inline sf::Packet& GetData()													{ return data_; }
+		inline sf::Packet& GetData()														{ return data_; }
 
 	private:
 		// Attributes.

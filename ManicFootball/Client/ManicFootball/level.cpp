@@ -200,9 +200,13 @@ void Level::HandleLevelObjects(float dt)
 				// Casting this to a dynamic body rectangle in order to update the sprites position for level object.
 				DynamicBodyRectangle* dynamic_rectangle = static_cast<DynamicBodyRectangle*>(level_object);
 				
-				// Provide the appropriate data response for the player, depending on the package that they have received.
-				DataResponse(network_->GetData(), *dynamic_rectangle, dt);
-				
+				// If we are not currently interpolating the other player's position.
+				if (!other_player_.IsInterpolating())
+				{
+					// Provide the appropriate data response for the player, depending on the package that they have received.
+					DataResponse(network_->GetData(), *dynamic_rectangle, dt);
+				}
+
 				// Update the other player.
 				dynamic_rectangle->Update(dt);
 			}
@@ -230,6 +234,8 @@ void Level::DataResponse(sf::Packet& data, DynamicBodyRectangle& object, float d
 	FinishMessage finish_message;
 	PositionUpdate position_update;
 
+	
+	
 	// If the data we have received is input data.
 	if (network_->ReceivedInputMessageFromServer())
 	{
@@ -243,8 +249,8 @@ void Level::DataResponse(sf::Packet& data, DynamicBodyRectangle& object, float d
 			// Filling the position update every frame.
 			position_update.x = object.GetPosition().x;
 			position_update.y = object.GetPosition().y;
-			position_update.time = network_->GetClock().getElapsedTime().asMilliseconds() + network_->GetLagOffset();
-			
+			position_update.time = (object.GetInput().time + network_->GetLagOffset());
+
 			// Place the positions in the vector of positions for interpolation/prediction.
 			other_player_.UpdateVectors(position_update.x, position_update.y, position_update.time);
 		}
@@ -259,24 +265,24 @@ void Level::DataResponse(sf::Packet& data, DynamicBodyRectangle& object, float d
 			level_generator_.SetFinished(true);
 		}
 	}
-	// Otherwise, if we have received some position updates.
-	else if (network_->ReceivedDeadReckoningMessageFromServer())
-	{
-		// See if we can place the data into a position update struct.
-		if (network_->GetData() >> position_update)
-		{
-			// Place the positions in the vector of positions for interpolation/prediction.
-			if (position_update.id == ObjectID::otherPlayer)
-			{
-				position_update.time = network_->GetClock().getElapsedTime().asMilliseconds() + network_->GetLagOffset();
-				other_player_.UpdateVectors(position_update.x, position_update.y, position_update.time);
-			}
-			else
-			{
-				network_->GetData() << position_update;
-			}
-		}
-	}
+	//// Otherwise, if we have received some position updates.
+	//else if (network_->ReceivedDeadReckoningMessageFromServer())
+	//{
+	//	// See if we can place the data into a position update struct.
+	//	if (network_->GetData() >> position_update)
+	//	{
+	//		// Place the positions in the vector of positions for interpolation/prediction.
+	//		if (position_update.id == ObjectID::otherPlayer)
+	//		{
+	//			/*position_update.time += network_->GetLagOffset();
+	//			other_player_.UpdateVectors(position_update.x, position_update.y, position_update.time);*/
+	//		}
+	//		else
+	//		{
+	//			network_->GetData() << position_update;
+	//		}
+	//	}
+	//}
 	
 }
 
@@ -289,7 +295,6 @@ void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
 	{
 		player.GetBody()->SetAwake(true);
 		player.GetBody()->ApplyLinearImpulse(b2Vec2(0.0f, player.GetMovementForce().y * dt), player.GetBody()->GetWorldCenter(), player.GetBody()->IsAwake());
-		
 	}
 
 	// Move the body to the right.
@@ -317,9 +322,11 @@ void Level::CorrectPositions(float dt)
 		// If the object is the other player.
 		if (object->GetID() == ObjectID::otherPlayer)
 		{
+			// Casting this to a dynamic body rectangle in order to update the sprites position for level object.
+			DynamicBodyRectangle* dynamic_rectangle = static_cast<DynamicBodyRectangle*>(object);
+
 			// Interpolate the other player.
-			//other_player_.Calculate(*object, *network_);
-			other_player_.CalculateTest(*object, *network_, dt);
+			other_player_.Interpolate(*dynamic_rectangle, *network_, dt);
 		}
 		//// If the object is a ball.
 		//else if (object->GetID() == ObjectID::ball)

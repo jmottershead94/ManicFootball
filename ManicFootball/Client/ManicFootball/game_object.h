@@ -23,7 +23,7 @@ class GameObject
 		GameObject();
 		~GameObject();
 		void Init(sf::Vector2f position, sf::Vector2f dimensions, ObjectID object_id, bool is_rectangle);
-		void TranslateBody(float x, float y);
+		void TranslateBody(float& x, float& y);
 
 		// Setters.
 		// This will set the remove flag.

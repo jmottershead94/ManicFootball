@@ -22,10 +22,10 @@ void GameObject::Init(sf::Vector2f position, sf::Vector2f dimensions, ObjectID o
 
 }
 
-void GameObject::TranslateBody(float x, float y)
+void GameObject::TranslateBody(float& x, float& y)
 {
 
 	SetPosition(sf::Vector2f(x, y));
-	body_->SetTransform(b2Vec2(FRAMEWORK_BOX2D_POS_X(position_.x), FRAMEWORK_BOX2D_POS_Y(position_.y)), 0.0f);
+	body_->SetTransform(b2Vec2(FRAMEWORK_BOX2D_POS_X(x), FRAMEWORK_BOX2D_POS_Y(y)), 0.0f);
 
 }

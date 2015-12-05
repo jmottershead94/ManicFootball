@@ -32,8 +32,8 @@ class Level
 		void CollisionTest();
 		void HandleLevelObjects(float dt);
 		void DataResponse(sf::TcpSocket& client_socket, sf::Packet& data, DynamicBodyRectangle& object, float dt);
-		void CompareBallPositions();
 		void ApplyPlayerInput(DynamicBodyRectangle& player, float dt);
+		void UpdatePositions(sf::TcpSocket& client_socket, DynamicBodyRectangle& player);
 		void Update(float dt);
 
 		// Getters.

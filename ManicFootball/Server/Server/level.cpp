@@ -177,19 +177,33 @@ void Level::HandleLevelObjects(float dt)
 				// If the dynamic object is player one.
 				if (dynamic_rectangle->GetID() == ObjectID::playerOne)
 				{
-					// Check to see if we have received any input data for player one.
+					// Check to see if we have received any data for player one.
 					if (network_->ReceivedData(*network_->GetClientSockets()[0], network_->GetData()))
 					{
 						DataResponse(*network_->GetClientSockets()[1], network_->GetData(), *dynamic_rectangle, dt);
 					}
+					
+					//// If 4 seconds have passed.
+					//if ((clock_->getElapsedTime().asMilliseconds() % 4000) == 0)
+					//{
+					//	// Update the position of player one for player two.
+					//	UpdatePositions(*network_->GetClientSockets()[1], *dynamic_rectangle);
+					//}
 				}
 				else if (dynamic_rectangle->GetID() == ObjectID::playerTwo)
 				{
-					// Check to see if we have received any input data for player one.
+					// Check to see if we have received any data for player two.
 					if (network_->ReceivedData(*network_->GetClientSockets()[1], network_->GetData()))
 					{
 						DataResponse(*network_->GetClientSockets()[0], network_->GetData(), *dynamic_rectangle, dt);
 					}
+
+					//// If 4 seconds have passed.
+					//if ((clock_->getElapsedTime().asMilliseconds() % 4000) == 0)
+					//{
+					//	// Update the position of player one for player two.
+					//	UpdatePositions(*network_->GetClientSockets()[0], *dynamic_rectangle);
+					//}
 				}
 				else if (dynamic_rectangle->GetID() == ObjectID::ball)
 				{
@@ -219,16 +233,23 @@ void Level::DataResponse(sf::TcpSocket& client_socket, sf::Packet& data, Dynamic
 
 	// Add in additional structs here for any further information.
 	FinishMessage finish_message;
-	PositionUpdate position_update;
+	//PositionUpdate position_update;
 
-	// If the data contains input.
+	//// If 4 seconds have passed.
+	//if ((clock_->getElapsedTime().asMilliseconds() % 4000) == 0)
+	//{
+	//	// Update the position of player one for player two.
+	//	UpdatePositions(client_socket, object);
+	//}
+
+	// If the data should contain input.
 	if (data >> object.GetInput())
 	{
 		// Process input data.
 		ApplyPlayerInput(object, dt);
 		network_->SendInputToClients(client_socket, object.GetInput());
 	}
-	// Otherwise, if the data contains a finish message.
+	// Otherwise, if the data should contain a finish message.
 	else if (data >> finish_message)
 	{
 		// Send the message out to the other clients.
@@ -237,19 +258,18 @@ void Level::DataResponse(sf::TcpSocket& client_socket, sf::Packet& data, Dynamic
 		// End the level on the server.
 		level_generator_.SetFinished(true);
 	}
-	// Otherwise, if the data contains a position update message.
-	else if (data >> position_update)
-	{
-		// Send the interpolated positions to the other client.
-		network_->SendDeadReckoningToClients(client_socket, position_update);
-	}
+	//// Otherwise, if the data should contain a position update message.
+	//else if (data >> position_update)
+	//{
+	//	// Place in the server position values.
+	//	position_update.x = object.GetPosition().x;
+	//	position_update.y = object.GetPosition().y;
+	//	position_update.id = object.GetID();
+	//	position_update.time = clock_->getElapsedTime().asMilliseconds();
 
-}
-
-void Level::CompareBallPositions()
-{
-
-
+	//	// Send the interpolated positions to the other client.
+	//	network_->SendDeadReckoningToClients(client_socket, position_update);
+	//}
 
 }
 
@@ -276,6 +296,21 @@ void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
 		player.GetBody()->SetAwake(true);
 		player.GetBody()->ApplyLinearImpulse(b2Vec2(((kPlayerMovementForce.x * -1.0f) * dt), 0.0f), player.GetBody()->GetWorldCenter(), player.GetBody()->IsAwake());
 	}
+
+}
+
+void Level::UpdatePositions(sf::TcpSocket& client_socket, DynamicBodyRectangle& player)
+{
+
+	// Get the current server position of the player.
+	PositionUpdate position_update;
+	position_update.x = player.GetPosition().x;
+	position_update.y = player.GetPosition().y;
+	position_update.id = player.GetID();
+	position_update.time = clock_->getElapsedTime().asMilliseconds();
+
+	// Send the updated positions to the other client.
+	network_->SendDeadReckoningToClients(client_socket, position_update);
 
 }
 

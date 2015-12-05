@@ -34,7 +34,7 @@ bool Network::ReceivedStartingMessage()
 
 			// Calculate the lag offset.
 			// When we get a message from the server add on this time.
-			lag_offset_ = lag - (starting_message.time + half_round_trip_time);
+			lag_offset_ = abs(lag - (starting_message.time + half_round_trip_time));
 
 			// FOR TESTING.
 			std::cout << "The lag offset is = " << lag_offset_ << std::endl;
