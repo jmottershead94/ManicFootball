@@ -82,7 +82,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="connection.cpp" />
-    <ClCompile Include="dynamic_body_circle.cpp" />
     <ClCompile Include="dynamic_body_rectangle.cpp" />
     <ClCompile Include="end_match_state.cpp" />
     <ClCompile Include="game.cpp" />
@@ -97,20 +96,17 @@
     <ClCompile Include="network.cpp" />
     <ClCompile Include="network_handler.cpp" />
     <ClCompile Include="player.cpp" />
-    <ClCompile Include="sensor.cpp" />
     <ClCompile Include="start_state.cpp" />
     <ClCompile Include="state.cpp" />
     <ClCompile Include="static_body.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="connection.h" />
-    <ClInclude Include="dynamic_body_circle.h" />
     <ClInclude Include="dynamic_body_rectangle.h" />
     <ClInclude Include="end_match_state.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="box2d_conversions.h" />
     <ClInclude Include="game_object.h" />
-    <ClInclude Include="category.h" />
     <ClInclude Include="interpolation.h" />
     <ClInclude Include="level_generator.h" />
     <ClInclude Include="tk_spline.h" />
@@ -123,7 +119,6 @@
     <ClInclude Include="init_state.h" />
     <ClInclude Include="menu_state.h" />
     <ClInclude Include="player.h" />
-    <ClInclude Include="sensor.h" />
     <ClInclude Include="start_state.h" />
     <ClInclude Include="state.h" />
     <ClInclude Include="static_body.h" />

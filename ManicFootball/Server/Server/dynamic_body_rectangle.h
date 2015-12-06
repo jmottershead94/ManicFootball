@@ -18,8 +18,6 @@ class DynamicBodyRectangle : public GameObject
 
 	public:
 		// Methods.
-		DynamicBodyRectangle();
-		~DynamicBodyRectangle();
 		void Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world, ObjectID object_id, const sf::Color colour, float bounciness);
 		void Update(float dt);
 
@@ -29,7 +27,7 @@ class DynamicBodyRectangle : public GameObject
 
 	private:
 		// Attributes.
-		Input input_;
+		Input input_;			// A struct for our input data.
 
 };
 

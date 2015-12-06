@@ -21,7 +21,6 @@ class NetworkHandler : protected Utilities
 		// Methods.
 		bool SendData(sf::Packet& data);
 		bool ReceivedData(sf::Packet& data);
-		bool Disconnected();
 
 		// Setters.
 		// Set the current time value for the client.
@@ -37,17 +36,10 @@ class NetworkHandler : protected Utilities
 		// This will return the current time value for the client.
 		inline sf::Int32& GetCurrentTime()  { return current_time_; }
 
-		// Pure virtual methods.
-		// Every network for a game using this "framework" must have these functions implemented.
-		virtual bool ReceivedStartingMessage() = 0;
-		virtual bool ReceivedReadyMessage() = 0;
-		virtual void SendInputMessageToServer(Input& client_input) = 0;
-
 	private:
 		// Attributes.
-		Connection connection_;
-		sf::Time game_time_;
-		sf::Int32 current_time_;
+		Connection connection_;		// The current connection we are using.
+		sf::Int32 current_time_;	// The current game time which will be in milliseconds.
 
 };
 

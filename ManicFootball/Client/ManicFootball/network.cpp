@@ -1,13 +1,15 @@
+// Include header file here.
 #include "network.h"
 
-Network::Network()
-{
-}
-
-Network::~Network()
-{
-}
-
+//////////////////////////////////////////////////////////
+//======================================================//
+//				ReceivedStartingMessage					//
+//======================================================//
+// This will be our specific response for receiving a	//
+// starting message from the server.					//
+// Here we will find out what team we have been			//
+// assigned, and calculate the lag offset.				//
+//////////////////////////////////////////////////////////
 bool Network::ReceivedStartingMessage()
 {
 
@@ -28,7 +30,7 @@ bool Network::ReceivedStartingMessage()
 			sf::Int32 lag = GetClock().getElapsedTime().asMilliseconds();
 			sf::Int32 half_round_trip_time = (lag /2);
 			
-			// FOR TESTING.
+			// Output the current lag statistics to the client.
 			std::cout << "The lag client side is = " << lag << std::endl;
 			std::cout << "The lag server side is = " << half_round_trip_time << std::endl;
 
@@ -36,7 +38,7 @@ bool Network::ReceivedStartingMessage()
 			// When we get a message from the server add on this time.
 			lag_offset_ = abs(lag - (starting_message.time + half_round_trip_time));
 
-			// FOR TESTING.
+			// Output the current 3-way handshake lag offset to the client.
 			std::cout << "The lag offset is = " << lag_offset_ << std::endl;
 
 			// Store what team the player will be on.
@@ -61,6 +63,15 @@ bool Network::ReceivedStartingMessage()
 
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//				ReceivedReadyMessage					//
+//======================================================//
+// This will be our specific response for receiving a	//
+// ready message from the server.						//
+// This will notify us when there is another player		//
+// that has connected to the server.					//
+//////////////////////////////////////////////////////////
 bool Network::ReceivedReadyMessage()
 {
 
@@ -99,6 +110,15 @@ bool Network::ReceivedReadyMessage()
 
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//				SendInputMessageToServer				//
+//======================================================//
+// This will be our specific response for sending an	//
+// input message to the server.							//
+// We will place our input data into the packet, and	//
+// then attempt to send the packet off to the server.	//
+//////////////////////////////////////////////////////////
 void Network::SendInputMessageToServer(Input& client_input)
 {
 	
@@ -116,6 +136,15 @@ void Network::SendInputMessageToServer(Input& client_input)
 
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//			ReceivedInputMessageFromServer				//
+//======================================================//
+// This will be our specific response for receiving an	//
+// input message from the server.						//
+// Here we will extract the input data from the packet,	//
+// and then we can use the data for our level update.	//
+//////////////////////////////////////////////////////////
 bool Network::ReceivedInputMessageFromServer()
 {
 
@@ -162,28 +191,21 @@ bool Network::ReceivedInputMessageFromServer()
 
 }
 
-void Network::SendDeadReckoningMessageToServer(PositionUpdate& client_position)
-{
-
-	// Clearing the packet of any data.
-	data_.clear();
-
-	// Placing client input into some data for transferring.
-	data_ << client_position;
-
-	// If we can successfully send the data.
-	if (SendData(data_))
-	{
-		//std::cout << "Data has been sent to the server." << std::endl;
-	}
-
-}
-
-bool Network::ReceivedDeadReckoningMessageFromServer()
+//////////////////////////////////////////////////////////
+//======================================================//
+//			ReceivedServerUpdateMessageFromServer		//
+//======================================================//
+// This will be our specific response for receiving a	//
+// server update message from the server.				//
+// Here we will extract the server update data from the	//
+// packet, and then we can use the data for our level	//
+// update.												//
+//////////////////////////////////////////////////////////
+bool Network::ReceivedServerUpdateMessageFromServer()
 {
 
 	// This is the struct that we will be passing the data into from the server.
-	PositionUpdate position_update;
+	ServerUpdate position_update;
 
 	// Clearing the packet of any data.
 	data_.clear();
@@ -221,69 +243,6 @@ bool Network::ReceivedDeadReckoningMessageFromServer()
 	}
 
 	// We have not received any input yet.
-	return false;
-
-}
-
-void Network::SendFinishMessageToServer(FinishMessage& client_finished)
-{
-
-	// Clearing the packet of any data.
-	data_.clear();
-
-	// Placing client input into some data for transferring.
-	data_ << client_finished;
-
-	// If we can successfully send the data.
-	if (SendData(data_))
-	{
-		//std::cout << "Data has been sent to the server." << std::endl;
-	}
-
-}
-
-bool Network::ReceivedFinishMessageFromServer()
-{
-
-	// This is the struct that we will be passing the data into from the server.
-	FinishMessage finish_message;
-
-	// Clearing the packet of any data.
-	data_.clear();
-
-	// If we have received data from the server.
-	if (ReceivedData(data_))
-	{
-		// Check to see if it is okay to read the data.
-		if (data_ >> finish_message)
-		{
-			// Pass this time along with the message.
-			sf::Int32 current_time = GetClock().getElapsedTime().asMilliseconds() + lag_offset_;
-			SetCurrentTime(current_time);
-
-			// Add on the offset gathered from the trip to the server.
-			finish_message.time = GetCurrentTime();
-
-			// Place the input data back into the packet data to be used by the client.
-			data_ << finish_message;
-
-			// We have received some finish message data.
-			return true;
-		}
-		// Otherwise, we could not read the data.
-		else
-		{
-			// ERROR: The packet is not okay to read.
-			DisplayErrorMessage(kDataReadingErrorMessage);
-
-			// We could not read the finish message data.
-			return false;
-		}
-
-		return false;
-	}
-
-	// We have not received any finish message data yet.
 	return false;
 
 }

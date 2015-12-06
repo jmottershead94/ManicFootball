@@ -82,7 +82,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="connection.cpp" />
-    <ClCompile Include="dynamic_body_circle.cpp" />
     <ClCompile Include="dynamic_body_rectangle.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="game_object.cpp" />
@@ -95,9 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="box2d_conversions.h" />
-    <ClInclude Include="category.h" />
     <ClInclude Include="connection.h" />
-    <ClInclude Include="dynamic_body_circle.h" />
     <ClInclude Include="dynamic_body_rectangle.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="game_object.h" />

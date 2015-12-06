@@ -1,8 +1,13 @@
 // Include header file here.
 #include "game.h"
 
-// This will initialise the game window.
-Game::Game(const float game_screen_width, const float game_screen_height) :
+//////////////////////////////////////////////////////////
+//======================================================//
+//					Constructor							//
+//======================================================//
+// This will initialise the game window.				//
+//////////////////////////////////////////////////////////
+Game::Game(const int game_screen_width, const int game_screen_height) :
 	world_(nullptr),
 	window_(nullptr)
 {
@@ -14,7 +19,7 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 	// Handling the font loading.
 	if (!font_.loadFromFile("Resources/Fonts/heavy_data.ttf"))
 	{
-		// Error.
+		// ERROR: We have not found our desired font file.
 		std::cout << "Font file not found." << std::endl;
 	}
 
@@ -26,9 +31,15 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 	
 	// Accept connections from clients.
 	StartAcceptingConnections();
+
 }
 
-// This will clean up any pointers.
+//////////////////////////////////////////////////////////
+//======================================================//
+//					Destructor							//
+//======================================================//
+// This will clean up any pointers in our game.			//
+//////////////////////////////////////////////////////////
 Game::~Game()
 {
 	
@@ -40,11 +51,15 @@ Game::~Game()
 
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//				StartAcceptingConnections				//
+//======================================================//
+// This will accept connections from two clients, and   //
+// if we have two clients, then intialise the level.	//
+//////////////////////////////////////////////////////////
 void Game::StartAcceptingConnections()
 {
-
-	/*player_one_socket_.setBlocking(false);
-	player_two_socket_.setBlocking(false);*/
 
 	// Accept connections from two clients.
 	network_.AcceptConnection(player_one_socket_, true, clock_);
@@ -57,7 +72,7 @@ void Game::StartAcceptingConnections()
 		if (network_.ConnectionsAreReady())
 		{
 			// Setting up the game window with variable screen resolution.
-			window_ = new sf::RenderWindow(sf::VideoMode((unsigned int)screen_resolution_.x, (unsigned int)screen_resolution_.y), "Manic Football");
+			window_ = new sf::RenderWindow(sf::VideoMode(screen_resolution_.x, screen_resolution_.y), "Manic Football");
 
 			// This will lock the frame rate of the game window to 60 fps.
 			window_->setFramerateLimit(kFrameRate);
@@ -69,15 +84,20 @@ void Game::StartAcceptingConnections()
 
 }
 
-// This will check the current state of the match.
-// When someone has won the match.
+//////////////////////////////////////////////////////////
+//======================================================//
+//				CheckIfLevelHasFinished					//
+//======================================================//
+// This will check the current state of the match.		//
+// If someone has won the match then clear the current	//
+// level and disconnect the two clients.				//
+// Then start accepting connections again.				//
+//////////////////////////////////////////////////////////
 void Game::CheckIfLevelHasFinished()
 {
 
 	// If the current match has finished, or any of the clients have disconnected from the server.
 	if (level_.GetLevelGenerator().HasFinished())
-		//|| level_.GetNetwork().DisconnectingClients(*level_.GetNetwork().GetClientSockets()[0])
-		//|| level_.GetNetwork().DisconnectingClients(*level_.GetNetwork().GetClientSockets()[1]))
 	{
 		// Resetting the objects.
 		level_.GetLevelGenerator().Reset();
@@ -89,7 +109,7 @@ void Game::CheckIfLevelHasFinished()
 		network_.GetClientSockets()[0]->disconnect();
 		network_.GetClientSockets()[1]->disconnect();
 
-		// Terminate all of the connections here...
+		// Close the current render window.
 		window_->close();
 
 		// Look out for anymore connections.
@@ -98,7 +118,12 @@ void Game::CheckIfLevelHasFinished()
 
 }
 
-// This will update the game every frame.
+//////////////////////////////////////////////////////////
+//======================================================//
+//						Update							//
+//======================================================//
+// This will update the game every frame.				//
+//////////////////////////////////////////////////////////
 void Game::Update()
 {
 
@@ -132,7 +157,13 @@ void Game::Update()
 
 }
 
-// This will render everything in the game window.
+//////////////////////////////////////////////////////////
+//======================================================//
+//						Render							//
+//======================================================//
+// This will render everything in our current game		//
+// window.												//
+//////////////////////////////////////////////////////////
 void Game::Render()
 {
 

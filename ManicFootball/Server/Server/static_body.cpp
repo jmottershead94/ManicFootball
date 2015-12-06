@@ -3,24 +3,6 @@
 
 //////////////////////////////////////////////////////////
 //======================================================//
-//					Constructor							//
-//======================================================//
-//////////////////////////////////////////////////////////
-StaticBody::StaticBody()
-{
-}
-
-//////////////////////////////////////////////////////////
-//======================================================//
-//					Destructor							//
-//======================================================//
-//////////////////////////////////////////////////////////
-StaticBody::~StaticBody()
-{
-}
-
-//////////////////////////////////////////////////////////
-//======================================================//
 //						Init							//
 //======================================================//
 // This initialise function will set up the body		//
@@ -31,7 +13,7 @@ void StaticBody::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* w
 {
 
 	// Initialising the id and position for the game object.
-	GameObject::Init(position, dimensions, object_id, true);
+	GameObject::Init(position, dimensions, object_id);
 
 	// Setting up the rectangle shape.
 	rectangle_.setPosition(GetPosition());
@@ -52,13 +34,4 @@ void StaticBody::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* w
 	// Setting the connection between game objects and the Box2D body.
 	body_->SetUserData(this);
 
-}
-
-//////////////////////////////////////////////////////////
-//======================================================//
-//						Update							//
-//======================================================//
-//////////////////////////////////////////////////////////
-void StaticBody::Update()
-{
 }

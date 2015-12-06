@@ -1,6 +1,14 @@
+// Jason Mottershead, 1300455.
+
+// Messages header file.
+// This header file will provide a base set of structs that every file can use to pass messages
+// between the client and the server.
+
+// Header guard.
 #ifndef _MESSAGES_H_
 #define _MESSAGES_H_
 
+// Include files here.
 #include <SFML\Network.hpp>
 
 // The structure for the game's starting message.
@@ -8,7 +16,7 @@
 struct StartMessage
 {
 	bool player_team = false;		// What team the player will be on.
-	sf::Int32 time = 0;					// The current game time.
+	sf::Int32 time = 0;				// The current game time.
 };
 
 // The structure for the player's input.
@@ -18,36 +26,19 @@ struct Input
 	bool up = false;				// If the player is pressing up.
 	bool right = false;				// If the player is pressing right.
 	bool left = false;				// If the player is pressing left.
-	sf::Int32 time = 0;					// The current time that the input was given at.
-};
-
-// The structure for player's commands.
-// This will be used to pass in the player class struct of commands.
-struct Commands
-{
-	bool up = false;
-	bool right = false;
-	bool left = false;
+	sf::Int32 time = 0;				// The current time that the input was given at.
 };
 
 // The struct for updating the dynamic object positions.
-// This will be sent to the server for a few seconds, then let prediction do the rest.
-struct PositionUpdate
+// This will be sent to the clients every frame, will be used for interpolation.
+struct ServerUpdate
 {
-	float x = 0.0f;
-	float y = 0.0f;
-	int id = 0;
-	int red_score = 0;
-	int blue_score = 0;
-	sf::Int32 time = 0;
-};
-
-// The struct for updating the finished game.
-// This will be sent once one of the clients has scored 3 goals in their game.
-struct FinishMessage
-{
-	bool finished = false;
-	sf::Int32 time = 0;
+	float x = 0.0f;					// The current x position.
+	float y = 0.0f;					// The current y position.
+	int id = 0;						// The current id number.
+	int red_score = 0;				// The current red team score.
+	int blue_score = 0;				// The current blue team score.
+	sf::Int32 time = 0;				// The current time that the server update was given at.
 };
 
 // Overloading packet operator functions.
@@ -64,17 +55,10 @@ inline sf::Packet& operator <<(sf::Packet& packet, const Input& message)				{ re
 // This will allow me to receive Input data through packets.
 inline sf::Packet& operator >>(sf::Packet& packet, Input& message)						{ return packet >> message.up >> message.right >> message.left >> message.time; }
 
-// This will allow me to send Position Update data through packets.
-inline sf::Packet& operator <<(sf::Packet& packet, const PositionUpdate& message)		{ return packet << message.x << message.y << message.id << message.red_score << message.blue_score << message.time; }
+// This will allow me to send Server Update data through packets.
+inline sf::Packet& operator <<(sf::Packet& packet, const ServerUpdate& message)		{ return packet << message.x << message.y << message.id << message.red_score << message.blue_score << message.time; }
 
-// This will allow me to receive Position Update data through packets.
-inline sf::Packet& operator >>(sf::Packet& packet, PositionUpdate& message)				{ return packet >> message.x >> message.y >> message.id >> message.red_score >> message.blue_score >> message.time; }
-
-// This will allow me to send Finish Message data through packets.
-inline sf::Packet& operator <<(sf::Packet& packet, const FinishMessage& message)		{ return packet << message.finished  << message.time; }
-
-// This will allow me to receive Finish Message data through packets.
-inline sf::Packet& operator >>(sf::Packet& packet, FinishMessage& message)				{ return packet >> message.finished >> message.time; }
-
+// This will allow me to receive Server Update data through packets.
+inline sf::Packet& operator >>(sf::Packet& packet, ServerUpdate& message)				{ return packet >> message.x >> message.y >> message.id >> message.red_score >> message.blue_score >> message.time; }
 
 #endif

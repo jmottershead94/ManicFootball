@@ -1,9 +1,14 @@
+// Jason Mottershead, 1300455.
+// Adapted and changed from the PSVita coursework last year.
+
+// Box2D Conversions header file.
 // This header file helps to convert box2d coordinates into local framework coordinates.
 
 // Header guard.
 #ifndef _BOX2D_CONVERSIONS_H
 #define _BOX2D_CONVERSIONS_H
 
+// Our defined screen width and height.
 #define DISPLAY_WIDTH				1280
 #define DISPLAY_HEIGHT				720
 
@@ -12,7 +17,6 @@
 #define BOX2D_FRAMEWORK_OFFSET_X					0.0f
 #define BOX2D_FRAMEWORK_OFFSET_Y					0.0f
 #define BOX2D_FRAMEWORK_SIZE_OFFSET					0.5f
-#define BOX2D_FRAMEWORK_DYNAMIC_CIRCLE_SIZE			0.3f
 
 // To convert the Box2D coordinates into framework coordinates.
 #define BOX2D_FRAMEWORK_SIZE(s) ((s)*BOX2D_FRAMEWORK_SCALE)

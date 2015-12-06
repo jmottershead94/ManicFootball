@@ -11,7 +11,7 @@ void main()
 {
 
 	// Initialising a game window with a resolution of 1280 x 720.
-	Game game(1280.0f, 720.0f);
+	Game game(1280, 720);
 
 	// The main game loop runs from here.
 	// While the game window is open/in use.

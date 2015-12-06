@@ -10,28 +10,25 @@
 
 // Include files here.
 #include <iostream>
-#include <chrono>
-#include <ctime>
-#include <iomanip>
 #include <Box2D\Box2D.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
 #include "level.h"
 #include "network.h"
 
-// The main class that will render the window.
 class Game
 {
 
 	public:
 		// Methods.
-		Game(const float game_screen_width, const float game_screen_height);
+		Game(const int game_screen_width, const int game_screen_height);
 		~Game();
 		void Update();
 		void Render();
 
 		// Getters.
-		inline sf::RenderWindow* getWindow()	{ return window_; }				// This will return the current game window.
+		// This will return the current game window.
+		inline sf::RenderWindow* getWindow()	{ return window_; }				
 		
 	private:
 		// Attributes.

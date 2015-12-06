@@ -1,13 +1,14 @@
+// Include header file here.
 #include "connection.h"
 
-Connection::Connection()
-{
-}
-
-Connection::~Connection()
-{
-}
-
+//////////////////////////////////////////////////////////
+//======================================================//
+//						Listen							//
+//======================================================//
+// This will make our tcp listener listen our for any	//
+// tcp connections from tcp sockets on port number		//
+// 5000.												//
+//////////////////////////////////////////////////////////
 void Connection::Listen()
 {
 
@@ -25,6 +26,13 @@ void Connection::Listen()
 
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//						Accept							//
+//======================================================//
+// This will attempt to accept a connection from a		//
+// tcp socket.											//
+//////////////////////////////////////////////////////////
 bool Connection::Accept(sf::TcpSocket& client_socket)
 {
 

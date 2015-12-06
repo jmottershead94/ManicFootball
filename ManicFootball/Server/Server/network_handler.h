@@ -21,7 +21,6 @@ class NetworkHandler : protected Utilities
 		// Methods.
 		bool SendData(sf::TcpSocket& client_socket, sf::Packet& data);
 		bool ReceivedData(sf::TcpSocket& client_socket, sf::Packet& data);
-		bool DisconnectingClients(sf::TcpSocket& client_socket);
 
 		// Setters.
 		// Set the current time value for the client.
@@ -36,8 +35,8 @@ class NetworkHandler : protected Utilities
 
 	private:
 		// Attributes.
-		Connection connection_;
-		sf::Int32 current_time_;
+		Connection connection_;		// The current connection we are using.
+		sf::Int32 current_time_;	// The current game time which will be in milliseconds.;
 
 };
 

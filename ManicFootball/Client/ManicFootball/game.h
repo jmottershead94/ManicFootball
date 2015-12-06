@@ -14,19 +14,19 @@
 #include <SFML/Graphics.hpp>
 #include "init_state.h"
 
-// The main class that will render the window.
 class Game
 {
 
 	public:
 		// Methods.
-		Game(const float game_screen_width, const float game_screen_height);
+		Game(const int game_screen_width, const int game_screen_height);
 		~Game();
 		void Update();
 		void Render();
 
 		// Getters.
-		inline sf::RenderWindow* getWindow()	{ return window_; }				// This will return the current game window.
+		// This will return the current game window.
+		inline sf::RenderWindow* getWindow()	{ return window_; }				
 
 	private:
 		// Attributes.
@@ -40,6 +40,7 @@ class Game
 		sf::Vector2f screen_resolution_;
 		State* current_state_;
 
+		// Methods.
 		void HandleStates();
 
 };

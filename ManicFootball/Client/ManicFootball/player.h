@@ -17,25 +17,18 @@ class Player : public DynamicBodyRectangle
 
 	public:
 		// Methods.
-		Player();
-		~Player();
 		void Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world, bool red_team);
 		void Controls(float dt);
-		void Jump(float dt);
-		void Respawn();
 		void Update(float dt);
 
 		// Getters.
 		// This will return the current input state of the player.
-		inline Input& GetInput()				{ return input_; }
+		inline Input& GetInput()	{ return input_; }
 
 	private:
 		// Attributes.
-		bool is_red_team_;					// If the player is on the red team or not.
-		bool in_air_;						// A flag to determine if the player is in the air or not.
-		bool respawn_;						// A flag to determine if the player should respawn or not.
-		sf::Vector2f respawn_location_;		// A vector2 for the spawn location of the player.
-		Input input_;
+		bool is_red_team_;			// Whether or not the player is on the red team.
+		Input input_;				// The input struct for the player, whether we are going up, left, or right.
 
 };
 

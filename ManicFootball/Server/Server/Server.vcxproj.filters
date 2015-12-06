@@ -39,9 +39,6 @@
     <ClCompile Include="game.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
-    <ClCompile Include="dynamic_body_circle.cpp">
-      <Filter>Framework\Physics\Bodies</Filter>
-    </ClCompile>
     <ClCompile Include="dynamic_body_rectangle.cpp">
       <Filter>Framework\Physics\Bodies</Filter>
     </ClCompile>
@@ -65,9 +62,6 @@
     <ClInclude Include="box2d_conversions.h">
       <Filter>Framework\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="category.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
     <ClInclude Include="game_object.h">
       <Filter>Framework</Filter>
     </ClInclude>
@@ -79,9 +73,6 @@
     </ClInclude>
     <ClInclude Include="game.h">
       <Filter>Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="dynamic_body_circle.h">
-      <Filter>Framework\Physics\Bodies</Filter>
     </ClInclude>
     <ClInclude Include="dynamic_body_rectangle.h">
       <Filter>Framework\Physics\Bodies</Filter>

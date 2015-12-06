@@ -1,5 +1,12 @@
+// Include header file here.
 #include "connection.h"
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//						Constructor						//
+//======================================================//
+// This will initialise our tcp socket for connecting.	//
+//////////////////////////////////////////////////////////
 Connection::Connection()
 {
 
@@ -8,18 +15,27 @@ Connection::Connection()
 	
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//						Destructor						//
+//======================================================//
+//////////////////////////////////////////////////////////
 Connection::~Connection()
 {
 }
 
-// This will tell us whether or not the client has connected to the server yet.
+//////////////////////////////////////////////////////////
+//======================================================//
+//						ToServer						//
+//======================================================//
+// This will tell us whether or not the client has		//
+// connected to the server yet.							//
+//////////////////////////////////////////////////////////
 bool Connection::ToServer()
 {
 
-	//socket_->setBlocking(false);
-
 	// Use the created socket and connect to 127.0.0.1 (this machine) on port 5000, and use the default time out for this machine.
-	sf::Socket::Status status = socket_->connect(kIPAddress, kPort);
+	sf::Socket::Status status = socket_->connect(kIPAddress, kPort, sf::Time::Zero);
 
 	// If the socket has connected to the server.
 	if (status == sf::Socket::Done)

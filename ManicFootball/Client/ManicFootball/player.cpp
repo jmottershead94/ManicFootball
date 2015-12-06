@@ -1,14 +1,13 @@
 // Include header file here.
 #include "player.h"
 
-Player::Player()
-{
-}
-
-Player::~Player()
-{
-}
-
+//////////////////////////////////////////////////////////
+//======================================================//
+//						Init							//
+//======================================================//
+// This will intialise the player on either the red		//
+// team or the blue team.								//
+//////////////////////////////////////////////////////////
 void Player::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world, bool red_team)
 {
 
@@ -25,15 +24,19 @@ void Player::Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world
 		DynamicBodyRectangle::Init(position, dimensions, world, ObjectID::player, sf::Color::Blue, 0.2f);
 	}
 
-	// Initialising local attributes.
-	is_red_team_ = red_team;			// Setting if the player should be on the red team or not.
-	in_air_ = false;					// The player is currently not in the air.
-	respawn_ = false;					// The player does not need to respawn at this moment in time.
-	respawn_location_.x = position.x;	// The x position for respawn.
-	respawn_location_.y = position.y;	// The y position for respawn.
-	
+	// Initialsing local attributes.
+	is_red_team_ = red_team;		// Is the player on the red team or not.
+
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//						Controls						//
+//======================================================//
+// Depending on which team the player is on, the		//
+// controls will be different.							//
+// This will also apply input for the player.			//
+//////////////////////////////////////////////////////////
 void Player::Controls(float dt)
 {
 
@@ -84,8 +87,8 @@ void Player::Controls(float dt)
 			// Wake up the body.
 			body_->SetAwake(true);
 
-			// Make the player jump.
-			Jump(dt);
+			// Make the player jump upwards.
+			body_->ApplyLinearImpulse(b2Vec2(0.0f, (GetMovementForce().y * dt)), body_->GetWorldCenter(), body_->IsAwake());
 		}
 		else
 		{
@@ -140,8 +143,8 @@ void Player::Controls(float dt)
 			// Wake up the body.
 			body_->SetAwake(true);
 
-			// Make the player jump.
-			Jump(dt);
+			// Make the player jump upwards.
+			body_->ApplyLinearImpulse(b2Vec2(0.0f, (GetMovementForce().y * dt)), body_->GetWorldCenter(), body_->IsAwake());
 		}
 		else
 		{
@@ -152,50 +155,20 @@ void Player::Controls(float dt)
 
 }
 
-void Player::Jump(float dt)
-{
-
-	// Checking to see if the player is already in the air.
-	// If they are not currently in the air.
-	if (!in_air_)
-	{
-		// Make the player jump upwards.
-		body_->ApplyLinearImpulse(b2Vec2(0.0f, (GetMovementForce().y * dt)), body_->GetWorldCenter(), body_->IsAwake());
-
-		// Set the air flag to true.
-		in_air_ = true;
-	}
-
-	// Just for testing purposes.
-	// The player can fly.
-	in_air_ = false;
-
-	// In level check collisions have this.
-	// If the player has a surface beneath them.
-	//else if (((game_object_->id_ == player) && (game_object2_->id_ == platform))
-	//	|| ((game_object_->id_ == player) && (game_object2_->id_ == box)))
-	//{
-	//	// Allow them to jump in the air.
-	//	player_.in_air_ = false;
-	//}
-
-}
-
-void Player::Respawn()
-{
-
-	// This will set the rectangle of the player to the respawn location. 
-	rectangle_.setPosition(respawn_location_);
-
-	// This will set the body of the player to the respawn location, and to the current angle of the player.
-	body_->SetTransform(b2Vec2(FRAMEWORK_BOX2D_POS_X(respawn_location_.x), FRAMEWORK_BOX2D_POS_Y(respawn_location_.y)), 0.0f);
-
-}
-
+//////////////////////////////////////////////////////////
+//======================================================//
+//						Update							//
+//======================================================//
+// This will update player input and position every		//
+// frame.												//
+//////////////////////////////////////////////////////////
 void Player::Update(float dt)
 {
 
+	// Apply player controls.
 	Controls(dt);
+
+	// Update the body of the player.
 	DynamicBodyRectangle::Update(dt);
 
 }

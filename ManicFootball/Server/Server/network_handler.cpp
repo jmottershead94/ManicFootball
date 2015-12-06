@@ -1,5 +1,14 @@
+// Include header file here.
 #include "network_handler.h"
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//						SendData						//
+//======================================================//
+// This will be the standard response for sending data.	//
+// This function will return true if we are able to		//
+// send a packet.										//
+//////////////////////////////////////////////////////////
 bool NetworkHandler::SendData(sf::TcpSocket& client_socket, sf::Packet& data)
 {
 
@@ -8,6 +17,12 @@ bool NetworkHandler::SendData(sf::TcpSocket& client_socket, sf::Packet& data)
 	{
 		// Notify the server.
 		return true;
+	}
+	// Otherwise, if we have disconnected from the server.
+	else if (client_socket.send(data) == sf::Socket::Disconnected)
+	{
+		DisplayErrorMessage(kConnectionErrorMessage);
+		//client_socket.disconnect();
 	}
 
 	// We can modify what the standard response for not sending a packet of data is here.
@@ -20,6 +35,14 @@ bool NetworkHandler::SendData(sf::TcpSocket& client_socket, sf::Packet& data)
 
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//					ReceivedData						//
+//======================================================//
+// This will be the standard response for receiving		//
+// data. This function will return true if we are able	//
+// to receive a packet.									//
+//////////////////////////////////////////////////////////
 bool NetworkHandler::ReceivedData(sf::TcpSocket& client_socket, sf::Packet& data)
 {
 
@@ -37,27 +60,4 @@ bool NetworkHandler::ReceivedData(sf::TcpSocket& client_socket, sf::Packet& data
 
 	// We could not receive the data, notify the server.
 	return false;
-}
-
-// Add in standard procedure for a client disconnecting...
-bool NetworkHandler::DisconnectingClients(sf::TcpSocket& client_socket)
-{
-	
-	// Empty packet to see if the client is still there.
-	sf::Packet check;
-
-	// If a client wants to disconnect.
-	if (client_socket.receive(check) == sf::Socket::Disconnected)
-	{
-		// Standard disconnection response here...
-		DisplayErrorMessage(KDisconnectionErrorMessage);
-		client_socket.disconnect();
-
-		// A client has disconnected.
-		return true;
-	}
-
-	// A client has not disconnected.
-	return false;
-
 }

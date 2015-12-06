@@ -74,10 +74,11 @@ void MenuState::OnEnter()
 
 		// Set the font of the text that is going to be displayed and set what the text will display.
 		text_->setFont(*font_);
-		text_->setString("The Menu State");
+		text_->setPosition(screen_resolution_->x * 0.35f, 0.0f);
+		text_->setString("Manic Football");
 		text_->setCharacterSize(64);
-		text_->setColor(sf::Color::Red);
-		text_->setStyle(sf::Text::Bold | sf::Text::Underlined);
+		text_->setColor(sf::Color::White);
+		text_->setStyle(sf::Text::Bold);
 
 		// Telling the player about the controls on the menu.
 		menu_controls_ = new sf::Text();
@@ -101,10 +102,6 @@ void MenuState::OnEnter()
 //////////////////////////////////////////////////////////
 void MenuState::OnExit()
 {
-
-	// Stopping the menu state specific stuff.
-
-
 }
 
 //////////////////////////////////////////////////////////
@@ -131,9 +128,8 @@ void MenuState::Render()
 //======================================================//
 //						Update							//
 //======================================================//
-// This will provide a timer for this class.			//
+// This will update the states every frame.				//
 //////////////////////////////////////////////////////////
 void MenuState::Update(float dt)
 {
-
 }

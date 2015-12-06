@@ -31,12 +31,19 @@ void State::Cleanup()
 		text_controls_ = nullptr;
 	}
 
+	if (network_)
+	{
+		delete network_;
+		network_ = nullptr;
+	}
+
 }
 
 //////////////////////////////////////////////////////////
 //======================================================//
 //						Update							//
 //======================================================//
+// This will update the states every frame.				//
 //////////////////////////////////////////////////////////
 void State::Update(float dt)
 {

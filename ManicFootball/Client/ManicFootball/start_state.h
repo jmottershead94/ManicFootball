@@ -11,10 +11,6 @@
 // Include files here.
 // All of these includes are states that this state will communicate with.
 #include "state.h"
-#include "static_body.h"
-#include "dynamic_body_rectangle.h"
-#include "dynamic_body_circle.h"
-#include "player.h"
 #include "level_state.h"
 
 // Menu state IS A state, therefore inherits from it.
@@ -30,11 +26,6 @@ class StartState : public State
 		void OnExit();
 		void Render();
 		void Update(float dt);
-
-	private:
-		// Attributes.
-		bool ready_;					// If the level should start.
-		sf::Clock lag_offset_clock_;	// This will be used to work out the lag offset from the server.
 
 };
 

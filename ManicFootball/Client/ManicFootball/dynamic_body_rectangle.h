@@ -18,22 +18,20 @@ class DynamicBodyRectangle : public GameObject
 
 	public:
 		// Methods.
-		DynamicBodyRectangle();
-		~DynamicBodyRectangle();
 		void Init(sf::Vector2f position, sf::Vector2f dimensions, b2World* world, ObjectID object_id, const sf::Color colour, float bounciness);
 		void Update(float dt);
 
 		// Getters.
 		// This function will return the input struct that is being used.
-		inline Input& GetInput() { return input_; }
+		inline Input& GetInput()				{ return input_; }
 
 		// This function will return the current movement force for players.
 		inline sf::Vector2f& GetMovementForce()	{ return movement_force_; }
 
 	private:
 		// Attributes.
-		sf::Vector2f movement_force_;		// A vector2 for the amount of force that should be applied to the player.
-		Input input_;
+		sf::Vector2f movement_force_;			// A vector2 for the amount of force that should be applied to the player.
+		Input input_;							// A struct for our input data.
 
 
 };

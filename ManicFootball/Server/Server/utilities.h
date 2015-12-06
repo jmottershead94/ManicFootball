@@ -1,7 +1,7 @@
 // Jason Mottershead, 1300455.
 
 // Utilities class header file.
-// This class will provide basic attributes used for both server and client.
+// This class will provide basic attributes and error messages used for both server and client.
 
 // Header guard.
 #ifndef _UTILITIES_H_

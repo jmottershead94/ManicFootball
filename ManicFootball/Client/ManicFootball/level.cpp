@@ -1,31 +1,50 @@
+// Include header file here.
 #include "level.h"
 
-Level::Level() : world_(nullptr),
-	font_(nullptr),
-	screen_resolution_(nullptr),
-	network_(nullptr)
+//////////////////////////////////////////////////////////
+//======================================================//
+//					Constructor							//
+//======================================================//
+// This will initialise any pointers we have to null.	//
+//////////////////////////////////////////////////////////
+Level::Level() : network_(nullptr)
 {
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//					Destructor							//
+//======================================================//
+//////////////////////////////////////////////////////////
 Level::~Level()
 {
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//						Init							//
+//======================================================//
+// This will intialise the game level and build the		//
+// level that we want.									//
+//////////////////////////////////////////////////////////
 void Level::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution, Network& network)
 {
 
 	// Initialising local attributes.
-	world_ = world;									// Access to the box2D world.
-	font_ = &font;									// Access to the game font.
-	screen_resolution_ = &game_screen_resolution;	// Access to the game resolution.
 	network_ = &network;							// Access to the game network.
-	lag_offset_ = network_->GetLagOffset();			// What each networked message should take into consideration.
 
 	// Creating the level.
 	level_generator_.Init(world, font, game_screen_resolution, network);
 	
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//					UpdateTheScoreboard					//
+//======================================================//
+// This will update the current score on the score if	//
+// we have any new scores.								//
+//////////////////////////////////////////////////////////
 void Level::UpdateTheScoreboard()
 {
 
@@ -45,6 +64,12 @@ void Level::UpdateTheScoreboard()
 
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//					UpdateTheScore						//
+//======================================================//
+// This will update the current score.					//
+//////////////////////////////////////////////////////////
 void Level::UpdateTheScore(int score, int previous_score, std::ostringstream& conversion, bool red_team)
 {
 
@@ -82,92 +107,13 @@ void Level::UpdateTheScore(int score, int previous_score, std::ostringstream& co
 	
 }
 
-void Level::CollisionTest()
-{
-
-	// Get the head of the contact list.
-	b2Contact* contact_ = world_->GetContactList();
-
-	// Get the contact count.
-	int contact_count = world_->GetContactCount();
-
-	// Cycle through the contacts.
-	for (int contact_num = 0; contact_num < contact_count; contact_num++)
-	{
-		// If the contact we are currently processing contains bodies actually touching/intersecting.
-		if (contact_->IsTouching())
-		{
-			// Get the colliding bodies.
-			b2Body* body_a = contact_->GetFixtureA()->GetBody();
-			b2Body* body_b = contact_->GetFixtureB()->GetBody();
-
-			// Collision response here.
-			GameObject* game_object = static_cast<GameObject*>(body_a->GetUserData());
-			GameObject* game_object2 = static_cast<GameObject*>(body_b->GetUserData());
-
-			// If a ball collides with the red team's net.
-			if (game_object->GetID() == ObjectID::redNet
-				&& game_object2->GetID() == ObjectID::ball)
-			{
-				std::cout << "The blue team have scored!" << std::endl;
-
-				// Increment the blue team's score.
-				//level_generator_.IncrementBlueTeamScore();
-
-				// If the blue team has reached three goals.
-				if (level_generator_.GetBlueTeamScore() == 3)
-				{
-					// The match has now finished.
-					level_generator_.SetFinished(true);
-				}
-				else
-				{
-					// Reset the level for the next round.
-					level_generator_.Reset();
-					
-					// Update with the new scores.
-					UpdateTheScoreboard();
-				}
-				
-			}
-			// Otherwise, if the ball has collided with the blue team's net.
-			else if (game_object->GetID() == ObjectID::blueNet
-				&& game_object2->GetID() == ObjectID::ball)
-			{
-				std::cout << "The red team have scored!" << std::endl;
-
-				// Increment the red team's score.
-				//level_generator_.IncrementRedTeamScore();
-
-				// If the red team has reached three goals.
-				if (level_generator_.GetRedTeamScore() == 3)
-				{
-					// The match has now finished.
-					level_generator_.SetFinished(true);
-				}
-				else
-				{
-					// Reset the level for the next round.
-					level_generator_.Reset();
-				
-					// Update with the new scores.
-					UpdateTheScoreboard();
-				}
-			}
-			//if (game_object->GetID() == ObjectID::player
-			//	&& game_object2->GetID() == ObjectID::otherPlayer)
-			//{
-				//game_object->GetBody()->SetAwake(false);
-				//game_object2->GetBody()->SetAwake(false);
-			//}
-
-			// Get the next contact point.
-			contact_ = contact_->GetNext();
-		}
-	}
-
-}
-
+//////////////////////////////////////////////////////////
+//======================================================//
+//					HandleLevelObjects					//
+//======================================================//
+// This will update all of the objects in our level.	//
+// And handle any approriate responses.					//
+//////////////////////////////////////////////////////////
 void Level::HandleLevelObjects(float dt)
 {
 	
@@ -177,63 +123,19 @@ void Level::HandleLevelObjects(float dt)
 		// Iterating through all of the level objects.
 		for (auto& level_object : level_generator_.GetLevelObjects())
 		{
-			// If the level object is a football.
-			if (level_object->GetID() == ObjectID::ball)
+			// Otherwise, if the level object is a player.
+			if (level_object->GetID() == ObjectID::player)
 			{
-				PositionUpdate position_update;
+				// Casting this to a player in order to update the sprites position for level object.
+				Player* player_temp = static_cast<Player*>(level_object);
 
-				// Casting this to a dynamic body rectangle in order to update the sprites position for level object.
-				DynamicBodyRectangle* dynamic_rectangle = static_cast<DynamicBodyRectangle*>(level_object);
-				
-				if (network_->ReceivedDeadReckoningMessageFromServer())
-				{
-					// See if we can place the data into a position update struct.
-					if (network_->GetData() >> position_update)
-					{
-						// We need to place the ball in the server position.
-						if (position_update.id == ObjectID::ball)
-						{
-							// Checking to see if we have a new score from the server.
-							if (position_update.red_score > level_generator_.GetRedTeamScore())
-							{
-								/*if (position_update.red_score == 3)
-								{
-									level_generator_.SetFinished(true);
-								}*/
+				// Sending the current input message data to the server.
+				network_->SendInputMessageToServer(player_temp->GetInput());
 
-								UpdateTheScore(position_update.red_score, level_generator_.GetPreviousRedTeamScore(), level_generator_.red_convert_, true);
-								//UpdateTheScoreboard();
-							}
-							
-							if (position_update.blue_score > level_generator_.GetBlueTeamScore())
-							{
-								/*if (position_update.blue_score == 3)
-								{
-									level_generator_.SetFinished(true);
-								}*/
-
-								UpdateTheScore(position_update.blue_score, level_generator_.GetPreviousBlueTeamScore(), level_generator_.blue_convert_, false);
-								//UpdateTheScoreboard();
-							}
-
-							// Place the ball into the correct position.
-							dynamic_rectangle->TranslateBody(position_update.x, position_update.y);
-						}
-						// We need to apply the position update else where!
-						else
-						{
-							network_->GetData() << position_update;
-						}
-					}
-				}
-				
-				if ((position_update.red_score == 3) || (position_update.blue_score == 3))
-				{
-					level_generator_.SetFinished(true);
-				}
-
-				dynamic_rectangle->Update(dt);
+				// Updating the player.
+				player_temp->Update(dt);
 			}
+			// Otherwise, if the level object is the other player.
 			else if (level_object->GetID() == ObjectID::otherPlayer)
 			{
 				// Casting this to a dynamic body rectangle in order to update the sprites position for level object.
@@ -249,42 +151,64 @@ void Level::HandleLevelObjects(float dt)
 				// Update the other player.
 				dynamic_rectangle->Update(dt);
 			}
-			// Otherwise, if the object is a player.
-			else if (level_object->GetID() == ObjectID::player)
+			// If the level object is a football.
+			else if (level_object->GetID() == ObjectID::ball)
 			{
-				// Casting this to a player in order to update the sprites position for level object.
-				Player* temp = static_cast<Player*>(level_object);
-				
-				// Sending the current input message data to the server.
-				network_->SendInputMessageToServer(temp->GetInput());
+				// Casting this to a dynamic body rectangle in order to update the sprites position for level object.
+				DynamicBodyRectangle* dynamic_rectangle = static_cast<DynamicBodyRectangle*>(level_object);
 
-				// Updating the player.
-				temp->Update(dt);
+				// Creating a server update message.
+				ServerUpdate server_update;
 
-				//// If we have received a finish message from the server.
-				//if (network_->ReceivedFinishMessageFromServer())
-				//{
-				//	FinishMessage finish_message;
+				// If we have received an update from the server.
+				if (network_->ReceivedServerUpdateMessageFromServer())
+				{
+					// See if we can place the data into a server update struct.
+					if (network_->GetData() >> server_update)
+					{
+						// Checking to see if we have any new scores from the server.
+						if (server_update.red_score > level_generator_.GetRedTeamScore())
+						{
+							UpdateTheScore(server_update.red_score, level_generator_.GetPreviousRedTeamScore(), level_generator_.red_convert_, true);
+						}
 
-				//	// And if we can place the data into a finish message struct.
-				//	if (network_->GetData() >> finish_message)
-				//	{
-				//		// Finish the level.
-				//		level_generator_.SetFinished(finish_message.finished);
-				//	}
-				//}
+						if (server_update.blue_score > level_generator_.GetBlueTeamScore())
+						{
+							UpdateTheScore(server_update.blue_score, level_generator_.GetPreviousBlueTeamScore(), level_generator_.blue_convert_, false);
+						}
+
+						// Place the ball into the correct position.
+						dynamic_rectangle->TranslateBody(server_update.x, server_update.y);
+					}
+				}
+
+				// If we have reached the maximum score limit.
+				if ((server_update.red_score == 3) || (server_update.blue_score == 3))
+				{
+					// Notify the states.
+					level_generator_.SetFinished(true);
+				}
+
+				// Update the ball.
+				dynamic_rectangle->Update(dt);
 			}
 		}
 	}
 
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//					Data Response						//
+//======================================================//
+// This will provide the approriate response for the	//
+// other player we have displayed on our screen.		//
+//////////////////////////////////////////////////////////
 void Level::DataResponse(sf::Packet& data, DynamicBodyRectangle& object, float dt)
 {
 
-	// Add in additional structs here for any further information.
-	FinishMessage finish_message;
-	PositionUpdate position_update, player_update;
+	// Add in additional structs here for any required further information.
+	ServerUpdate update;
 	
 	// If the data we have received is input data.
 	if (network_->ReceivedInputMessageFromServer())
@@ -295,50 +219,26 @@ void Level::DataResponse(sf::Packet& data, DynamicBodyRectangle& object, float d
 			// Apply the input to the other player.
 			ApplyPlayerInput(object, dt);
 			
-			// Just update the positions.
-			// Filling the position update every frame.
-			position_update.x = (object.GetPosition().x + (object.GetBody()->GetAngularVelocity() * dt));
-			position_update.y = (object.GetPosition().y + (object.GetBody()->GetAngularVelocity() * dt));
-			position_update.time = (object.GetInput().time + network_->GetLagOffset());
+			// Store the positions of the other player.
+			update.x = (object.GetPosition().x + (object.GetBody()->GetAngularVelocity() * dt));
+			update.y = (object.GetPosition().y + (object.GetBody()->GetAngularVelocity() * dt));
+			update.time = (object.GetInput().time + network_->GetLagOffset());
 
 			// Place the positions in the vector of positions for interpolation/prediction.
-			other_player_.UpdateVectors(position_update.x, position_update.y, position_update.time);
+			other_player_.UpdateVectors(update.x, update.y, update.time);
 		}
 	}
-	//// Otherwise, if we have received finish message data.
-	//else if (network_->ReceivedFinishMessageFromServer())
-	//{
-	//	// Place the finish message data into the finish message struct for the other player.
-	//	if (network_->GetData() >> finish_message)
-	//	{
-	//		// Finish the match.
-	//		level_generator_.SetFinished(finish_message.finished);
-	//	}
-	//}
-	//// Otherwise, if we have received some position updates.
-	//else if (network_->ReceivedDeadReckoningMessageFromServer())
-	//{
-	//	// See if we can place the data into a position update struct.
-	//	if (network_->GetData() >> player_update)
-	//	{
-	//		// If we are updating the our player.
-	//		if (player_update.id == ObjectID::player)
-	//		{
-	//			player_update.time += network_->GetLagOffset();
-
-	//			// Move the player to the server positions.
-	//			object.TranslateBody(player_update.x, player_update.y);
-	//			//other_player_.UpdateVectors(player_update.x, player_update.y, player_update.time);
-	//		}
-	//		else
-	//		{
-	//			network_->GetData() << player_update;
-	//		}
-	//	}
-	//}
 	
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//					ApplyPlayerInput					//
+//======================================================//
+// This will apply the commands sent to us by the other	//
+// player to move our representation of the other		//
+// player.												//
+//////////////////////////////////////////////////////////
 void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
 {
 
@@ -365,6 +265,13 @@ void Level::ApplyPlayerInput(DynamicBodyRectangle& player, float dt)
 
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//					CorrectPositions					//
+//======================================================//
+// This will interpolate the positions for the other	//
+// player on our screen.								//
+//////////////////////////////////////////////////////////
 void Level::CorrectPositions(float dt)
 {
 
@@ -384,16 +291,20 @@ void Level::CorrectPositions(float dt)
 
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//						Update							//
+//======================================================//
+// This will interpolate and handle object responses	//
+// every frame.											//
+//////////////////////////////////////////////////////////
 void Level::Update(float dt)
 {
-
-	if ((level_generator_.GetRedTeamScore() == 3) || (level_generator_.GetBlueTeamScore() == 3))
-	{
-		level_generator_.SetFinished(true);
-	}
-
-	CollisionTest();
+	
+	// Interpolate the other player.
 	CorrectPositions(dt);
+
+	// Handle all of our level objects.
 	HandleLevelObjects(dt);
 	
 }

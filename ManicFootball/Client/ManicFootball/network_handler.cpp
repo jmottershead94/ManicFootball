@@ -1,5 +1,14 @@
+// Include header file here.
 #include "network_handler.h"
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//						SendData						//
+//======================================================//
+// This will be the standard response for sending data.	//
+// This function will return true if we are able to		//
+// send a packet.										//
+//////////////////////////////////////////////////////////
 bool NetworkHandler::SendData(sf::Packet& data)
 {
 
@@ -8,6 +17,15 @@ bool NetworkHandler::SendData(sf::Packet& data)
 	{
 		// Notify the client.
 		return true;
+	}
+	// Otherwise, if we have disconnected from the server.
+	else if (connection_.GetSocket()->send(data) == sf::Socket::Disconnected)
+	{
+		// ERROR: We could not connect to the server.
+		DisplayErrorMessage(kConnectionErrorMessage);
+
+		// Disconnect from the server.
+		//connection_.GetSocket()->disconnect();
 	}
 
 	// We can modify what the standard response for not sending a packet of data is here.
@@ -20,6 +38,14 @@ bool NetworkHandler::SendData(sf::Packet& data)
 
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//					ReceivedData						//
+//======================================================//
+// This will be the standard response for receiving		//
+// data. This function will return true if we are able	//
+// to receive a packet.									//
+//////////////////////////////////////////////////////////
 bool NetworkHandler::ReceivedData(sf::Packet& data)
 {
 
@@ -37,26 +63,4 @@ bool NetworkHandler::ReceivedData(sf::Packet& data)
 
 	// We could not receive the data, notify the client.
 	return false;
-}
-
-bool NetworkHandler::Disconnected()
-{
-
-	// Empty packet to see if our socket responds.
-	sf::Packet check;
-
-	// If a client wants to disconnect.
-	if (connection_.GetSocket()->receive(check) == sf::Socket::Disconnected)
-	{
-		// Standard disconnection response here...
-		DisplayErrorMessage(KDisconnectionErrorMessage);
-		connection_.GetSocket()->disconnect();
-
-		// A client has disconnected.
-		return true;
-	}
-
-	// A client has not disconnected.
-	return false;
-
 }

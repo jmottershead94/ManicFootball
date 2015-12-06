@@ -9,8 +9,7 @@
 // Passing in the current state allows for				//
 // communication between the states.					//
 //////////////////////////////////////////////////////////
-EndMatchState::EndMatchState(const State& current_state, bool red_winning_team) : State(current_state),
-	red_won_(red_winning_team)
+EndMatchState::EndMatchState(const State& current_state) : State(current_state)
 {
 }
 
@@ -36,14 +35,13 @@ EndMatchState::~EndMatchState()
 State* EndMatchState::HandleInput()
 {
 
-	// Basically any rage quitters here.
 	// If the player presses the escape button.
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 	{
 		// Exit the game.
 		window_->close();
 	}
-	// If the number 1 has been pressed.
+	// If the 'M' key has been pressed.
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::M))
 	{
 		// Go back to the main menu.
@@ -66,31 +64,14 @@ State* EndMatchState::HandleInput()
 void EndMatchState::OnEnter()
 {
 
-	// Starting the state specific stuff.
-	// If the red team won.
-	if (red_won_)
-	{
-		// Display red winner text.
-		text_ = new sf::Text();
-		text_->setFont(*font_);
-		text_->setPosition((screen_resolution_->x * 0.25f), (screen_resolution_->y * 0.3f));
-		text_->setString("Finished!");
-		text_->setCharacterSize(64);
-		text_->setColor(sf::Color::White);
-		text_->setStyle(sf::Text::Bold);
-	}
-	// Otherwise, if the blue team won.
-	else
-	{
-		// Display blue winner text.
-		text_ = new sf::Text();
-		text_->setFont(*font_);
-		text_->setPosition((screen_resolution_->x * 0.25f), (screen_resolution_->y * 0.3f));
-		text_->setString("The Blue Team Won!");
-		text_->setCharacterSize(64);
-		text_->setColor(sf::Color::Blue);
-		text_->setStyle(sf::Text::Bold);
-	}
+	// Set up the finished text.
+	text_ = new sf::Text();
+	text_->setFont(*font_);
+	text_->setPosition((screen_resolution_->x * 0.35f), (screen_resolution_->y * 0.3f));
+	text_->setString("Finished!");
+	text_->setCharacterSize(64);
+	text_->setColor(sf::Color::White);
+	text_->setStyle(sf::Text::Bold);
 
 	// Display controls.
 	text_controls_ = new sf::Text();
@@ -113,11 +94,6 @@ void EndMatchState::OnEnter()
 //////////////////////////////////////////////////////////
 void EndMatchState::OnExit()
 {
-
-	// Stopping the state specific stuff.
-	text_->~Text();
-	text_controls_->~Text();
-
 }
 
 //////////////////////////////////////////////////////////
@@ -133,7 +109,7 @@ void EndMatchState::Render()
 	// If the game window exists.
 	if (window_)
 	{
-		// Draw the winner text.
+		// Draw the finished and controls text.
 		window_->draw(*text_);
 		window_->draw(*text_controls_);
 	}
@@ -144,11 +120,8 @@ void EndMatchState::Render()
 //======================================================//
 //						Update							//
 //======================================================//
-// This will provide a timer for this class.			//
+// This will update the states every frame.				//
 //////////////////////////////////////////////////////////
 void EndMatchState::Update(float dt)
 {
-
-
-
 }

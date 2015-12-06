@@ -14,24 +14,20 @@
 #include "menu_state.h"
 #include "level.h"
 
-// Menu state IS A state, therefore inherits from it.
+// End Match state IS A state, therefore inherits from it.
 class EndMatchState : public State
 {
 
 	public:
 		// Methods.
-		EndMatchState(const State& current_state, bool red_winning_team);
+		EndMatchState(const State& current_state);
 		~EndMatchState();
 		State* HandleInput();
 		void OnEnter();
 		void OnExit();
 		void Render();
 		void Update(float dt);
-
-	private:
-		// Attributes.
-		bool red_won_;
-
+		
 };
 
 #endif

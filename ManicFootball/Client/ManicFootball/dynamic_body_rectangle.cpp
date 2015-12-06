@@ -3,24 +3,6 @@
 
 //////////////////////////////////////////////////////////
 //======================================================//
-//					Constructor							//
-//======================================================//
-//////////////////////////////////////////////////////////
-DynamicBodyRectangle::DynamicBodyRectangle()
-{
-}
-
-//////////////////////////////////////////////////////////
-//======================================================//
-//					Destructor							//
-//======================================================//
-//////////////////////////////////////////////////////////
-DynamicBodyRectangle::~DynamicBodyRectangle()
-{
-}
-
-//////////////////////////////////////////////////////////
-//======================================================//
 //						Init							//
 //======================================================//
 // This initialise function will set up the body		//
@@ -31,7 +13,7 @@ void DynamicBodyRectangle::Init(sf::Vector2f position, sf::Vector2f dimensions, 
 {
 
 	// Initialising the sprite for the body.
-	GameObject::Init(position, dimensions, object_id, true);
+	GameObject::Init(position, dimensions, object_id);
 
 	movement_force_.x = 2.0f;
 	movement_force_.y = 10.0f;

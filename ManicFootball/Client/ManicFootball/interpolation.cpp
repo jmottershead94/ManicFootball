@@ -1,13 +1,32 @@
+// Include header file here.
 #include "interpolation.h"
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//						Constructor						//
+//======================================================//
+// This will initialise our interpolation flag.			//
+//////////////////////////////////////////////////////////
 Interpolation::Interpolation() : interpolating_(false)
 {
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//						Destructor						//
+//======================================================//
+//////////////////////////////////////////////////////////
 Interpolation::~Interpolation()
 {
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//					UpdateVectors						//
+//======================================================//
+// This will update our position and time vectors, with	//
+// the values we pass in.								//
+//////////////////////////////////////////////////////////
 void Interpolation::UpdateVectors(float& x, float& y, sf::Int32& time)
 {
 
@@ -18,15 +37,18 @@ void Interpolation::UpdateVectors(float& x, float& y, sf::Int32& time)
 
 }
 
-//void Interpolate(deltaTime)
-//{
-//	difference = unit.RemoteX - unit.LocalX
-//		if (difference < threshold)
-//			unit.LocalX = unit.RemoteX
-//		else
-//		unit.LocalX += difference * deltaTime * interpolation_constant
-//}
-
+//////////////////////////////////////////////////////////
+//======================================================//
+//						Interpolate						//
+//======================================================//
+// This will create a cubic spline graph based on the	//
+// positions and times we have received and recorded.	//
+// First we will work out if we should carry on using	//
+// our input data as normal, but if it goes outside of	//
+// our position threshold, i.e. our positions are too	//
+// far our from the server, then we will interpolate	//
+// the position.										//
+//////////////////////////////////////////////////////////
 void Interpolation::Interpolate(DynamicBodyRectangle& object, Network& network, float dt)
 {
 
@@ -92,6 +114,13 @@ void Interpolation::Interpolate(DynamicBodyRectangle& object, Network& network, 
 
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//					ClearVectors						//
+//======================================================//
+// This will clear all of our position and time			//
+// vectors so that new values can be passed in.			//
+//////////////////////////////////////////////////////////
 void Interpolation::ClearVectors()
 {
 

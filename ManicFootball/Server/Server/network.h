@@ -28,11 +28,7 @@ class Network : public NetworkHandler
 		bool ConnectionsAreReady();
 		bool ReceivedInputMessageFromClient(sf::TcpSocket& client_socket);
 		void SendInputToClients(sf::TcpSocket& client_socket, Input& client_input);
-		void SendDeadReckoningToClients(sf::TcpSocket& client_socket, PositionUpdate& client_position);
-		//void SendPositionCorrectionToClients(sf::TcpSocket& client_socket, PositionCorrection& server_positions);
-		bool ReceivedPositionMessageFromClient();
-		bool ReceivedFinishMessageFromClients(sf::TcpSocket& client_socket);
-		void SendFinishMessageToClients(sf::TcpSocket& client_socket, FinishMessage& client_finished);
+		void SendServerUpdateToClients(sf::TcpSocket& client_socket, ServerUpdate& client_position);
 		
 		// Getters.
 		// This will return the current number of clients in the network.
@@ -49,10 +45,10 @@ class Network : public NetworkHandler
 
 	private:
 		// Attributes.
-		bool ready_;																			// Whether the server is ready to start the level or not.
-		unsigned int connected_clients_;														// The current number of connected clients to this server.
-		std::array< sf::TcpSocket*, MAX_NUMBER_OF_CONNECTIONS > sockets_;						// A data structure holding all of the connected client's TCP sockets.
-		sf::Packet data_;																		// Packet data used to store and pass along messages.
+		bool ready_;																		// Whether the server is ready to start the level or not.
+		unsigned int connected_clients_;													// The current number of connected clients to this server.
+		std::array< sf::TcpSocket*, MAX_NUMBER_OF_CONNECTIONS > sockets_;					// A data structure holding all of the connected client's TCP sockets.
+		sf::Packet data_;																	// Packet data used to store and pass along messages.
 		
 		
 };

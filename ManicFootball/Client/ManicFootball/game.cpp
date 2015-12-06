@@ -1,8 +1,13 @@
 // Include header file here.
 #include "game.h"
 
-// This will initialise the game window.
-Game::Game(const float game_screen_width, const float game_screen_height) :
+//////////////////////////////////////////////////////////
+//======================================================//
+//					Constructor							//
+//======================================================//
+// This will initialise the game window.				//
+//////////////////////////////////////////////////////////
+Game::Game(const int game_screen_width, const int game_screen_height) :
 	world_(nullptr),
 	window_(nullptr),
 	current_state_(nullptr)
@@ -13,7 +18,7 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 	screen_resolution_.y = game_screen_height;
 
 	// Setting up the game window with variable screen resolution.
-	window_ = new sf::RenderWindow(sf::VideoMode((unsigned int)screen_resolution_.x, (unsigned int)screen_resolution_.y), "Manic Football");
+	window_ = new sf::RenderWindow(sf::VideoMode(screen_resolution_.x, screen_resolution_.y), "Manic Football");
 	
 	// This will lock the frame rate of the game window to 60 fps.
 	window_->setFramerateLimit(kFrameRate);
@@ -21,7 +26,7 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 	// Handling the font loading.
 	if (!font_.loadFromFile("Resources/Fonts/heavy_data.ttf"))
 	{
-		// Error.
+		// ERROR: We have not found our desired font file.
 		std::cout << "Font file not found." << std::endl;
 	}
 
@@ -37,12 +42,15 @@ Game::Game(const float game_screen_width, const float game_screen_height) :
 
 }
 
-// This will clean up any pointers.
+//////////////////////////////////////////////////////////
+//======================================================//
+//					Destructor							//
+//======================================================//
+// This will clean up any pointers in our game.			//
+//////////////////////////////////////////////////////////
 Game::~Game()
 {
 
-	// Cleaning up pointer variables.
-	// If the current state exists.
 	if (current_state_)
 	{
 		// Clean up the state machine.
@@ -61,28 +69,38 @@ Game::~Game()
 
 }
 
-// This will handle the changing of game states.
+//////////////////////////////////////////////////////////
+//======================================================//
+//					HandleStates						//
+//======================================================//
+// This will handle the changing of game states.		//
+//////////////////////////////////////////////////////////
 void Game::HandleStates()
 {
 
 	// Creates a new state if a new one is required.
-	State* new_state_ = current_state_->HandleInput();
+	State* new_state = current_state_->HandleInput();
 
 	// If the new state is equal to something.
-	if (new_state_ != nullptr)
+	if (new_state != nullptr)
 	{
 		// Exit the previous state.
 		current_state_->OnExit();
 		delete current_state_;
 
 		// Enter the new state.
-		current_state_ = new_state_;
+		current_state_ = new_state;
 		current_state_->OnEnter();
 	}
 
 }
 
-// This will update the game every frame.
+//////////////////////////////////////////////////////////
+//======================================================//
+//						Update							//
+//======================================================//
+// This will update the game every frame.				//
+//////////////////////////////////////////////////////////
 void Game::Update()
 {
 
@@ -117,7 +135,13 @@ void Game::Update()
 
 }
 
-// This will render everything in the game window.
+//////////////////////////////////////////////////////////
+//======================================================//
+//						Render							//
+//======================================================//
+// This will render everything in our current game		//
+// window.												//
+//////////////////////////////////////////////////////////
 void Game::Render()
 {
 

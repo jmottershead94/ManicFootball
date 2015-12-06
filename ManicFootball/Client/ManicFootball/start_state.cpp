@@ -42,6 +42,9 @@ State* StartState::HandleInput()
 	// If the player presses the escape button.
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 	{
+		// Disconnect from the server.
+		network_->GetConnection().GetSocket()->disconnect();
+
 		// Close the window.
 		window_->close();
 	}
@@ -55,26 +58,17 @@ State* StartState::HandleInput()
 			// Check to see if the client is now ready.
 			if (network_->ReceivedReadyMessage())
 			{
-				// Initially set to non blocking-mode.
-				//network_->GetConnection().GetSocket()->setBlocking(false);
-
 				// Continue with the game.
 				return new LevelState(*this);
 			}
 		}
-		//// Otherwise, we have not received a starting message.
-		//else
-		//{
-		//	// Return to the main menu.
-		//	return new MenuState(*this);
-		//}
 	}
-	//// Otherwise, we have not connected to the server.
-	//else
-	//{
-	//	// Return to the main menu.
-	//	return new MenuState(*this);
-	//}
+	// Otherwise, we have not connected to the server.
+	else
+	{
+		// Return to the main menu.
+		return new MenuState(*this);
+	}
 
 	// Returns nothing because there has been no input from the player yet.
 	return nullptr;
@@ -120,14 +114,6 @@ void StartState::OnEnter()
 //////////////////////////////////////////////////////////
 void StartState::OnExit()
 {
-
-	// Stopping the start state specific stuff.
-	if (text_)
-	{
-		// Remove the "connection" text from the screen.
-		text_->~Text();
-	}
-
 }
 
 //////////////////////////////////////////////////////////
@@ -140,15 +126,11 @@ void StartState::OnExit()
 void StartState::Render()
 {
 
-	// If the game window exists.
-	if (window_)
+	// If the text actually exists, meaning everything has loaded correctly.
+	if (text_)
 	{
-		// If the text actually exists, meaning everything has loaded correctly.
-		if (text_)
-		{
-			// Draws the text onto the screen.
-			window_->draw(*text_);
-		}
+		// Draws the text onto the screen.
+		window_->draw(*text_);
 	}
 
 }
@@ -157,7 +139,7 @@ void StartState::Render()
 //======================================================//
 //						Update							//
 //======================================================//
-// This will provide a timer for this class.			//
+// This will update the states every frame.				//
 //////////////////////////////////////////////////////////
 void StartState::Update(float dt)
 {

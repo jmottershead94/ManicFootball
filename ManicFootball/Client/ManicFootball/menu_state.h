@@ -13,9 +13,6 @@
 // All of these includes are states that this state will communicate with.
 #include "state.h"
 #include "start_state.h"
-//#include "options_state.h"
-//#include "credits_state.h"
-//#include "exit_state.h"
 
 // Menu state IS A state, therefore inherits from it.
 class MenuState : public State

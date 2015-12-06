@@ -35,55 +35,11 @@ LevelState::~LevelState()
 State* LevelState::HandleInput()
 {
 
-	// If the player presses the escape button.
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-	{
-		// Exit the game.
-		window_->close();
-	}
-	// Otherwise, if the player presses backspace.
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace))
-	{
-		// Take the player back to the main menu.
-		return new MenuState(*this);
-	}
-
-	//// If we have disconnected from the network.
-	//if (network_->Disconnected())
-	//{
-	//	// Take the player back to the main menu.
-	//	return new MenuState(*this);
-	//}
-
 	// If the current match has finished.
 	if (level_.GetLevelGenerator().HasFinished())
 	{
-		//// Disconnect the clients from the server.
-		//network_->GetConnection().GetSocket()->disconnect();
-
-		// If the red team won.
-		//if (level_.GetLevelGenerator().GetRedTeamScore() == 3)
-		//{
-			// Go to the winning screen with red team as the winner.
-			return new EndMatchState(*this, true);
-		//}
-		//else if (level_.GetLevelGenerator().GetBlueTeamScore() == 3)
-		//{
-			// Go to the winning screen with blue team as the winner.
-		//	return new EndMatchState(*this, false);
-		//}
-		//
-		//if (level_.GetLevelGenerator().GetBlueTeamScore() == 3)
-		//{
-		//	// Go to the winning screen with blue team as the winner.
-		//	return new EndMatchState(*this, false);
-		//}
-	}
-
-	// USED FOR DEBUGGING.
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
-	{
-		level_.GetLevelGenerator().Reset();
+		// Go to the end match screen.
+		return new EndMatchState(*this);		
 	}
 
 	// Returns nothing because there has been no input from the player yet.
@@ -105,15 +61,6 @@ void LevelState::OnEnter()
 	// Starting the level state specific stuff.
 	// Load the level.
 	level_.Init(world_, *font_, *screen_resolution_, *network_);
-
-	// Display finished text.
-	text_ = new sf::Text();
-	text_->setFont(*font_);
-	text_->setPosition((screen_resolution_->x * 0.25f), (screen_resolution_->y * 0.3f));
-	text_->setString("Finished!");
-	text_->setCharacterSize(64);
-	text_->setColor(sf::Color::White);
-	text_->setStyle(sf::Text::Bold);
 
 }
 
@@ -146,46 +93,25 @@ void LevelState::OnExit()
 void LevelState::Render()
 {
 
-	// If the game window exists.
-	if (window_)
+	// If there are objects in the level.
+	if (!level_.GetLevelGenerator().GetLevelObjects().empty())
 	{
-		// If there are objects in the level.
-		if (!level_.GetLevelGenerator().GetLevelObjects().empty())
+		// Iterating through all of the level objects.
+		for (auto& level_object : level_.GetLevelGenerator().GetLevelObjects())
 		{
-			// Iterating through all of the level objects.
-			for (auto& level_object : level_.GetLevelGenerator().GetLevelObjects())
-			{
-				// If the level object has a rectangle shape.
-				if (level_object->IsRectangle())
-				{
-					// Therefore, draw the rectangle shape.
-					window_->draw(level_object->GetRectangleShape());
-				}
-				// Otherwise, the level object will have a circle shape.
-				else
-				{
-					// Draw the circle shape for the football.
-					window_->draw(level_object->GetCircleShape());
-				}
-			}
+			// Therefore, draw the rectangle shape.
+			window_->draw(level_object->GetRectangleShape());
 		}
+	}
 
-		// If there is a set of scores in the level.
-		if (!level_.GetLevelGenerator().GetScoresText().empty())
+	// If there is a set of scores in the level.
+	if (!level_.GetLevelGenerator().GetScoresText().empty())
+	{
+		// Iterating through all of the level scores.
+		for (auto& score : level_.GetLevelGenerator().GetScoresText())
 		{
-			// Iterating through all of the level scores.
-			for (auto& score : level_.GetLevelGenerator().GetScoresText())
-			{
-				// Draw the score on the screen.
-				window_->draw(*score);
-			}
-		}
-
-		// If the current match has finished.
-		if (level_.GetLevelGenerator().HasFinished())
-		{
-			window_->draw(*text_);
-
+			// Draw the score on the screen.
+			window_->draw(*score);
 		}
 	}
 
@@ -195,17 +121,10 @@ void LevelState::Render()
 //======================================================//
 //						Update							//
 //======================================================//
-// This will provide a timer for this class.			//
+// This will update the states every frame.				//
 //////////////////////////////////////////////////////////
 void LevelState::Update(float dt)
 {
-
-	//// If 3 seconds have passed on the client side.
-	//if (game_clock_.getElapsedTime().asSeconds % 1 == 0)
-	//{
-	//	// Receive a position correction message from the server.
-
-	//}
 
 	// Update the level.
 	level_.Update(dt);

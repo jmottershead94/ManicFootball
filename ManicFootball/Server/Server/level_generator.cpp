@@ -1,13 +1,34 @@
+// Include header file here.
 #include "level_generator.h"
 
-LevelGenerator::LevelGenerator()
+//////////////////////////////////////////////////////////
+//======================================================//
+//					Constructor							//
+//======================================================//
+// This will initialise any pointers we have to null.	//
+//////////////////////////////////////////////////////////
+LevelGenerator::LevelGenerator() : world_(nullptr),
+	font_(nullptr),
+	screen_resolution_(nullptr)
 {
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//					Destructor							//
+//======================================================//
+//////////////////////////////////////////////////////////
 LevelGenerator::~LevelGenerator()
 {
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//						Init							//
+//======================================================//
+// Here we will intialise all of the attributes and		//
+// then build the level we want.						//
+//////////////////////////////////////////////////////////
 void LevelGenerator::Init(b2World* world, sf::Font& font, sf::Vector2f& game_screen_resolution)
 {
 
@@ -23,9 +44,16 @@ void LevelGenerator::Init(b2World* world, sf::Font& font, sf::Vector2f& game_scr
 	font_ = &font;									// Access to the game font.
 	screen_resolution_ = &game_screen_resolution;	// Access to the game resolution.
 
+	// Placing the level together.
 	BuildLevel();
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//					BuildLevel							//
+//======================================================//
+// This will put our level together.					//
+//////////////////////////////////////////////////////////
 void LevelGenerator::BuildLevel()
 {
 
@@ -40,12 +68,16 @@ void LevelGenerator::BuildLevel()
 	CreateScoreboard();
 	CreatePlayer(true);
 	CreatePlayer(false);
-	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.25f, screen_resolution_->y * 0.25f));
 	CreateFootball(sf::Vector2f(screen_resolution_->x * 0.5f, screen_resolution_->y * 0.6f));
-	//CreateFootball(sf::Vector2f(screen_resolution_->x * 0.75f, screen_resolution_->y * 0.25f));
 
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//					CreateGround						//
+//======================================================//
+// This will create our ground for the level.			//
+//////////////////////////////////////////////////////////
 void LevelGenerator::CreateGround()
 {
 
@@ -60,6 +92,12 @@ void LevelGenerator::CreateGround()
 
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//						CreateWall						//
+//======================================================//
+// This will create a wall for the level.				//
+//////////////////////////////////////////////////////////
 void LevelGenerator::CreateWall(sf::Vector2f& position, sf::Vector2f& dimension)
 {
 
@@ -67,13 +105,19 @@ void LevelGenerator::CreateWall(sf::Vector2f& position, sf::Vector2f& dimension)
 	StaticBody* wall = new StaticBody();
 
 	// Initialising the static body for the ground.
-	wall->Init(sf::Vector2f(position.x, position.y), sf::Vector2f(dimension.x, dimension.y), world_, ObjectID::surface, sf::Color::Cyan, true);
+	wall->Init(sf::Vector2f(position.x, position.y), sf::Vector2f(dimension.x, dimension.y), world_, ObjectID::surface, sf::Color::Black, true);
 
 	// Adding the game object to the level objects vector.
 	level_objects_.push_back(wall);
 
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//						CreateNets						//
+//======================================================//
+// This will create some nets.							//
+//////////////////////////////////////////////////////////
 void LevelGenerator::CreateNets(bool left_of_the_field)
 {
 
@@ -110,6 +154,12 @@ void LevelGenerator::CreateNets(bool left_of_the_field)
 
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//					CreateScoreboard					//
+//======================================================//
+// This will create a scoreboard for the level.			//
+//////////////////////////////////////////////////////////
 void LevelGenerator::CreateScoreboard()
 {
 
@@ -143,6 +193,12 @@ void LevelGenerator::CreateScoreboard()
 
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//						CreatePlayer					//
+//======================================================//
+// This will create a player for the level.				//
+//////////////////////////////////////////////////////////
 void LevelGenerator::CreatePlayer(bool red_team)
 {
 
@@ -167,6 +223,12 @@ void LevelGenerator::CreatePlayer(bool red_team)
 
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//					CreateFootball						//
+//======================================================//
+// This will create a football for the level.			//
+//////////////////////////////////////////////////////////
 void LevelGenerator::CreateFootball(sf::Vector2f& position)
 {
 
@@ -181,6 +243,15 @@ void LevelGenerator::CreateFootball(sf::Vector2f& position)
 
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//						Reset							//
+//======================================================//
+// This will respawn all of the required objects at		//
+// their respawn locations.								//
+// Whenever we reset the level, we will respawn the		//
+// football at it's respawn location.					//
+//////////////////////////////////////////////////////////
 void LevelGenerator::Reset()
 {
 
@@ -193,28 +264,31 @@ void LevelGenerator::Reset()
 			// If the level object is a football.
 			if (level_object->GetID() == ObjectID::ball)
 			{
-				// Casting this to a dynamic body rectangle in order to update the sprites position for level object.
-				DynamicBodyRectangle* dynamic_rectangle = static_cast<DynamicBodyRectangle*>(level_object);
-				dynamic_rectangle->TranslateBody(dynamic_rectangle->GetRespawnPosition().x, dynamic_rectangle->GetRespawnPosition().y);
+				// Respawn the football at the respawn location.
+				level_object->TranslateBody(level_object->GetRespawnPosition().x, level_object->GetRespawnPosition().y);
 			}
 		}
 	}
 
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//						Clear							//
+//======================================================//
+// This will clear all of the objects out of the level.	//
+//////////////////////////////////////////////////////////
 void LevelGenerator::Clear()
 {
 
-	// Destroying the fixtures that were created during the set up of the text file levels.
-	// This means that there will be no random collisions in the level.
+	// Iterating through all of the level objects.
 	for (auto& level_object : level_objects_)
 	{
+		// Destroying the fixtures that were created during the set up of the text file levels.
 		level_object->GetBody()->DestroyFixture(level_object->GetBody()->GetFixtureList());
 		
 		delete level_object;
 		level_object = nullptr;
-		//level_object->~GameObject();
-		//world_->DestroyBody(level_object->GetBody());
 	}
 
 	// If there are objects in the level.
@@ -241,11 +315,15 @@ void LevelGenerator::Clear()
 		}
 	}
 
-	// Resetting the finished flag.
-	finished_ = false;
-
 }
 
+//////////////////////////////////////////////////////////
+//======================================================//
+//						Render							//
+//======================================================//
+// This will be used to display all of the level		//
+// objects in our render window.						//
+//////////////////////////////////////////////////////////
 void LevelGenerator::Render(sf::RenderWindow& game_window)
 {
 
@@ -253,20 +331,10 @@ void LevelGenerator::Render(sf::RenderWindow& game_window)
 	if (!level_objects_.empty())
 	{
 		// Iterating through all of the level objects.
-		for (auto level_object = level_objects_.begin(); level_object != level_objects_.end(); level_object++)
+		for (auto& level_object : level_objects_)
 		{
-			// If the level object has a rectangle shape.
-			if ((**level_object).IsRectangle())
-			{
-				// Therefore, draw the rectangle shape.
-				game_window.draw((**level_object).GetRectangleShape());
-			}
-			// Otherwise, the level object will have a circle shape.
-			else
-			{
-				// Draw the circle shape for the football.
-				game_window.draw((**level_object).GetCircleShape());
-			}
+			// Therefore, draw the rectangle shape.
+			game_window.draw(level_object->GetRectangleShape());
 		}
 	}
 
@@ -274,10 +342,10 @@ void LevelGenerator::Render(sf::RenderWindow& game_window)
 	if (!scores_.empty())
 	{
 		// Iterating through all of the level scores.
-		for (auto score = scores_.begin(); score != scores_.end(); score++)
+		for (auto& score : scores_)
 		{
 			// Draw the score on the screen.
-			game_window.draw((**score));
+			game_window.draw(*score);
 		}
 	}
 

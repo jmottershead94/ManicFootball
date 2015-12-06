@@ -1,10 +1,15 @@
+// Jason Mottershead, 1300455.
+
+// Level Generator class header file.
+// This class will be responsible for generating all of the game objects in the level.
+
+// Header guard.
 #ifndef _LEVEL_GENERATOR_H_
 #define _LEVEL_GENERATOR_H_
 
 #include <array>
 #include <sstream>
 #include "static_body.h"
-#include "dynamic_body_circle.h"
 #include "dynamic_body_rectangle.h"
 
 class LevelGenerator
@@ -75,7 +80,7 @@ class LevelGenerator
 		int previous_red_team_score_, previous_blue_team_score_;	// The previous score values used for comparisons.
 		std::array<sf::Text*, 2> scores_;							// The array for storing scores.
 		std::vector<GameObject*> level_objects_;					// The vector of level objects, stores all game objects in the world.
-		b2World* world_;
+		b2World* world_;											// Points to the Box2D world.
 		sf::Font* font_;											// Points to the game font.
 		sf::Vector2f* screen_resolution_;							// Points to the screen resolution.
 };
