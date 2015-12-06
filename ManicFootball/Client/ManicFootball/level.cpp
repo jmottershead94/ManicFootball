@@ -141,12 +141,8 @@ void Level::HandleLevelObjects(float dt)
 				// Casting this to a dynamic body rectangle in order to update the sprites position for level object.
 				DynamicBodyRectangle* dynamic_rectangle = static_cast<DynamicBodyRectangle*>(level_object);
 				
-				// If we are not currently interpolating the other player's position.
-				if (!other_player_.IsInterpolating())
-				{
-					// Provide the appropriate data response for the player, depending on the package that they have received.
-					DataResponse(network_->GetData(), *dynamic_rectangle, dt);
-				}
+				// Provide the appropriate data response for the player, depending on the package that they have received.
+				DataResponse(network_->GetData(), *dynamic_rectangle, dt);
 
 				// Update the other player.
 				dynamic_rectangle->Update(dt);
