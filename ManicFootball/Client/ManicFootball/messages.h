@@ -33,7 +33,7 @@ struct Input
 // This will be sent to the clients every frame, will be used for interpolation.
 struct ServerUpdate
 {
-	float x = 0.0f;					// The current x position.
+	float x = 0.0f;					// The current x position.sf
 	float y = 0.0f;					// The current y position.
 	int id = 0;						// The current id number.
 	int red_score = 0;				// The current red team score.
@@ -56,7 +56,7 @@ inline sf::Packet& operator <<(sf::Packet& packet, const Input& message)				{ re
 inline sf::Packet& operator >>(sf::Packet& packet, Input& message)						{ return packet >> message.up >> message.right >> message.left >> message.time; }
 
 // This will allow me to send Server Update data through packets.
-inline sf::Packet& operator <<(sf::Packet& packet, const ServerUpdate& message)		{ return packet << message.x << message.y << message.id << message.red_score << message.blue_score << message.time; }
+inline sf::Packet& operator <<(sf::Packet& packet, const ServerUpdate& message)			{ return packet << message.x << message.y << message.id << message.red_score << message.blue_score << message.time; }
 
 // This will allow me to receive Server Update data through packets.
 inline sf::Packet& operator >>(sf::Packet& packet, ServerUpdate& message)				{ return packet >> message.x >> message.y >> message.id >> message.red_score >> message.blue_score >> message.time; }

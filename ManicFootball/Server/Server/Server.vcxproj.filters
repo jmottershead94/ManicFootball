@@ -95,9 +95,6 @@
     <ClInclude Include="messages.h">
       <Filter>Framework\Network</Filter>
     </ClInclude>
-    <ClInclude Include="tk_spline.h">
-      <Filter>Framework\Network</Filter>
-    </ClInclude>
     <ClInclude Include="level_generator.h">
       <Filter>Framework</Filter>
     </ClInclude>

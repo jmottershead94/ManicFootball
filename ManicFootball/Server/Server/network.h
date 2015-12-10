@@ -50,7 +50,6 @@ class Network : public NetworkHandler
 		std::array< sf::TcpSocket*, MAX_NUMBER_OF_CONNECTIONS > sockets_;					// A data structure holding all of the connected client's TCP sockets.
 		sf::Packet data_;																	// Packet data used to store and pass along messages.
 		
-		
 };
 
 #endif

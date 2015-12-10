@@ -316,37 +316,3 @@ void LevelGenerator::Clear()
 	}
 
 }
-
-//////////////////////////////////////////////////////////
-//======================================================//
-//						Render							//
-//======================================================//
-// This will be used to display all of the level		//
-// objects in our render window.						//
-//////////////////////////////////////////////////////////
-void LevelGenerator::Render(sf::RenderWindow& game_window)
-{
-
-	// If there are objects in the level.
-	if (!level_objects_.empty())
-	{
-		// Iterating through all of the level objects.
-		for (auto& level_object : level_objects_)
-		{
-			// Therefore, draw the rectangle shape.
-			game_window.draw(level_object->GetRectangleShape());
-		}
-	}
-
-	// If there is a set of scores in the level.
-	if (!scores_.empty())
-	{
-		// Iterating through all of the level scores.
-		for (auto& score : scores_)
-		{
-			// Draw the score on the screen.
-			game_window.draw(*score);
-		}
-	}
-
-}

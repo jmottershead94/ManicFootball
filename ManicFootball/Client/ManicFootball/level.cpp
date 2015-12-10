@@ -123,7 +123,7 @@ void Level::HandleLevelObjects(float dt)
 		// Iterating through all of the level objects.
 		for (auto& level_object : level_generator_.GetLevelObjects())
 		{
-			// Otherwise, if the level object is a player.
+			// If the level object is a player.
 			if (level_object->GetID() == ObjectID::player)
 			{
 				// Casting this to a player in order to update the sprites position for level object.
@@ -141,13 +141,16 @@ void Level::HandleLevelObjects(float dt)
 				// Casting this to a dynamic body rectangle in order to update the sprites position for level object.
 				DynamicBodyRectangle* dynamic_rectangle = static_cast<DynamicBodyRectangle*>(level_object);
 				
-				// Provide the appropriate data response for the player, depending on the package that they have received.
-				DataResponse(network_->GetData(), *dynamic_rectangle, dt);
+				//if (!other_player_.IsInterpolating())
+				//{
+					// Provide the appropriate data response for the player, depending on the package that they have received.
+					DataResponse(network_->GetData(), *dynamic_rectangle, dt);
+				//}
 
 				// Update the other player.
 				dynamic_rectangle->Update(dt);
 			}
-			// If the level object is a football.
+			// Otherwise, if the level object is a football.
 			else if (level_object->GetID() == ObjectID::ball)
 			{
 				// Casting this to a dynamic body rectangle in order to update the sprites position for level object.

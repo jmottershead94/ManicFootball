@@ -8,8 +8,7 @@
 // This will initialise the game window.				//
 //////////////////////////////////////////////////////////
 Game::Game(const int game_screen_width, const int game_screen_height) :
-	world_(nullptr),
-	window_(nullptr)
+	world_(nullptr)
 {
 
 	// Setting the screen width and height.
@@ -71,12 +70,6 @@ void Game::StartAcceptingConnections()
 		// Check to see if the clients are ready to play a match.
 		if (network_.ConnectionsAreReady())
 		{
-			// Setting up the game window with variable screen resolution.
-			window_ = new sf::RenderWindow(sf::VideoMode(screen_resolution_.x, screen_resolution_.y), "Manic Football");
-
-			// This will lock the frame rate of the game window to 60 fps.
-			window_->setFramerateLimit(kFrameRate);
-
 			// Initialise the server level.
 			level_.Init(world_, font_, screen_resolution_, network_, clock_);
 		}
@@ -109,9 +102,6 @@ void Game::CheckIfLevelHasFinished()
 		network_.GetClientSockets()[0]->disconnect();
 		network_.GetClientSockets()[1]->disconnect();
 
-		// Close the current render window.
-		window_->close();
-
 		// Look out for anymore connections.
 		StartAcceptingConnections();
 	}
@@ -134,16 +124,6 @@ void Game::Update()
 
 	// Setting up delta time.
 	dt_ = clock_.restart();
-
-	while (window_->pollEvent(event_))
-	{
-		// If the user wants to close the window.
-		if (event_.type == sf::Event::Closed)
-		{
-			// Close the window.
-			window_->close();
-		}
-	}
 	
 	// This will keep checking the current match state.
 	CheckIfLevelHasFinished();
@@ -154,26 +134,5 @@ void Game::Update()
 
 	// Update the level.
 	level_.Update(dt_.asSeconds());
-
-}
-
-//////////////////////////////////////////////////////////
-//======================================================//
-//						Render							//
-//======================================================//
-// This will render everything in our current game		//
-// window.												//
-//////////////////////////////////////////////////////////
-void Game::Render()
-{
-
-	// Clear the current game window.
-	window_->clear();
-
-	// Render everything in the level.
-	level_.GetLevelGenerator().Render(*window_);
-
-	// Display the new layout of the window.
-	window_->display();
 
 }

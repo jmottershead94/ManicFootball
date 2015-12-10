@@ -33,7 +33,6 @@ class LevelGenerator
 		void CreateFootball(sf::Vector2f& position);
 		void Reset();
 		void Clear();
-		void Render(sf::RenderWindow& game_window);
 
 		// Setters.
 		// This will set the current finish state of the match.

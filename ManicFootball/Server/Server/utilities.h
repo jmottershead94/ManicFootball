@@ -16,7 +16,7 @@ class Utilities
 
 	protected:
 		// Attributes.
-		const unsigned short kPort = 5000;
+		const unsigned short kPort = 55001;
 		const std::string kIPAddress = "127.0.0.1";
 		const std::string kTCPListenerErrorMessage = "ERROR: TCP connection listener failed.";	// The error message if tcp connection messes up.
 		const std::string kConnectionErrorMessage = "ERROR: Client could not connect.";			// The error message if the client cannot connect.

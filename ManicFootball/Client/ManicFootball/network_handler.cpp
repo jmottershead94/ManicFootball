@@ -23,9 +23,6 @@ bool NetworkHandler::SendData(sf::Packet& data)
 	{
 		// ERROR: We could not connect to the server.
 		DisplayErrorMessage(kConnectionErrorMessage);
-
-		// Disconnect from the server.
-		//connection_.GetSocket()->disconnect();
 	}
 
 	// We can modify what the standard response for not sending a packet of data is here.
@@ -54,6 +51,12 @@ bool NetworkHandler::ReceivedData(sf::Packet& data)
 	{
 		// Notify the client.
 		return true;
+	}
+	// Otherwise, if we have disconnected from the server.
+	else if (connection_.GetSocket()->receive(data) == sf::Socket::Disconnected)
+	{
+		// ERROR: We could not connect to the server.
+		DisplayErrorMessage(kConnectionErrorMessage);
 	}
 
 	// We can modify what the standard response for not receiving a packet of data is here.

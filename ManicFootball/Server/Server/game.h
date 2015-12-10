@@ -24,12 +24,7 @@ class Game
 		Game(const int game_screen_width, const int game_screen_height);
 		~Game();
 		void Update();
-		void Render();
 
-		// Getters.
-		// This will return the current game window.
-		inline sf::RenderWindow* getWindow()	{ return window_; }				
-		
 	private:
 		// Attributes.
 		const unsigned int kFrameRate= 60;	
@@ -37,7 +32,6 @@ class Game
 		sf::Clock clock_;
 		sf::Event event_;
 		sf::Font font_;
-		sf::RenderWindow* window_;
 		sf::Time dt_;
 		sf::Vector2f screen_resolution_;
 		sf::TcpSocket player_one_socket_;

@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////
 //======================================================//
 //						Constructor						//
-//======================================================//
+//======================================================//         
 // This will initialise our interpolation flag.			//
 //////////////////////////////////////////////////////////
 Interpolation::Interpolation() : interpolating_(false)
@@ -60,10 +60,7 @@ void Interpolation::Interpolate(DynamicBodyRectangle& object, Network& network, 
 
 		// Calculate the difference in the server and client positions.
 		sf::Vector2f position_difference(abs(remote_position.x - object.GetPosition().x), abs(remote_position.y - object.GetPosition().y));
-		
-		// Calculate the difference in time from when we received the last network message.
-		//sf::Int32 time_difference = times_[kPositionSampleSize - 1] - network.GetClock().getElapsedTime().asMilliseconds();
-		
+				
 		// If our calculated position difference is within the network threshold.
 		if ((position_difference.x < network.GetThreshold()) && (position_difference.y < network.GetThreshold()))
 		{
@@ -72,7 +69,7 @@ void Interpolation::Interpolate(DynamicBodyRectangle& object, Network& network, 
 
 			std::cout << "Using the remote position." << std::endl;
 
-			// We can move the body just through interpolation.
+			// We can move the body as normal.
 			object.TranslateBody(remote_position.x, remote_position.y);
 		}
 		// Otherwise, we are too far out with our positions from the server, we will use interpolation.
